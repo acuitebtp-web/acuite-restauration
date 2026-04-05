@@ -144,7 +144,7 @@ export default function EditDishPage() {
       target_food_cost: targetFoodCost, total_cost: metrics.totalCost,
       price_advised: metrics.priceAdvised, price_actual: null,
       margin_pct: metrics.marginPct, allergens, notes,
-      created_at: '', updated_at: '',
+      popularity: null, created_at: '', updated_at: '',
     }
     await generateDishPDF(dish, profile)
     setPdfLoading(false)
