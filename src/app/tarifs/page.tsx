@@ -173,7 +173,7 @@ export default function TarifsPage() {
                     className="w-full"
                     variant={plan.highlight ? 'primary' : 'secondary'}
                     loading={loading === plan.id}
-                    onClick={() => handleSubscribe(plan.priceId, plan.id)}
+                    onClick={() => handleSubscribe(plan.priceId ?? undefined, plan.id)}
                   >
                     {plan.cta}
                   </Button>
