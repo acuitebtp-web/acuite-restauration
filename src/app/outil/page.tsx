@@ -121,7 +121,7 @@ export default function OutilPage() {
 
   const addIngredient = () => {
     if (!newIngName.trim() || !newIngQty) return
-    const pricePerKg = getPriceForIngredient(newIngName, customPrices)
+    const pricePerKg = getPriceForIngredient(newIngName, customPricesMap)
     const qty_grams = parseFloat(newIngQty)
     const cost = pricePerKg * qty_grams / 1000
     setIngredients(prev => [...prev, { name: newIngName, qty_grams, price_per_kg: pricePerKg, cost }])
