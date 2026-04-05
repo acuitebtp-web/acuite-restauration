@@ -15,6 +15,7 @@ export default function ComptePage() {
   const [loading, setLoading] = useState(true)
   const searchParams = useSearchParams()
   const upgraded = searchParams.get('upgraded')
+  const welcome = searchParams.get('welcome')
 
   useEffect(() => {
     if (!user) return
@@ -38,6 +39,15 @@ export default function ComptePage() {
       <Nav />
       <div className="pt-24 min-h-screen pb-16 px-4">
         <div className="max-w-5xl mx-auto">
+
+          {welcome && (
+            <div className="bg-sauge-pale border border-sauge-light text-sauge font-medium text-sm px-5 py-3 rounded-xl mb-6 flex items-center gap-2">
+              <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              Votre adresse email a bien été confirmée. Bienvenue sur Acuité Restauration !
+            </div>
+          )}
 
           {upgraded && (
             <div className="bg-sauge-pale border border-sauge-light text-sauge font-medium text-sm px-5 py-3 rounded-xl mb-6 flex items-center gap-2">
