@@ -66,11 +66,18 @@ export default function OutilPage() {
       .then(({ data }) => setCustomPrices(data || []))
   }, [user])
 
+  // Convertir CustomPrice[] en Record<string, number> pour les fonctions de calcul
+  const customPricesMap = useMemo(() => {
+    const map: Record<string, number> = {}
+    customPrices.forEach(cp => { map[cp.ingredient_name] = cp.price_per_kg })
+    return map
+  }, [customPrices])
+
   // Metrics (real-time, client-side)
   const metrics = useMemo(() => {
     if (ingredients.length === 0) return null
-    return calculateDishMetrics(ingredients, isShared ? covers : 1, targetFoodCost, customPrices)
-  }, [ingredients, covers, isShared, targetFoodCost, customPrices])
+    return calculateDishMetrics(ingredients, isShared ? covers : 1, targetFoodCost, customPricesMap)
+  }, [ingredients, covers, isShared, targetFoodCost, customPricesMap])
 
   const scenarios = useMemo(() => metrics ? getPriceScenarios(metrics.costPerCover) : [], [metrics])
 
@@ -98,7 +105,7 @@ export default function OutilPage() {
       if (data.fallback) setAiFallback(true)
       if (data.ingredients) {
         const mapped: Ingredient[] = data.ingredients.map((ing: { name: string; qty: number }) => {
-          const pricePerKg = getPriceForIngredient(ing.name, customPrices)
+          const pricePerKg = getPriceForIngredient(ing.name, customPricesMap)
           const cost = pricePerKg * ing.qty / 1000
           return { name: ing.name, qty_grams: ing.qty, price_per_kg: pricePerKg, cost }
         })
@@ -126,7 +133,7 @@ export default function OutilPage() {
     setIngredients(prev => prev.map((ing, i) => {
       if (i !== index) return ing
       const updated = { ...ing, [field]: value }
-      if (field === 'name') updated.price_per_kg = getPriceForIngredient(value as string, customPrices)
+      if (field === 'name') updated.price_per_kg = getPriceForIngredient(value as string, customPricesMap)
       updated.cost = updated.price_per_kg * updated.qty_grams / 1000
       return updated
     }))
