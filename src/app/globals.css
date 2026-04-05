@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --creme: #FDFAF4;
+  --ivoire: #FFF8EE;
+  --orange: #F2854A;
+  --orange-light: #F9C4A0;
+  --orange-pale: #FDE8D8;
+  --sauge: #7A9E7E;
+  --sauge-light: #B8D4BA;
+  --sauge-pale: #E8F2E8;
+  --brun: #2C1A0E;
+  --brun-mid: #6B4226;
+  --brun-light: #A0745A;
+  --brun-pale: #E8D5C4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--creme);
+  color: var(--brun);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Lora', Georgia, serif;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-orange text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-[#e0733a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-transparent border-2 border-orange text-orange font-semibold px-5 py-2.5 rounded-xl hover:bg-orange-pale transition-colors duration-200;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-brun-mid font-medium px-4 py-2 rounded-xl hover:bg-brun-pale transition-colors duration-200;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-brun-pale p-6;
+  }
+  .input-field {
+    @apply w-full border border-brun-pale rounded-xl px-4 py-2.5 text-brun bg-white focus:outline-none focus:ring-2 focus:ring-orange focus:border-transparent transition-all;
+  }
+  .label {
+    @apply block text-sm font-semibold text-brun-mid mb-1.5;
+  }
+  .badge-green {
+    @apply inline-flex items-center gap-1 bg-sauge-pale text-sauge font-semibold text-xs px-2.5 py-1 rounded-full;
+  }
+  .badge-orange {
+    @apply inline-flex items-center gap-1 bg-orange-pale text-orange font-semibold text-xs px-2.5 py-1 rounded-full;
+  }
+  .badge-blue {
+    @apply inline-flex items-center gap-1 bg-blue-50 text-blue-600 font-semibold text-xs px-2.5 py-1 rounded-full;
+  }
+  .badge-red {
+    @apply inline-flex items-center gap-1 bg-red-50 text-red-600 font-semibold text-xs px-2.5 py-1 rounded-full;
+  }
+}
