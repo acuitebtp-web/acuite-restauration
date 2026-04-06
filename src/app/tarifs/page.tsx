@@ -1,3 +1,4 @@
+// No metadata export here — this is a client component
 'use client'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'

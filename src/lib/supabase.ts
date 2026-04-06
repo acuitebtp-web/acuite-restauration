@@ -1,3 +1,4 @@
+import { createBrowserClient } from '@supabase/ssr'
 import { createClient } from '@supabase/supabase-js'
 
 export type Plan = 'free' | 'pro' | 'multi'
@@ -46,7 +47,8 @@ export interface CustomPrice {
   updated_at: string
 }
 
-export const supabase = createClient(
+// createBrowserClient stocke le token dans les cookies (lisibles par le middleware SSR)
+export const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )

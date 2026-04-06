@@ -1,6 +1,16 @@
 import Link from 'next/link'
 import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Calculez votre food cost en 30 secondes — Acuité Restauration',
+  description: 'Outil SaaS pour restaurateurs : calcul food cost instantané basé sur les cotations FranceAgriMer, analyse de carte, fiches techniques PDF.',
+  openGraph: {
+    title: 'Calculez votre food cost en 30 secondes',
+    description: 'Outil SaaS pour restaurateurs. Calcul food cost instantané, analyse de carte, IA.',
+  },
+}
 
 export default function LandingPage() {
   return (
@@ -8,12 +18,10 @@ export default function LandingPage() {
       <Nav />
 
       {/* ── 1. HERO ─────────────────────────────────────────────── */}
-      <section className="pt-28 pb-24 px-4 bg-creme overflow-hidden relative">
-        {/* Déco végétale fond */}
-        <div className="absolute top-16 right-0 w-72 h-72 bg-sauge-pale rounded-full -translate-y-1/2 translate-x-1/2 opacity-60 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-56 h-56 bg-citron-pale rounded-full translate-y-1/2 -translate-x-1/2 opacity-70 blur-2xl pointer-events-none" />
+      <section className="pt-28 pb-24 px-4 bg-creme">
 
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-14 relative">
+
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-14">
           <div className="flex-1 text-center lg:text-left">
             <span className="inline-flex items-center gap-2 bg-sauge-pale text-sauge text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
               <span className="text-base">🥬</span> Basé sur les cotations FranceAgriMer
@@ -371,7 +379,7 @@ export default function LandingPage() {
           </p>
           <Link href="/outil">
             <button className="bg-white text-brun font-bold text-base px-10 py-4 rounded-xl hover:bg-ivoire transition-colors shadow-lg">
-              Essayer gratuitement →
+              Calculer le food cost de mon premier plat →
             </button>
           </Link>
         </div>

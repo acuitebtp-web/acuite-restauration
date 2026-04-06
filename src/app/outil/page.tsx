@@ -296,7 +296,7 @@ export default function OutilPage() {
                         <span className="text-xs text-brun-light">g</span>
                       </div>
                       <span className="text-xs text-brun-light w-14 text-right shrink-0">
-                        {ing.cost.toFixed(3)} €
+                        {ing.cost.toLocaleString('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €
                       </span>
                       <button
                         onClick={() => removeIngredient(i)}
@@ -380,18 +380,40 @@ export default function OutilPage() {
 
           {/* ── Colonne droite — Résultats ─── */}
           <div className="flex-1 p-6 lg:overflow-y-auto lg:h-[calc(100vh-64px)]">
-            {!metrics ? (
+            {aiLoading ? (
+              <div className="h-full flex flex-col items-center justify-center text-center py-20">
+                <div className="w-16 h-16 bg-sauge-pale rounded-2xl flex items-center justify-center mb-4 animate-pulse">
+                  <span className="text-3xl">🌿</span>
+                </div>
+                <h3 className="font-lora text-xl font-semibold text-brun mb-2">L'IA analyse votre plat…</h3>
+                <p className="text-brun-light max-w-sm">Génération des ingrédients et calcul des coûts en cours. Cela prend quelques secondes.</p>
+                <div className="flex gap-1 mt-5">
+                  {[0,1,2].map(i => (
+                    <div key={i} className="w-2 h-2 bg-sauge rounded-full animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
+                  ))}
+                </div>
+              </div>
+            ) : !metrics ? (
               <div className="h-full flex flex-col items-center justify-center text-center py-20">
                 <div className="w-16 h-16 bg-orange-pale rounded-2xl flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 20h16a2 2 0 002-2V8a2 2 0 00-.586-1.414l-5-5A2 2 0 0014 1H6a2 2 0 00-2 2v5" />
-                  </svg>
+                  <span className="text-3xl">🧮</span>
                 </div>
                 <h3 className="font-lora text-xl font-semibold text-brun mb-2">Décrivez votre plat</h3>
-                <p className="text-brun-light max-w-sm">
+                <p className="text-brun-light max-w-sm mb-6">
                   Utilisez l'IA pour générer automatiquement les ingrédients, ou ajoutez-les manuellement.
                   Les résultats s'affichent en temps réel.
                 </p>
+                <div className="grid grid-cols-2 gap-2 text-left max-w-xs w-full">
+                  {['Magret de canard aux cerises', 'Risotto aux champignons', 'Tiramisu maison', 'Soupe de poisson'].map(ex => (
+                    <button
+                      key={ex}
+                      className="bg-white border border-brun-pale rounded-xl px-3 py-2 text-xs text-brun-mid hover:border-orange hover:text-orange transition-colors text-left"
+                      onClick={() => { setAiPrompt(ex) }}
+                    >
+                      {ex}
+                    </button>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="max-w-2xl space-y-5">
@@ -476,7 +498,7 @@ export default function OutilPage() {
                               </div>
                             </div>
                             <span className="text-xs text-brun-light w-14 text-right shrink-0">
-                              {ing.cost.toFixed(3)} €
+                              {ing.cost.toLocaleString('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €
                             </span>
                           </div>
                         )
