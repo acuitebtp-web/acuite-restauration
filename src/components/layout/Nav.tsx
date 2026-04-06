@@ -14,10 +14,10 @@ export function Nav() {
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.svg" alt="Acuité Restauration" className="h-8" />
+          <img src="/logo.svg" alt="Acuité Restauration" className="h-11" />
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop nav + CTA — tout à droite */}
         <div className="hidden md:flex items-center gap-6">
           <Link href="/outil" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
             Calculateur
@@ -35,10 +35,6 @@ export function Nav() {
               </Link>
             </>
           )}
-        </div>
-
-        {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-3">
           {loading ? null : user ? (
             <div className="relative">
               <button
