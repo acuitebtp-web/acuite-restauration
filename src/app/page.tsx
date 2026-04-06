@@ -53,7 +53,6 @@ export default function LandingPage() {
               <span className="text-xs text-brun-light font-medium">Données officielles</span>
               <div className="h-px flex-1 max-w-[40px] bg-brun-pale" />
               <span className="bg-white border border-brun-pale text-brun text-xs font-semibold px-3 py-1.5 rounded-full">FranceAgriMer</span>
-              <span className="bg-white border border-brun-pale text-brun text-xs font-semibold px-3 py-1.5 rounded-full">Claude AI</span>
             </div>
           </div>
 
