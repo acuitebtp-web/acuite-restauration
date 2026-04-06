@@ -12,14 +12,13 @@ Retourne UNIQUEMENT un objet JSON valide, sans markdown, sans backticks, sans te
 - Noms en français précis (ex: "Bœuf - Filet", pas "Bœuf")
 - 6 à 10 ingrédients maximum
 - Génère EXACTEMENT le plat demandé, pas un plat similaire`
-
 async function callClaude(prompt: string) {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY non configurée')
 
   const client = new Anthropic({ apiKey })
   const response = await client.messages.create({
-    model: 'claude-3-haiku-20240307', // Haiku : 3x plus rapide, suffisant pour ce cas
+          model: 'claude-haiku-4-5-20251001', // Haiku 4.5 : modèle actuel
     max_tokens: 512,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: prompt }],
