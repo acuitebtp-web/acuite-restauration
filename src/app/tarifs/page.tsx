@@ -13,6 +13,7 @@ const PLANS = [
     name: 'Gratuit',
     price: '0€',
     period: '',
+    emoji: '🌱',
     description: "Pour découvrir l'outil",
     priceId: null,
     features: [
@@ -30,15 +31,17 @@ const PLANS = [
     cta: 'Commencer gratuitement',
     ctaLink: '/inscription',
     highlight: false,
+    accentBg: 'bg-ivoire',
+    accentBorder: 'border-brun-pale',
   },
   {
     id: 'pro',
     name: 'Pro',
     price: '19€',
     period: '/mois HT',
+    emoji: '🥕',
     description: 'Pour les restaurateurs actifs',
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO,
-    envKey: 'STRIPE_PRICE_PRO',
     features: [
       'Plats illimités',
       'Génération IA illimitée',
@@ -51,15 +54,17 @@ const PLANS = [
     missing: [],
     cta: 'Commencer le plan Pro',
     highlight: true,
+    accentBg: 'bg-white',
+    accentBorder: 'border-orange',
   },
   {
     id: 'multi',
     name: 'Multi',
     price: '49€',
     period: '/mois HT',
+    emoji: '🧺',
     description: 'Pour les groupes & franchises',
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_MULTI,
-    envKey: 'STRIPE_PRICE_MULTI',
     features: [
       'Tout le plan Pro',
       "Jusqu'à 5 établissements",
@@ -70,6 +75,8 @@ const PLANS = [
     missing: [],
     cta: 'Commencer le plan Multi',
     highlight: false,
+    accentBg: 'bg-ivoire',
+    accentBorder: 'border-brun-pale',
   },
 ]
 
@@ -105,10 +112,12 @@ export default function TarifsPage() {
   return (
     <>
       <Nav />
-      <div className="pt-24 pb-20 px-4">
+      <div className="pt-24 pb-20 px-4 bg-creme min-h-screen">
         <div className="max-w-5xl mx-auto">
+
           {/* Header */}
           <div className="text-center mb-14">
+            <span className="text-4xl block mb-3">🧺</span>
             <h1 className="font-lora text-4xl font-bold text-brun mb-3">
               Des tarifs simples et transparents
             </h1>
@@ -122,19 +131,19 @@ export default function TarifsPage() {
             {PLANS.map((plan) => (
               <div
                 key={plan.id}
-                className={`relative rounded-2xl border p-6 flex flex-col ${
-                  plan.highlight || highlightPlan === plan.id
-                    ? 'border-orange bg-white shadow-xl ring-2 ring-orange'
-                    : 'border-brun-pale bg-white shadow-sm'
+                className={`relative rounded-2xl border-2 p-6 flex flex-col ${plan.accentBg} ${plan.accentBorder} ${
+                  plan.highlight || highlightPlan === plan.id ? 'shadow-xl ring-2 ring-orange' : 'shadow-sm'
                 }`}
               >
                 {(plan.highlight || highlightPlan === plan.id) && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-orange text-white text-xs font-bold px-3 py-1 rounded-full">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                    <span className="bg-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow">
                       Le plus populaire
                     </span>
                   </div>
                 )}
+
+                <div className="text-4xl mb-3">{plan.emoji}</div>
 
                 <div className="mb-5">
                   <h2 className="font-lora text-xl font-bold text-brun">{plan.name}</h2>
@@ -155,7 +164,7 @@ export default function TarifsPage() {
                     </li>
                   ))}
                   {plan.missing?.map(f => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm text-brun-light">
+                    <li key={f} className="flex items-start gap-2.5 text-sm text-brun-light/60">
                       <svg className="w-4 h-4 text-brun-pale shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                       </svg>
@@ -182,9 +191,21 @@ export default function TarifsPage() {
             ))}
           </div>
 
+          {/* Garantie */}
+          <div className="bg-sauge-pale border border-sauge-light rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left mb-14">
+            <span className="text-4xl shrink-0">🛡️</span>
+            <div>
+              <h3 className="font-lora font-bold text-brun text-lg">Satisfait ou remboursé 14 jours</h3>
+              <p className="text-sm text-brun-mid mt-1">Si l'outil ne vous convient pas dans les 14 premiers jours, on vous rembourse sans question. C'est notre engagement.</p>
+            </div>
+          </div>
+
           {/* FAQ */}
           <div className="max-w-2xl mx-auto">
-            <h2 className="font-lora text-2xl font-bold text-brun text-center mb-8">Questions fréquentes</h2>
+            <div className="text-center mb-8">
+              <span className="text-3xl">🌿</span>
+              <h2 className="font-lora text-2xl font-bold text-brun mt-2">Questions fréquentes</h2>
+            </div>
             <div className="space-y-4">
               {[
                 {
@@ -205,8 +226,10 @@ export default function TarifsPage() {
                 },
               ].map(({ q, a }) => (
                 <div key={q} className="bg-white rounded-2xl border border-brun-pale p-5">
-                  <h3 className="font-semibold text-brun mb-2">{q}</h3>
-                  <p className="text-sm text-brun-light">{a}</p>
+                  <h3 className="font-semibold text-brun mb-2 flex items-center gap-2">
+                    <span className="text-orange">→</span> {q}
+                  </h3>
+                  <p className="text-sm text-brun-light leading-relaxed">{a}</p>
                 </div>
               ))}
             </div>

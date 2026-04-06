@@ -9,23 +9,48 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        creme: '#FDFAF4',
-        ivoire: '#FFF8EE',
+        // Fond principal — parchemin de marché frais
+        creme: '#F7FDF5',
+        ivoire: '#F0FAF0',
+
+        // Orange carotte — CTA principal
         orange: {
-          DEFAULT: '#F2854A',
-          light: '#F9C4A0',
-          pale: '#FDE8D8',
+          DEFAULT: '#EE6B2F',
+          light: '#F5A87A',
+          pale: '#FDEADC',
         },
+
+        // Herbe / basilic — accent vert
         sauge: {
-          DEFAULT: '#7A9E7E',
-          light: '#B8D4BA',
-          pale: '#E8F2E8',
+          DEFAULT: '#3D9E4A',
+          light: '#7EC880',
+          pale: '#DDF2DE',
         },
+
+        // Texte principal — vert très foncé (remplace le brun)
         brun: {
-          DEFAULT: '#2C1A0E',
-          mid: '#6B4226',
-          light: '#A0745A',
-          pale: '#E8D5C4',
+          DEFAULT: '#1A2E1C',
+          mid: '#3A5E3E',
+          light: '#6A9870',
+          pale: '#C8E2CA',
+        },
+
+        // Citron / soleil — accent jaune
+        citron: {
+          DEFAULT: '#F5C535',
+          pale: '#FEF5D0',
+        },
+
+        // Tomate — accent rouge/alerte
+        tomate: {
+          DEFAULT: '#E84C3D',
+          pale: '#FDECEA',
+        },
+
+        // Aubergine — accent profond
+        aubergine: {
+          DEFAULT: '#6B3FA0',
+          pale: '#EDE8F8',
         },
       },
       fontFamily: {

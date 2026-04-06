@@ -5,18 +5,37 @@
 @tailwind utilities;
 
 :root {
-  --creme: #FDFAF4;
-  --ivoire: #FFF8EE;
-  --orange: #F2854A;
-  --orange-light: #F9C4A0;
-  --orange-pale: #FDE8D8;
-  --sauge: #7A9E7E;
-  --sauge-light: #B8D4BA;
-  --sauge-pale: #E8F2E8;
-  --brun: #2C1A0E;
-  --brun-mid: #6B4226;
-  --brun-light: #A0745A;
-  --brun-pale: #E8D5C4;
+  /* Fond marché frais */
+  --creme: #F7FDF5;
+  --ivoire: #F0FAF0;
+
+  /* Carotte — CTA */
+  --orange: #EE6B2F;
+  --orange-light: #F5A87A;
+  --orange-pale: #FDEADC;
+
+  /* Herbe — accent vert vif */
+  --sauge: #3D9E4A;
+  --sauge-light: #7EC880;
+  --sauge-pale: #DDF2DE;
+
+  /* Texte vert très foncé */
+  --brun: #1A2E1C;
+  --brun-mid: #3A5E3E;
+  --brun-light: #6A9870;
+  --brun-pale: #C8E2CA;
+
+  /* Citron */
+  --citron: #F5C535;
+  --citron-pale: #FEF5D0;
+
+  /* Tomate */
+  --tomate: #E84C3D;
+  --tomate-pale: #FDECEA;
+
+  /* Aubergine */
+  --aubergine: #6B3FA0;
+  --aubergine-pale: #EDE8F8;
 }
 
 * {
@@ -39,7 +58,7 @@ h1, h2, h3 {
 
 @layer components {
   .btn-primary {
-    @apply bg-orange text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-[#e0733a] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-orange text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-[#d95e28] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
   }
   .btn-secondary {
     @apply bg-transparent border-2 border-orange text-orange font-semibold px-5 py-2.5 rounded-xl hover:bg-orange-pale transition-colors duration-200;
@@ -66,6 +85,6 @@ h1, h2, h3 {
     @apply inline-flex items-center gap-1 bg-blue-50 text-blue-600 font-semibold text-xs px-2.5 py-1 rounded-full;
   }
   .badge-red {
-    @apply inline-flex items-center gap-1 bg-red-50 text-red-600 font-semibold text-xs px-2.5 py-1 rounded-full;
+    @apply inline-flex items-center gap-1 bg-tomate-pale text-tomate font-semibold text-xs px-2.5 py-1 rounded-full;
   }
 }

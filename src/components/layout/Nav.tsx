@@ -10,7 +10,7 @@ export function Nav() {
   const [accountOpen, setAccountOpen] = useState(false)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 bg-creme/90 backdrop-blur-sm border-b border-brun-pale">
+    <nav className="fixed top-0 left-0 right-0 z-40 bg-creme/95 backdrop-blur-sm border-b border-brun-pale shadow-sm">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
