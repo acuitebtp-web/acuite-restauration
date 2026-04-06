@@ -10,7 +10,29 @@ import { Badge } from '@/components/ui/Badge'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase, Ingredient, CustomPrice } from '@/lib/supabase'
 import { INGREDIENT_NAMES, getPriceForIngredient } from '@/lib/ingredients'
+import { getFallbackClient } from '@/lib/fallback'
 import { calculateDishMetrics, getPriceScenarios, getFoodCostStatus, formatEuros, formatPct } from '@/lib/calculations'
+
+const SIMILAR_DISHES: Record<string, string[]> = {
+  canard: ['Canard à l\'orange', 'Magret de canard, sauce miel-soja', 'Confit de canard'],
+  boeuf: ['Entrecôte sauce bordelaise', 'Filet de bœuf en croûte', 'Tartare de bœuf'],
+  wellington: ['Filet de bœuf en croûte', 'Côte de bœuf rôtie', 'Tournedos Rossini'],
+  saumon: ['Saumon gravlax', 'Pavé de saumon laqué', 'Tataki de saumon'],
+  agneau: ['Gigot d\'agneau confit', 'Épaule d\'agneau 7h', 'Côtelettes d\'agneau'],
+  poulet: ['Poulet rôti aux herbes', 'Blanquette de poulet', 'Poulet basquaise'],
+  veau: ['Blanquette de veau', 'Osso buco', 'Côte de veau à la crème'],
+  saint: ['Homard grillé', 'Coquilles Saint-Jacques à la bretonne', 'Langoustines flambées'],
+  risotto: ['Risotto aux truffes', 'Risotto au homard', 'Risotto aux asperges'],
+  foie: ['Foie gras mi-cuit', 'Terrine de foie gras', 'Foie gras poêlé aux figues'],
+}
+
+function getSimilarDishes(name: string): string[] {
+  const n = name.toLowerCase()
+  for (const [key, suggestions] of Object.entries(SIMILAR_DISHES)) {
+    if (n.includes(key)) return suggestions
+  }
+  return ['Magret de canard', 'Pavé de saumon', 'Risotto aux champignons']
+}
 
 const CATEGORY_OPTIONS = [
   { value: 'plat', label: 'Plat principal' },
@@ -99,7 +121,21 @@ export default function OutilPage() {
         body: JSON.stringify({ prompt: aiPrompt }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error)
+      if (!res.ok) {
+        // Si clé API manquante → passer au fallback local côté client
+        if (res.status === 503) {
+          const fallback = getFallbackClient(aiPrompt)
+          if (fallback.dishName) setDishName(fallback.dishName)
+          setIngredients(fallback.ingredients.map((ing: { name: string; qty: number }) => {
+            const pricePerKg = getPriceForIngredient(ing.name, customPricesMap)
+            return { name: ing.name, qty_grams: ing.qty, price_per_kg: pricePerKg, cost: pricePerKg * ing.qty / 1000 }
+          }))
+          setAiFallback(true)
+          localStorage.setItem('acuite_dish_count', String(count + 1))
+          return
+        }
+        throw new Error(data.error)
+      }
 
       if (data.dishName) setDishName(data.dishName)
       if (data.fallback) setAiFallback(true)
@@ -113,7 +149,8 @@ export default function OutilPage() {
       }
       localStorage.setItem('acuite_dish_count', String(count + 1))
     } catch (err: unknown) {
-      setAiError(err instanceof Error ? err.message : 'Erreur lors de la génération')
+      const msg = err instanceof Error ? err.message : 'Erreur lors de la génération'
+      setAiError(msg.includes('503') || msg.includes('API') ? 'Service IA temporairement indisponible — réessayez dans quelques instants.' : msg)
     } finally {
       setAiLoading(false)
     }
@@ -518,6 +555,24 @@ export default function OutilPage() {
                     ))}
                   </div>
                 </div>
+
+                {/* Suggestions plats similaires */}
+                {dishName && (
+                  <div className="bg-ivoire border border-brun-pale rounded-2xl p-4">
+                    <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-3">Analyser un plat similaire</p>
+                    <div className="flex flex-wrap gap-2">
+                      {getSimilarDishes(dishName).map(suggestion => (
+                        <button
+                          key={suggestion}
+                          className="text-xs bg-white border border-brun-pale text-brun-mid px-3 py-1.5 rounded-full hover:border-orange hover:text-orange transition-colors"
+                          onClick={() => { setAiPrompt(suggestion) }}
+                        >
+                          {suggestion} →
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Bouton sauvegarde */}
                 <div>

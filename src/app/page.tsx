@@ -286,6 +286,62 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── 4.5 TÉMOIGNAGES ─────────────────────────────────────── */}
+      <section className="py-20 px-4 bg-creme">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-3xl">⭐</span>
+            <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
+              Ce qu'en disent les restaurateurs
+            </h2>
+            <p className="text-brun-light">Des professionnels qui ont repris le contrôle de leur rentabilité</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                name: 'Thomas R.',
+                role: 'Chef propriétaire, bistrot parisien',
+                emoji: '👨‍🍳',
+                text: "En 2 ans, je n'avais jamais calculé précisément mon food cost. Avec Acuité, j'ai découvert que 3 plats me faisaient perdre de l'argent. Revu les prix, marge passée de 58% à 71% en un mois.",
+                stars: 5,
+              },
+              {
+                name: 'Sophie M.',
+                role: 'Gérante, restaurant gastronomique',
+                emoji: '👩‍🍳',
+                text: "L'IA génère des recettes professionnelles en quelques secondes. Je gagne 2h par semaine sur la construction de mes fiches techniques. Indispensable pour la gestion de ma brigade.",
+                stars: 5,
+              },
+              {
+                name: 'Marc D.',
+                role: 'Directeur, groupe de 3 restaurants',
+                emoji: '🧑‍💼',
+                text: "Le plan Multi nous permet de comparer les coûts entre nos établissements. On a identifié des écarts de 15% sur les mêmes plats selon les sites — maintenant tout est aligné.",
+                stars: 5,
+              },
+            ].map(t => (
+              <div key={t.name} className="bg-white border border-brun-pale rounded-2xl p-6 flex flex-col">
+                <div className="flex gap-0.5 mb-4">
+                  {Array.from({ length: t.stars }).map((_, i) => (
+                    <span key={i} className="text-citron text-lg">★</span>
+                  ))}
+                </div>
+                <p className="text-brun-mid text-sm leading-relaxed flex-1 mb-5 italic">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-sauge-pale rounded-full flex items-center justify-center text-xl shrink-0">
+                    {t.emoji}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-brun text-sm">{t.name}</p>
+                    <p className="text-brun-light text-xs">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── 5. TARIFS ───────────────────────────────────────────── */}
       <section className="py-20 px-4 bg-creme" id="tarifs">
         <div className="max-w-5xl mx-auto">

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Nav } from '@/components/layout/Nav'
 import { Button } from '@/components/ui/Button'
@@ -13,12 +13,22 @@ import { generateDishPDF } from '@/lib/pdf'
 
 const FREE_LIMIT = 3
 
+const CATEGORIES = [
+  { value: '', label: 'Tous' },
+  { value: 'plat', label: 'Plats' },
+  { value: 'entrée', label: 'Entrées' },
+  { value: 'dessert', label: 'Desserts' },
+  { value: 'autre', label: 'Autres' },
+]
+
 export default function PlatsPage() {
   const { user, profile, isPro } = useAuth()
   const [dishes, setDishes] = useState<Dish[]>([])
   const [loading, setLoading] = useState(true)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [pdfLoading, setPdfLoading] = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const [filterCategory, setFilterCategory] = useState('')
 
   useEffect(() => {
     if (!user) return
@@ -29,6 +39,14 @@ export default function PlatsPage() {
       .order('updated_at', { ascending: false })
       .then(({ data }) => { setDishes(data || []); setLoading(false) })
   }, [user])
+
+  const filteredDishes = useMemo(() => {
+    return dishes.filter(d => {
+      const matchSearch = !search || d.name.toLowerCase().includes(search.toLowerCase())
+      const matchCat = !filterCategory || d.category === filterCategory
+      return matchSearch && matchCat
+    })
+  }, [dishes, search, filterCategory])
 
   const handleDelete = async () => {
     if (!deleteId) return
@@ -53,9 +71,9 @@ export default function PlatsPage() {
   return (
     <>
       <Nav />
-      <div className="pt-24 min-h-screen pb-16 px-4">
+      <div className="pt-24 min-h-screen pb-16 px-4 bg-creme">
         <div className="max-w-5xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="font-lora text-3xl font-bold text-brun">Mes plats</h1>
               <p className="text-brun-light mt-1">{dishes.length} plat{dishes.length !== 1 ? 's' : ''} sauvegardé{dishes.length !== 1 ? 's' : ''}</p>
@@ -73,7 +91,7 @@ export default function PlatsPage() {
           </div>
 
           {!isPro && (
-            <div className="bg-brun-pale rounded-xl px-4 py-3 mb-6 flex items-center justify-between">
+            <div className="bg-brun-pale rounded-xl px-4 py-3 mb-5 flex items-center justify-between">
               <p className="text-sm text-brun-mid">
                 Plan gratuit : {dishes.length}/{FREE_LIMIT} plats utilisés
               </p>
@@ -85,6 +103,39 @@ export default function PlatsPage() {
             </div>
           )}
 
+          {/* Barre de recherche + filtres */}
+          {dishes.length > 0 && (
+            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+              <div className="relative flex-1">
+                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brun-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Rechercher un plat…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="input-field pl-9 text-sm"
+                />
+              </div>
+              <div className="flex gap-2">
+                {CATEGORIES.map(cat => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setFilterCategory(cat.value)}
+                    className={`px-3 py-2 text-sm rounded-xl font-medium transition-colors ${
+                      filterCategory === cat.value
+                        ? 'bg-orange text-white'
+                        : 'bg-white border border-brun-pale text-brun-mid hover:border-orange hover:text-orange'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {loading ? (
             <div className="space-y-3">
               {[...Array(4)].map((_, i) => (
@@ -93,27 +144,31 @@ export default function PlatsPage() {
             </div>
           ) : dishes.length === 0 ? (
             <Card className="text-center py-16">
-              <div className="w-14 h-14 bg-orange-pale rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-7 h-7 text-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-              </div>
+              <span className="text-5xl block mb-4">🍽️</span>
               <h3 className="font-lora text-xl font-semibold text-brun mb-2">Aucun plat sauvegardé</h3>
               <p className="text-brun-light mb-4">Utilisez le calculateur pour analyser votre premier plat</p>
               <Link href="/outil"><Button>Analyser un plat</Button></Link>
             </Card>
+          ) : filteredDishes.length === 0 ? (
+            <Card className="text-center py-12">
+              <span className="text-4xl block mb-3">🔍</span>
+              <p className="text-brun-light">Aucun plat ne correspond à votre recherche.</p>
+              <button onClick={() => { setSearch(''); setFilterCategory('') }} className="text-orange text-sm font-semibold mt-2 hover:underline">
+                Effacer les filtres
+              </button>
+            </Card>
           ) : (
             <div className="space-y-3">
-              {dishes.map((dish) => {
+              {filteredDishes.map((dish) => {
                 const foodCostPct = dish.total_cost && dish.price_advised && dish.covers
                   ? (dish.total_cost / dish.covers) / dish.price_advised * 100
                   : 30
                 const status = getFoodCostStatus(foodCostPct)
                 return (
-                  <Card key={dish.id} className="p-4">
+                  <Card key={dish.id} className="p-4 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
+                        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                           <h3 className="font-semibold text-brun truncate">{dish.name}</h3>
                           <Badge variant={status.color === 'green' ? 'green' : status.color === 'orange' ? 'orange' : 'red'}>
                             {formatPct(foodCostPct)}
@@ -191,13 +246,16 @@ export default function PlatsPage() {
           )}
 
           {!isPro && dishes.length > 0 && (
-            <div className="mt-8 bg-gradient-to-r from-orange-pale to-orange-light rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <h3 className="font-lora text-lg font-bold text-brun">Exportez vos fiches techniques en PDF</h3>
-                <p className="text-brun-mid text-sm mt-1">Fiches professionnelles prêtes à l'impression — Plan Pro à 19€/mois</p>
+            <div className="mt-8 bg-gradient-to-r from-orange-pale via-citron-pale to-sauge-pale rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border border-orange/20">
+              <div className="flex items-center gap-4">
+                <span className="text-3xl">🥕</span>
+                <div>
+                  <h3 className="font-lora text-lg font-bold text-brun">Exportez vos fiches techniques en PDF</h3>
+                  <p className="text-brun-mid text-sm mt-1">Fiches professionnelles prêtes à l'impression — Plan Pro à 19€/mois</p>
+                </div>
               </div>
               <Link href="/tarifs" className="shrink-0">
-                <Button>Passer au Pro</Button>
+                <Button>Passer au Pro →</Button>
               </Link>
             </div>
           )}
