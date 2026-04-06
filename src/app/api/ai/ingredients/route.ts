@@ -2,20 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { getFallbackClient } from '@/lib/fallback'
 
+// Augmente le timeout Vercel à 30s (Hobby plan max)
+export const maxDuration = 30
+
 const SYSTEM_PROMPT = `Tu es un assistant pour restaurateurs professionnels.
-Retourne UNIQUEMENT un JSON valide, sans texte autour, sans backticks markdown :
-{
-  "dishName": "Nom du plat professionnel",
-  "ingredients": [
-    { "name": "Nom exact de l'ingrédient", "qty": quantité_en_grammes }
-  ]
-}
-Quantités par assiette individuelle, en grammes.
-Noms d'ingrédients précis en français (ex: "Bœuf - Filet", pas "Bœuf").
-Sois réaliste sur les quantités professionnelles.
-Génère EXACTEMENT le plat demandé par l'utilisateur, pas un plat similaire.`
-
-
+Retourne UNIQUEMENT un objet JSON valide, sans markdown, sans backticks, sans texte avant ou après :
+{"dishName":"Nom du plat","ingredients":[{"name":"Ingrédient précis","qty":grammes}]}
+- Quantités par assiette individuelle, en grammes (nombre entier)
+- Noms en français précis (ex: "Bœuf - Filet", pas "Bœuf")
+- 6 à 10 ingrédients maximum
+- Génère EXACTEMENT le plat demandé, pas un plat similaire`
 
 async function callClaude(prompt: string) {
   const apiKey = process.env.ANTHROPIC_API_KEY
@@ -23,16 +19,17 @@ async function callClaude(prompt: string) {
 
   const client = new Anthropic({ apiKey })
   const response = await client.messages.create({
-    model: 'claude-3-5-sonnet-20241022',
-    max_tokens: 800,
+    model: 'claude-3-haiku-20240307', // Haiku : 3x plus rapide, suffisant pour ce cas
+    max_tokens: 512,
     system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: `Génère les ingrédients pour ce plat : ${prompt}` }],
+    messages: [{ role: 'user', content: prompt }],
   })
   const text = response.content[0].type === 'text' ? response.content[0].text : ''
 
-  // Nettoyer les backticks potentiels
-  const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-  return JSON.parse(cleaned)
+  // Extraire le JSON même si Claude ajoute du texte autour
+  const jsonMatch = text.match(/\{[\s\S]*\}/)
+  if (!jsonMatch) throw new Error(`Réponse Claude non parseable: ${text.substring(0, 100)}`)
+  return JSON.parse(jsonMatch[0])
 }
 
 // ── Handler ────────────────────────────────────────────────────────────────────
@@ -48,15 +45,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(result)
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    console.warn('Claude API unavailable:', message)
+    console.error('Claude API error:', message)
 
-    // Signaler si c'est un problème de clé API
     if (message.includes('ANTHROPIC_API_KEY')) {
-      return NextResponse.json({ error: 'Clé API IA non configurée. Ajoutez ANTHROPIC_API_KEY dans les variables d\'environnement Vercel.' }, { status: 503 })
+      return NextResponse.json({ error: 'Clé API IA non configurée.' }, { status: 503 })
     }
   }
 
-  // 2. Fallback local
+  // 2. Fallback local si Claude échoue
   const fallback = { ...getFallbackClient(prompt), fallback: true }
   return NextResponse.json(fallback)
 }
