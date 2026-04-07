@@ -86,6 +86,7 @@ export default function TarifsPage() {
   const searchParams = useSearchParams()
   const highlightPlan = searchParams.get('plan')
   const [loading, setLoading] = useState<string | null>(null)
+  const [isAnnual, setIsAnnual] = useState(false)
 
   const handleSubscribe = async (priceId: string | undefined, planId: string) => {
     if (!priceId) return
@@ -117,14 +118,30 @@ export default function TarifsPage() {
         <div className="max-w-5xl mx-auto">
 
           {/* Header */}
-          <div className="text-center mb-14">
+          <div className="text-center mb-10">
             <span className="text-4xl block mb-3">🧺</span>
             <h1 className="font-lora text-4xl font-bold text-brun mb-3">
               Des tarifs simples et transparents
             </h1>
-            <p className="text-brun-light text-lg max-w-xl mx-auto">
+            <p className="text-brun-light text-lg max-w-xl mx-auto mb-6">
               Sans engagement. Résiliable à tout moment. Facturation HT.
             </p>
+            {/* Toggle mensuel/annuel */}
+            <div className="inline-flex items-center gap-3 bg-white border border-brun-pale rounded-2xl p-1.5">
+              <button
+                onClick={() => setIsAnnual(false)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${!isAnnual ? 'bg-brun text-white shadow-sm' : 'text-brun-mid hover:text-brun'}`}
+              >
+                Mensuel
+              </button>
+              <button
+                onClick={() => setIsAnnual(true)}
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isAnnual ? 'bg-brun text-white shadow-sm' : 'text-brun-mid hover:text-brun'}`}
+              >
+                Annuel
+                <span className="bg-sauge text-white text-xs px-1.5 py-0.5 rounded-full font-bold">-20%</span>
+              </button>
+            </div>
           </div>
 
           {/* Plans */}
@@ -150,8 +167,24 @@ export default function TarifsPage() {
                   <h2 className="font-lora text-xl font-bold text-brun">{plan.name}</h2>
                   <p className="text-brun-light text-sm mt-1">{plan.description}</p>
                   <div className="flex items-end gap-1 mt-3">
-                    <span className="font-lora text-4xl font-bold text-brun">{plan.price}</span>
-                    {plan.period && <span className="text-brun-light text-sm mb-1">{plan.period}</span>}
+                    {plan.id === 'pro' ? (
+                      <>
+                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '15€' : '19€'}</span>
+                        <span className="text-brun-light text-sm mb-1">/mois HT</span>
+                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">183€/an</span>}
+                      </>
+                    ) : plan.id === 'multi' ? (
+                      <>
+                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '39€' : '49€'}</span>
+                        <span className="text-brun-light text-sm mb-1">/mois HT</span>
+                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">470€/an</span>}
+                      </>
+                    ) : (
+                      <>
+                        <span className="font-lora text-4xl font-bold text-brun">{plan.price}</span>
+                        {plan.period && <span className="text-brun-light text-sm mb-1">{plan.period}</span>}
+                      </>
+                    )}
                   </div>
                 </div>
 

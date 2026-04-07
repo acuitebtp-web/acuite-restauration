@@ -3,7 +3,12 @@
     "allow": [
       "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir --no-git --yes)",
       "Bash(npm --version)",
-      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH:/usr/local/sbin\")"
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$PATH:/usr/local/sbin\")",
+      "Bash(/usr/local/bin/npm install:*)",
+      "Bash(npx --yes framer-motion)",
+      "Bash(export PATH=\"$PATH:/usr/local/bin:/opt/homebrew/bin\")",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)"
     ]
   }
 }

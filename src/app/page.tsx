@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
+import { AnimatedSection } from '@/components/ui/AnimatedSection'
+import { StatsBar } from '@/components/ui/StatsBar'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -19,10 +21,8 @@ export default function LandingPage() {
 
       {/* ── 1. HERO ─────────────────────────────────────────────── */}
       <section className="pt-28 pb-24 px-4 bg-creme">
-
-
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-14">
-          <div className="flex-1 text-center lg:text-left">
+          <AnimatedSection className="flex-1 text-center lg:text-left" direction="left">
             <span className="inline-flex items-center gap-2 bg-sauge-pale text-sauge text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
               <span className="text-base">🥬</span> Basé sur les cotations FranceAgriMer
             </span>
@@ -54,10 +54,10 @@ export default function LandingPage() {
               <div className="h-px flex-1 max-w-[40px] bg-brun-pale" />
               <span className="bg-white border border-brun-pale text-brun text-xs font-semibold px-3 py-1.5 rounded-full">FranceAgriMer</span>
             </div>
-          </div>
+          </AnimatedSection>
 
           {/* Preview outil */}
-          <div className="flex-1 w-full max-w-md lg:max-w-none">
+          <AnimatedSection className="flex-1 w-full max-w-md lg:max-w-none" direction="right" delay={0.15}>
             <div className="bg-white rounded-3xl shadow-2xl border border-brun-pale p-6 relative">
               {/* Accent couleur */}
               <div className="absolute -top-3 -right-3 w-16 h-16 bg-citron rounded-2xl rotate-12 opacity-80 flex items-center justify-center text-2xl">
@@ -104,46 +104,32 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* ── STATS RAPIDES ───────────────────────────────────────── */}
       <section className="py-10 px-4 bg-brun">
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { value: '200+', label: 'ingrédients', emoji: '🥕' },
-              { value: '< 30s', label: 'par plat', emoji: '⚡' },
-              { value: '0 CB', label: 'pour commencer', emoji: '🎁' },
-              { value: '100%', label: 'en temps réel', emoji: '📊' },
-            ].map(s => (
-              <div key={s.label}>
-                <div className="text-2xl mb-1">{s.emoji}</div>
-                <div className="font-lora text-2xl font-bold text-white">{s.value}</div>
-                <div className="text-white/50 text-xs mt-0.5">{s.label}</div>
-              </div>
-            ))}
-          </div>
+          <StatsBar />
         </div>
       </section>
 
       {/* ── 2. PROBLÈME ─────────────────────────────────────────── */}
       <section className="py-20 px-4 bg-ivoire">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <AnimatedSection className="text-center mb-12">
             <span className="text-3xl">🍅</span>
             <h2 className="font-lora text-3xl font-bold text-brun mt-2">
               La restauration, c'est dur à rentabiliser
             </h2>
-          </div>
+          </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 emoji: '📉',
                 bg: 'bg-tomate-pale',
                 border: 'border-tomate/20',
-                accent: 'text-tomate',
                 title: 'Marge inconnue',
                 text: 'La plupart des restaurateurs ignorent le coût réel de leurs plats. Résultat : des prix trop bas ou trop élevés.',
               },
@@ -151,7 +137,6 @@ export default function LandingPage() {
                 emoji: '⏱️',
                 bg: 'bg-citron-pale',
                 border: 'border-citron/30',
-                accent: 'text-brun-mid',
                 title: 'Calculs chronophages',
                 text: "Calculer manuellement le coût matière prend des heures. Du temps perdu que vous n'avez pas.",
               },
@@ -159,16 +144,17 @@ export default function LandingPage() {
                 emoji: '💸',
                 bg: 'bg-orange-pale',
                 border: 'border-orange/20',
-                accent: 'text-orange',
                 title: 'Prix marchés incontrôlés',
                 text: "Les prix fournisseurs varient chaque semaine. Sans suivi, votre marge s'effondre sans vous en rendre compte.",
               },
-            ].map(item => (
-              <div key={item.title} className={`${item.bg} border ${item.border} rounded-2xl p-6`}>
-                <div className="text-4xl mb-3">{item.emoji}</div>
-                <h3 className="font-lora text-lg font-bold text-brun mb-2">{item.title}</h3>
-                <p className="text-sm text-brun-mid leading-relaxed">{item.text}</p>
-              </div>
+            ].map((item, i) => (
+              <AnimatedSection key={item.title} delay={i * 0.1}>
+                <div className={`${item.bg} border ${item.border} rounded-2xl p-6 h-full`}>
+                  <div className="text-4xl mb-3">{item.emoji}</div>
+                  <h3 className="font-lora text-lg font-bold text-brun mb-2">{item.title}</h3>
+                  <p className="text-sm text-brun-mid leading-relaxed">{item.text}</p>
+                </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -177,13 +163,13 @@ export default function LandingPage() {
       {/* ── 3. COMMENT ÇA MARCHE ────────────────────────────────── */}
       <section className="py-20 px-4 bg-creme">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <AnimatedSection className="text-center mb-12">
             <span className="text-3xl">🌿</span>
             <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
               Comment ça marche ?
             </h2>
             <p className="text-brun-light">Trois étapes, moins d'une minute</p>
-          </div>
+          </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
@@ -208,17 +194,19 @@ export default function LandingPage() {
                 text: 'Coût matière, prix conseillé, marge brute, jauge food cost. Sauvegardez et exportez votre fiche technique en PDF.',
               },
             ].map((item, i) => (
-              <div key={item.step} className="relative flex flex-col items-center md:items-start text-center md:text-left">
-                {i < 2 && (
-                  <div className="hidden md:block absolute top-6 left-full w-full h-0.5 bg-gradient-to-r from-brun-pale to-transparent z-0" />
-                )}
-                <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm z-10`}>
-                  {item.emoji}
+              <AnimatedSection key={item.step} delay={i * 0.12}>
+                <div className="relative flex flex-col items-center md:items-start text-center md:text-left">
+                  {i < 2 && (
+                    <div className="hidden md:block absolute top-6 left-full w-full h-0.5 bg-gradient-to-r from-brun-pale to-transparent z-0" />
+                  )}
+                  <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm z-10`}>
+                    {item.emoji}
+                  </div>
+                  <div className="text-xs font-bold text-brun-light mb-1 tracking-widest">ÉTAPE {item.step}</div>
+                  <h3 className="font-lora text-lg font-bold text-brun mb-2">{item.title}</h3>
+                  <p className="text-sm text-brun-mid leading-relaxed">{item.text}</p>
                 </div>
-                <div className="text-xs font-bold text-brun-light mb-1 tracking-widest">ÉTAPE {item.step}</div>
-                <h3 className="font-lora text-lg font-bold text-brun mb-2">{item.title}</h3>
-                <p className="text-sm text-brun-mid leading-relaxed">{item.text}</p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -227,7 +215,7 @@ export default function LandingPage() {
       {/* ── 4. DONNÉES FRANCEAGRIMER ────────────────────────────── */}
       <section className="py-20 px-4 bg-sauge-pale">
         <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12">
-          <div className="flex-1">
+          <AnimatedSection className="flex-1" direction="left">
             <span className="inline-flex items-center gap-2 bg-white text-sauge text-sm font-semibold px-4 py-1.5 rounded-full mb-5 border border-sauge-light">
               <span>🥦</span> Données officielles
             </span>
@@ -251,10 +239,10 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </AnimatedSection>
 
           {/* Tableau exemple */}
-          <div className="flex-1 w-full max-w-sm">
+          <AnimatedSection className="flex-1 w-full max-w-sm" direction="right" delay={0.1}>
             <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-sauge-light">
               <div className="bg-brun px-4 py-3 flex items-center gap-2">
                 <span className="text-lg">🛒</span>
@@ -281,20 +269,20 @@ export default function LandingPage() {
                 <p className="text-xs text-brun-light text-center font-medium">+ 200 ingrédients disponibles</p>
               </div>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* ── 4.5 TÉMOIGNAGES ─────────────────────────────────────── */}
       <section className="py-20 px-4 bg-creme">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <AnimatedSection className="text-center mb-12">
             <span className="text-3xl">⭐</span>
             <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
               Ce qu'en disent les restaurateurs
             </h2>
             <p className="text-brun-light">Des professionnels qui ont repris le contrôle de leur rentabilité</p>
-          </div>
+          </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
@@ -318,24 +306,26 @@ export default function LandingPage() {
                 text: "Le plan Multi nous permet de comparer les coûts entre nos établissements. On a identifié des écarts de 15% sur les mêmes plats selon les sites — maintenant tout est aligné.",
                 stars: 5,
               },
-            ].map(t => (
-              <div key={t.name} className="bg-white border border-brun-pale rounded-2xl p-6 flex flex-col">
-                <div className="flex gap-0.5 mb-4">
-                  {Array.from({ length: t.stars }).map((_, i) => (
-                    <span key={i} className="text-citron text-lg">★</span>
-                  ))}
-                </div>
-                <p className="text-brun-mid text-sm leading-relaxed flex-1 mb-5 italic">"{t.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-sauge-pale rounded-full flex items-center justify-center text-xl shrink-0">
-                    {t.emoji}
+            ].map((t, i) => (
+              <AnimatedSection key={t.name} delay={i * 0.1}>
+                <div className="bg-white border border-brun-pale rounded-2xl p-6 flex flex-col h-full">
+                  <div className="flex gap-0.5 mb-4">
+                    {Array.from({ length: t.stars }).map((_, j) => (
+                      <span key={j} className="text-citron text-lg">★</span>
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-semibold text-brun text-sm">{t.name}</p>
-                    <p className="text-brun-light text-xs">{t.role}</p>
+                  <p className="text-brun-mid text-sm leading-relaxed flex-1 mb-5 italic">"{t.text}"</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-sauge-pale rounded-full flex items-center justify-center text-xl shrink-0">
+                      {t.emoji}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-brun text-sm">{t.name}</p>
+                      <p className="text-brun-light text-xs">{t.role}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -344,13 +334,13 @@ export default function LandingPage() {
       {/* ── 5. TARIFS ───────────────────────────────────────────── */}
       <section className="py-20 px-4 bg-creme" id="tarifs">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+          <AnimatedSection className="text-center mb-12">
             <span className="text-3xl">🧺</span>
             <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
               Tarifs simples et sans surprise
             </h2>
             <p className="text-brun-light">Sans engagement · Résiliable à tout moment</p>
-          </div>
+          </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
@@ -383,37 +373,36 @@ export default function LandingPage() {
                 link: '/tarifs',
                 highlight: false,
               },
-            ].map(plan => (
-              <div
-                key={plan.name}
-                className={`relative rounded-2xl border p-6 flex flex-col ${plan.bg}`}
-              >
-                {plan.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-orange text-white text-xs font-bold px-3 py-1 rounded-full">
-                      Recommandé
-                    </span>
-                  </div>
-                )}
-                <div className="text-3xl mb-3">{plan.emoji}</div>
-                <h3 className="font-lora text-xl font-bold text-brun">{plan.name}</h3>
-                <p className="text-2xl font-bold text-brun mt-2 mb-4">{plan.price}</p>
-                <ul className="space-y-2 mb-6 flex-1">
-                  {plan.features.map(f => (
-                    <li key={f} className="flex items-center gap-2 text-sm text-brun-mid">
-                      <svg className="w-4 h-4 text-sauge shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link href={plan.link}>
-                  <button className={plan.highlight ? 'btn-primary w-full' : 'btn-secondary w-full'}>
-                    {plan.cta}
-                  </button>
-                </Link>
-              </div>
+            ].map((plan, i) => (
+              <AnimatedSection key={plan.name} delay={i * 0.1}>
+                <div className={`relative rounded-2xl border p-6 flex flex-col h-full transition-shadow hover:shadow-lg ${plan.bg}`}>
+                  {plan.highlight && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="bg-orange text-white text-xs font-bold px-3 py-1 rounded-full">
+                        Recommandé
+                      </span>
+                    </div>
+                  )}
+                  <div className="text-3xl mb-3">{plan.emoji}</div>
+                  <h3 className="font-lora text-xl font-bold text-brun">{plan.name}</h3>
+                  <p className="text-2xl font-bold text-brun mt-2 mb-4">{plan.price}</p>
+                  <ul className="space-y-2 mb-6 flex-1">
+                    {plan.features.map(f => (
+                      <li key={f} className="flex items-center gap-2 text-sm text-brun-mid">
+                        <svg className="w-4 h-4 text-sauge shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href={plan.link}>
+                    <button className={plan.highlight ? 'btn-primary w-full' : 'btn-secondary w-full'}>
+                      {plan.cta}
+                    </button>
+                  </Link>
+                </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -424,7 +413,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 opacity-10 pointer-events-none text-9xl flex items-center justify-center gap-8 select-none">
           🥬🍅🥕🧅🫒🌿
         </div>
-        <div className="max-w-3xl mx-auto text-center relative">
+        <AnimatedSection className="max-w-3xl mx-auto text-center relative">
           <span className="text-5xl block mb-4">🎯</span>
           <h2 className="font-lora text-4xl font-bold text-white mb-4">
             Commencez à piloter votre rentabilité
@@ -437,7 +426,7 @@ export default function LandingPage() {
               Calculer le food cost de mon premier plat →
             </button>
           </Link>
-        </div>
+        </AnimatedSection>
       </section>
 
       <Footer />

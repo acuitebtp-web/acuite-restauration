@@ -78,6 +78,17 @@ export default function OutilPage() {
 
   const { signUp } = useAuth()
 
+  // Raccourci Cmd+Enter / Ctrl+Enter pour générer
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && aiPrompt.trim() && !aiLoading) {
+        handleGenerate()
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [aiPrompt, aiLoading])
+
   // Charger les prix personnalisés quand l'utilisateur est connecté
   useEffect(() => {
     if (!user) { setCustomPrices([]); return }
@@ -259,6 +270,11 @@ export default function OutilPage() {
               >
                 Générer les ingrédients
               </Button>
+              {aiPrompt.trim() && !aiLoading && (
+                <p className="text-xs text-brun-light text-center mt-1">
+                  ou <kbd className="bg-brun-pale px-1.5 py-0.5 rounded text-brun text-xs font-mono">⌘ Enter</kbd>
+                </p>
+              )}
             </div>
 
             <div className="border-t border-brun-pale" />
@@ -418,16 +434,41 @@ export default function OutilPage() {
           {/* ── Colonne droite — Résultats ─── */}
           <div className="flex-1 p-6 lg:overflow-y-auto lg:h-[calc(100vh-64px)]">
             {aiLoading ? (
-              <div className="h-full flex flex-col items-center justify-center text-center py-20">
-                <div className="w-16 h-16 bg-sauge-pale rounded-2xl flex items-center justify-center mb-4 animate-pulse">
-                  <span className="text-3xl">🌿</span>
+              <div className="max-w-2xl space-y-5 pt-4">
+                {/* Header skeleton */}
+                <div className="space-y-2">
+                  <div className="h-4 w-20 bg-brun-pale/60 rounded-full animate-pulse" />
+                  <div className="h-8 w-64 bg-brun-pale/60 rounded-xl animate-pulse" />
                 </div>
-                <h3 className="font-lora text-xl font-semibold text-brun mb-2">L'IA analyse votre plat…</h3>
-                <p className="text-brun-light max-w-sm">Génération des ingrédients et calcul des coûts en cours. Cela prend quelques secondes.</p>
-                <div className="flex gap-1 mt-5">
+                {/* Métriques skeleton */}
+                <div className="grid grid-cols-3 gap-3">
                   {[0,1,2].map(i => (
-                    <div key={i} className="w-2 h-2 bg-sauge rounded-full animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
+                    <div key={i} className="bg-white rounded-2xl border border-brun-pale p-4 space-y-2 animate-pulse">
+                      <div className="h-3 w-16 bg-brun-pale/60 rounded-full mx-auto" />
+                      <div className="h-7 w-20 bg-brun-pale/60 rounded-xl mx-auto" />
+                      <div className="h-3 w-12 bg-brun-pale/60 rounded-full mx-auto" />
+                    </div>
                   ))}
+                </div>
+                {/* Ingrédients skeleton */}
+                <div className="bg-white rounded-2xl border border-brun-pale p-5 space-y-3 animate-pulse">
+                  <div className="h-4 w-40 bg-brun-pale/60 rounded-full" />
+                  {[0,1,2,3,4].map(i => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="h-3 flex-1 bg-brun-pale/50 rounded-full" style={{ opacity: 1 - i * 0.12 }} />
+                      <div className="h-3 w-8 bg-brun-pale/40 rounded-full" />
+                      <div className="h-1.5 w-24 bg-brun-pale/40 rounded-full" />
+                    </div>
+                  ))}
+                </div>
+                {/* Message IA */}
+                <div className="flex items-center gap-3 text-brun-light">
+                  <div className="flex gap-1">
+                    {[0,1,2].map(i => (
+                      <div key={i} className="w-2 h-2 bg-sauge rounded-full animate-bounce" style={{ animationDelay: `${i * 150}ms` }} />
+                    ))}
+                  </div>
+                  <span className="text-sm italic">L'IA génère vos ingrédients…</span>
                 </div>
               </div>
             ) : !metrics ? (

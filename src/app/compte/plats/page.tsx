@@ -29,6 +29,13 @@ export default function PlatsPage() {
   const [pdfLoading, setPdfLoading] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [filterCategory, setFilterCategory] = useState('')
+  const [sortCol, setSortCol] = useState<'name' | 'cost' | 'food_cost' | 'margin' | null>(null)
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
+
+  const handleSort = (col: typeof sortCol) => {
+    if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortCol(col); setSortDir('desc') }
+  }
 
   useEffect(() => {
     if (!user) return
@@ -41,12 +48,27 @@ export default function PlatsPage() {
   }, [user])
 
   const filteredDishes = useMemo(() => {
-    return dishes.filter(d => {
+    const filtered = dishes.filter(d => {
       const matchSearch = !search || d.name.toLowerCase().includes(search.toLowerCase())
       const matchCat = !filterCategory || d.category === filterCategory
       return matchSearch && matchCat
     })
-  }, [dishes, search, filterCategory])
+    if (!sortCol) return filtered
+    return [...filtered].sort((a, b) => {
+      let va = 0, vb = 0
+      if (sortCol === 'name') {
+        const cmp = a.name.localeCompare(b.name)
+        return sortDir === 'asc' ? cmp : -cmp
+      }
+      if (sortCol === 'cost') { va = a.total_cost / (a.covers || 1); vb = b.total_cost / (b.covers || 1) }
+      if (sortCol === 'food_cost') {
+        va = (a.total_cost / (a.covers || 1)) / a.price_advised * 100
+        vb = (b.total_cost / (b.covers || 1)) / b.price_advised * 100
+      }
+      if (sortCol === 'margin') { va = a.margin_pct; vb = b.margin_pct }
+      return sortDir === 'asc' ? va - vb : vb - va
+    })
+  }, [dishes, search, filterCategory, sortCol, sortDir])
 
   const handleDelete = async () => {
     if (!deleteId) return
@@ -158,6 +180,24 @@ export default function PlatsPage() {
               </button>
             </Card>
           ) : (
+            <>
+              {/* En-têtes de tri */}
+              <div className="hidden sm:flex items-center px-4 mb-1 text-xs font-semibold text-brun-light uppercase tracking-wide">
+                <button className="flex-1 flex items-center gap-1 text-left hover:text-brun transition-colors" onClick={() => handleSort('name')}>
+                  Plat {sortCol === 'name' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                </button>
+                <div className="flex items-center gap-6 shrink-0 mr-24">
+                  <button className="w-16 text-right hover:text-brun transition-colors" onClick={() => handleSort('cost')}>
+                    Coût {sortCol === 'cost' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                  </button>
+                  <button className="w-20 text-right hover:text-brun transition-colors" onClick={() => handleSort('food_cost')}>
+                    Food cost {sortCol === 'food_cost' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                  </button>
+                  <button className="w-14 text-right hover:text-brun transition-colors" onClick={() => handleSort('margin')}>
+                    Marge {sortCol === 'margin' ? (sortDir === 'asc' ? '↑' : '↓') : ''}
+                  </button>
+                </div>
+              </div>
             <div className="space-y-3">
               {filteredDishes.map((dish) => {
                 const foodCostPct = dish.total_cost && dish.price_advised && dish.covers
@@ -243,6 +283,7 @@ export default function PlatsPage() {
                 )
               })}
             </div>
+            </>
           )}
 
           {!isPro && dishes.length > 0 && (
