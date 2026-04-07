@@ -67,6 +67,8 @@ export default function OutilPage() {
   const [newIngQty, setNewIngQty] = useState('')
 
   const [aiFallback, setAiFallback] = useState(false)
+  const [marginSuggestions, setMarginSuggestions] = useState<null | { type: string; title: string; description: string; saving: string; newFoodCost: string }[]>(null)
+  const [marginLoading, setMarginLoading] = useState(false)
   const [showSignupModal, setShowSignupModal] = useState(false)
   const [showAllergens, setShowAllergens] = useState(false)
   const [signupEmail, setSignupEmail] = useState('')
@@ -125,6 +127,7 @@ export default function OutilPage() {
     setAiLoading(true)
     setAiError('')
     setAiFallback(false)
+    setMarginSuggestions(null)
     try {
       const res = await fetch('/api/ai/ingredients', {
         method: 'POST',
@@ -219,6 +222,30 @@ export default function OutilPage() {
       console.error(err)
     } finally {
       setSaveLoading(false)
+    }
+  }
+
+  const handleSuggestMargin = async () => {
+    if (!metrics || !dishName) return
+    setMarginLoading(true)
+    setMarginSuggestions(null)
+    try {
+      const res = await fetch('/api/ai/suggest-margin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dishName,
+          ingredients,
+          foodCostPct: metrics.foodCostPct,
+          costPerCover: metrics.costPerCover,
+        }),
+      })
+      const data = await res.json()
+      if (data.suggestions) setMarginSuggestions(data.suggestions)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setMarginLoading(false)
     }
   }
 
@@ -614,6 +641,58 @@ export default function OutilPage() {
                     </div>
                   </div>
                 )}
+
+                {/* Module suggestions marge IA */}
+                <div className="bg-white rounded-2xl border border-brun-pale p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="font-semibold text-brun">Améliorer votre marge</h3>
+                      <p className="text-xs text-brun-light mt-0.5">L'IA analyse votre recette et suggère des optimisations</p>
+                    </div>
+                    {!marginSuggestions && (
+                      <button
+                        onClick={handleSuggestMargin}
+                        disabled={marginLoading}
+                        className="flex items-center gap-2 bg-sauge-pale text-sauge text-sm font-semibold px-3 py-2 rounded-xl hover:bg-sauge hover:text-white transition-colors disabled:opacity-50"
+                      >
+                        {marginLoading ? (
+                          <><div className="w-3 h-3 border-2 border-sauge border-t-transparent rounded-full animate-spin" /> Analyse…</>
+                        ) : (
+                          <><span>✨</span> Analyser</>
+                        )}
+                      </button>
+                    )}
+                  </div>
+
+                  {marginSuggestions && (
+                    <div className="space-y-3">
+                      {marginSuggestions.map((s, i) => (
+                        <div key={i} className="bg-sauge-pale/50 rounded-xl p-3 border border-sauge-light">
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <p className="font-semibold text-brun text-sm">{s.title}</p>
+                            <div className="flex gap-1 shrink-0">
+                              <span className="bg-sauge text-white text-xs font-bold px-2 py-0.5 rounded-full">{s.saving}</span>
+                              <span className="bg-white text-brun-mid text-xs font-medium px-2 py-0.5 rounded-full border border-brun-pale">{s.newFoodCost}</span>
+                            </div>
+                          </div>
+                          <p className="text-xs text-brun-mid leading-relaxed">{s.description}</p>
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => { setMarginSuggestions(null) }}
+                        className="text-xs text-brun-light hover:text-brun mt-1"
+                      >
+                        ↺ Relancer l'analyse
+                      </button>
+                    </div>
+                  )}
+
+                  {!marginSuggestions && !marginLoading && (
+                    <div className="text-center py-3">
+                      <p className="text-xs text-brun-light">Obtenez 3 suggestions concrètes pour réduire votre food cost</p>
+                    </div>
+                  )}
+                </div>
 
                 {/* Bouton sauvegarde */}
                 <div>

@@ -38,7 +38,7 @@ const PLANS = [
   {
     id: 'pro',
     name: 'Pro',
-    price: '19€',
+    price: '15€',
     period: '/mois HT',
     emoji: '🥕',
     description: 'Pour les restaurateurs actifs',
@@ -88,6 +88,16 @@ export default function TarifsPage() {
   const [loading, setLoading] = useState<string | null>(null)
   const [isAnnual, setIsAnnual] = useState(false)
 
+  const getEffectivePriceId = (plan: typeof PLANS[0]) => {
+    if (plan.id === 'pro') return isAnnual
+      ? (process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO_ANNUAL || plan.priceId)
+      : plan.priceId
+    if (plan.id === 'multi') return isAnnual
+      ? (process.env.NEXT_PUBLIC_STRIPE_PRICE_MULTI_ANNUAL || plan.priceId)
+      : plan.priceId
+    return plan.priceId
+  }
+
   const handleSubscribe = async (priceId: string | undefined, planId: string) => {
     if (!priceId) return
     if (!user) {
@@ -99,7 +109,7 @@ export default function TarifsPage() {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, userId: user.id }),
+        body: JSON.stringify({ priceId, userId: user.id, isAnnual }),
       })
       const { url, error } = await res.json()
       if (error) throw new Error(error)
@@ -139,7 +149,7 @@ export default function TarifsPage() {
                 className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isAnnual ? 'bg-brun text-white shadow-sm' : 'text-brun-mid hover:text-brun'}`}
               >
                 Annuel
-                <span className="bg-sauge text-white text-xs px-1.5 py-0.5 rounded-full font-bold">-20%</span>
+                <span className="bg-sauge text-white text-xs px-1.5 py-0.5 rounded-full font-bold">-25%</span>
               </button>
             </div>
           </div>
@@ -169,15 +179,15 @@ export default function TarifsPage() {
                   <div className="flex items-end gap-1 mt-3">
                     {plan.id === 'pro' ? (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '15€' : '19€'}</span>
+                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '11€' : '15€'}</span>
                         <span className="text-brun-light text-sm mb-1">/mois HT</span>
-                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">183€/an</span>}
+                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">135€/an</span>}
                       </>
                     ) : plan.id === 'multi' ? (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '39€' : '49€'}</span>
+                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '37€' : '49€'}</span>
                         <span className="text-brun-light text-sm mb-1">/mois HT</span>
-                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">470€/an</span>}
+                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">441€/an</span>}
                       </>
                     ) : (
                       <>
@@ -216,7 +226,7 @@ export default function TarifsPage() {
                     className="w-full"
                     variant={plan.highlight ? 'primary' : 'secondary'}
                     loading={loading === plan.id}
-                    onClick={() => handleSubscribe(plan.priceId ?? undefined, plan.id)}
+                    onClick={() => handleSubscribe(getEffectivePriceId(plan) ?? undefined, plan.id)}
                   >
                     {plan.cta}
                   </Button>

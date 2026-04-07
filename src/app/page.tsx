@@ -3,6 +3,8 @@ import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 import { StatsBar } from '@/components/ui/StatsBar'
+import { getBonsPlans } from '@/lib/priceHistory'
+import { getSeasonalForMonth, getCurrentSeasonLabel } from '@/lib/seasons'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -15,6 +17,11 @@ export const metadata: Metadata = {
 }
 
 export default function LandingPage() {
+  const currentMonth = new Date().getMonth() + 1
+  const bonsPlans = getBonsPlans()
+  const seasonalNow = getSeasonalForMonth(currentMonth).slice(0, 6)
+  const seasonLabel = getCurrentSeasonLabel(currentMonth)
+
   return (
     <>
       <Nav />
@@ -46,7 +53,7 @@ export default function LandingPage() {
                 </button>
               </Link>
             </div>
-            <p className="text-brun-light text-sm mt-4">Gratuit pour 3 plats · Pro dès 19€/mois</p>
+            <p className="text-brun-light text-sm mt-4">Gratuit pour 3 plats · Pro dès 15€/mois</p>
 
             {/* Logos confiance */}
             <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
@@ -331,6 +338,81 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── 4.7 BONS PLANS & SAISON ─────────────────────────────── */}
+      <section className="py-20 px-4 bg-ivoire">
+        <div className="max-w-5xl mx-auto">
+          <AnimatedSection className="text-center mb-10">
+            <span className="text-3xl">📉</span>
+            <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
+              Le marché cette semaine
+            </h2>
+            <p className="text-brun-light">Baisses de prix détectées — profitez-en pour améliorer vos marges</p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Bons plans */}
+            <AnimatedSection direction="left">
+              <div className="bg-white rounded-2xl border border-sauge-light overflow-hidden shadow-sm">
+                <div className="bg-sauge px-5 py-3 flex items-center gap-2">
+                  <span className="text-white text-lg">📉</span>
+                  <p className="text-white font-semibold text-sm">Bons plans — prix en baisse</p>
+                </div>
+                <div className="divide-y divide-brun-pale">
+                  {bonsPlans.slice(0, 5).map(p => (
+                    <div key={p.ingredient} className="flex items-center justify-between px-5 py-3">
+                      <span className="text-sm text-brun flex items-center gap-2">
+                        <span>{p.emoji}</span>{p.ingredient}
+                      </span>
+                      <div className="flex items-center gap-3 text-sm">
+                        <span className="text-brun-light line-through">{p.previousPrice}€/kg</span>
+                        <span className="font-bold text-sauge">{p.currentPrice}€/kg</span>
+                        <span className="bg-sauge-pale text-sauge text-xs font-bold px-1.5 py-0.5 rounded-full">
+                          {p.changePct}%
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="px-5 py-3 bg-sauge-pale">
+                  <p className="text-xs text-sauge font-medium text-center">Basé sur les cotations FranceAgriMer</p>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* Produits de saison */}
+            <AnimatedSection direction="right" delay={0.1}>
+              <div className="bg-white rounded-2xl border border-citron/30 overflow-hidden shadow-sm">
+                <div className="bg-citron px-5 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-brun text-lg">🌿</span>
+                    <p className="text-brun font-semibold text-sm">En ce moment — {seasonLabel}</p>
+                  </div>
+                  <Link href="/saison" className="text-xs text-brun-mid font-semibold hover:text-brun underline">
+                    Tout voir →
+                  </Link>
+                </div>
+                <div className="p-4 flex flex-wrap gap-2">
+                  {seasonalNow.map(s => (
+                    <Link
+                      key={s.name}
+                      href={`/outil?prompt=${encodeURIComponent(s.name)}`}
+                      className="flex items-center gap-1.5 bg-creme border border-brun-pale rounded-xl px-3 py-2 text-sm font-medium text-brun hover:border-orange hover:text-orange transition-colors"
+                    >
+                      <span>{s.emoji}</span> {s.name}
+                    </Link>
+                  ))}
+                </div>
+                <div className="px-5 py-3 bg-citron-pale border-t border-citron/20">
+                  <p className="text-xs text-brun-mid font-medium text-center">
+                    Les produits de saison coûtent jusqu'à 40% moins cher
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
       {/* ── 5. TARIFS ───────────────────────────────────────────── */}
       <section className="py-20 px-4 bg-creme" id="tarifs">
         <div className="max-w-5xl mx-auto">
@@ -355,7 +437,7 @@ export default function LandingPage() {
               },
               {
                 name: 'Pro',
-                price: '19€/mois',
+                price: '15€/mois',
                 emoji: '🥕',
                 bg: 'bg-white border-orange ring-2 ring-orange shadow-xl',
                 features: ['Plats illimités', 'IA illimitée', 'Export PDF', 'Analyse de carte', 'Prix personnalisés'],

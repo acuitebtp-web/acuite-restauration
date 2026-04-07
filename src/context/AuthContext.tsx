@@ -59,7 +59,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut()
   }
 
-  const plan: Plan = profile?.plan ?? 'free'
+  // NEXT_PUBLIC_FORCE_PLAN=multi dans .env.local pour tester toutes les fonctionnalités sans payer
+  const forcePlan = process.env.NEXT_PUBLIC_FORCE_PLAN as Plan | undefined
+  const plan: Plan = forcePlan || profile?.plan || 'free'
   const isPro = plan === 'pro' || plan === 'multi'
 
   return (

@@ -25,6 +25,9 @@ export function Nav() {
           <Link href="/tarifs" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
             Tarifs
           </Link>
+          <Link href="/saison" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors flex items-center gap-1">
+            <span>🌿</span> Saison
+          </Link>
           {user && (
             <>
               <Link href="/compte/plats" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
@@ -115,6 +118,7 @@ export function Nav() {
         <div className="md:hidden bg-white border-t border-brun-pale px-4 py-4 flex flex-col gap-1">
           <Link href="/outil" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Calculateur</Link>
           <Link href="/tarifs" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Tarifs</Link>
+          <Link href="/saison" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>🌿 Saison</Link>
           {user && (
             <>
               <Link href="/compte" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Tableau de bord</Link>
