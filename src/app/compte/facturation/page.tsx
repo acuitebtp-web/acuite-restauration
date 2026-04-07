@@ -31,7 +31,7 @@ export default function FacturationPage() {
   }
 
   const planLabel = plan === 'pro' ? 'Pro' : plan === 'multi' ? 'Multi-établissements' : 'Gratuit'
-  const planPrice = plan === 'pro' ? '19€/mois HT' : plan === 'multi' ? '49€/mois HT' : 'Gratuit'
+  const planPrice = plan === 'pro' ? '15€/mois HT' : plan === 'multi' ? '30€/mois HT' : 'Gratuit'
 
   return (
     <>
@@ -103,7 +103,7 @@ export default function FacturationPage() {
                   <Button>Pro — 19€/mois</Button>
                 </Link>
                 <Link href="/tarifs?plan=multi">
-                  <Button variant="secondary">Multi — 49€/mois</Button>
+                  <Button variant="secondary">Multi — 30€/mois</Button>
                 </Link>
               </div>
             </Card>

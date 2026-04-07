@@ -61,7 +61,7 @@ const PLANS = [
   {
     id: 'multi',
     name: 'Multi',
-    price: '49€',
+    price: '30€',
     period: '/mois HT',
     emoji: '🧺',
     description: 'Pour les groupes & franchises',
@@ -185,9 +185,9 @@ export default function TarifsPage() {
                       </>
                     ) : plan.id === 'multi' ? (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '37€' : '49€'}</span>
+                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '22€' : '30€'}</span>
                         <span className="text-brun-light text-sm mb-1">/mois HT</span>
-                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">441€/an</span>}
+                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">270€/an</span>}
                       </>
                     ) : (
                       <>

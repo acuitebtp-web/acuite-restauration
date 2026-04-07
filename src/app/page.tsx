@@ -447,7 +447,7 @@ export default function LandingPage() {
               },
               {
                 name: 'Multi',
-                price: '49€/mois',
+                price: '30€/mois',
                 emoji: '🧺',
                 bg: 'bg-white border-brun-pale',
                 features: ['Tout le Pro', '5 établissements', "Partage d'équipe"],

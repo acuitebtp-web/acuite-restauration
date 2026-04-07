@@ -29,8 +29,8 @@ export default function CgvPage() {
               <div className="mt-3 space-y-2">
                 {[
                   { plan: 'Gratuit', desc: '3 plats sauvegardés, 3 calculs IA, accès au calculateur food cost.' },
-                  { plan: 'Pro — 19€ HT/mois', desc: 'Plats illimités, IA illimitée, export PDF, analyse de carte, prix fournisseurs personnalisés.' },
-                  { plan: 'Multi — 49€ HT/mois', desc: "Tout le plan Pro + jusqu'à 5 établissements, partage d'équipe, support prioritaire." },
+                  { plan: 'Pro — 15€ HT/mois', desc: 'Plats illimités, IA illimitée, export PDF, analyse de carte, prix fournisseurs personnalisés.' },
+                  { plan: 'Multi — 30€ HT/mois', desc: "Tout le plan Pro + jusqu'à 5 établissements, partage d'équipe, support prioritaire." },
                 ].map(({ plan, desc }) => (
                   <div key={plan} className="bg-white border border-brun-pale rounded-xl p-4 text-sm">
                     <strong className="text-brun">{plan}</strong><br />{desc}
