@@ -28,9 +28,9 @@ export default function CgvPage() {
               <p>Acuité Restauration propose trois plans d'abonnement :</p>
               <div className="mt-3 space-y-2">
                 {[
-                  { plan: 'Gratuit', desc: '3 plats sauvegardés, 3 calculs IA, accès au calculateur food cost.' },
-                  { plan: 'Pro — 15€ HT/mois', desc: 'Plats illimités, IA illimitée, export PDF, analyse de carte, prix fournisseurs personnalisés.' },
-                  { plan: 'Multi — 30€ HT/mois', desc: "Tout le plan Pro + jusqu'à 5 établissements, partage d'équipe, support prioritaire." },
+                  { plan: 'Gratuit', desc: '3 plats sauvegardés, 3 calculs IA, accès au calculateur food cost. Sans engagement.' },
+                  { plan: 'Pro — 15€ HT/mois', desc: 'Plats illimités, IA illimitée, export PDF, analyse de carte, prix fournisseurs personnalisés. Engagement annuel disponible à 12€ HT/mois (144€ HT/an).' },
+                  { plan: 'Multi — 30€ HT/mois', desc: "Tout le plan Pro + jusqu'à 5 établissements, partage d'équipe, support prioritaire. Engagement annuel disponible à 24€ HT/mois (288€ HT/an)." },
                 ].map(({ plan, desc }) => (
                   <div key={plan} className="bg-white border border-brun-pale rounded-xl p-4 text-sm">
                     <strong className="text-brun">{plan}</strong><br />{desc}
@@ -40,9 +40,18 @@ export default function CgvPage() {
             </section>
 
             <section>
-              <h2 className="font-lora text-xl font-bold text-brun mb-3">3. Tarifs et facturation</h2>
+              <h2 className="font-lora text-xl font-bold text-brun mb-3">3. Tarifs, facturation et reconduction automatique</h2>
+              <p className="mb-3">
+                Les prix sont indiqués en euros hors taxes (HT). La TVA applicable est celle en vigueur au moment de la souscription.
+              </p>
+              <p className="mb-3">
+                <strong>Abonnement mensuel :</strong> la facturation est mensuelle et se renouvelle automatiquement chaque mois à la date anniversaire de la souscription, jusqu'à résiliation explicite par le client. Le montant est prélevé via <strong>Stripe</strong> sur le moyen de paiement enregistré lors de la souscription.
+              </p>
+              <p className="mb-3">
+                <strong>Abonnement annuel :</strong> la facturation est annuelle et se renouvelle automatiquement chaque année à la date anniversaire, jusqu'à résiliation. Le montant annuel est prélevé en une seule fois.
+              </p>
               <p>
-                Les prix sont indiqués en euros hors taxes (HT). La TVA applicable est celle en vigueur au moment de la souscription. La facturation est mensuelle et automatique via notre prestataire de paiement <strong>Stripe</strong>. Une facture est émise par email à chaque renouvellement.
+                Une facture est émise par email à chaque renouvellement. Le client est informé de tout renouvellement imminent par email au moins 7 jours avant la date de prélèvement.
               </p>
             </section>
 

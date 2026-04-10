@@ -149,7 +149,7 @@ export default function TarifsPage() {
                 className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isAnnual ? 'bg-brun text-white shadow-sm' : 'text-brun-mid hover:text-brun'}`}
               >
                 Annuel
-                <span className="bg-sauge text-white text-xs px-1.5 py-0.5 rounded-full font-bold">-25%</span>
+                <span className="bg-sauge text-white text-xs px-1.5 py-0.5 rounded-full font-bold">-20%</span>
               </button>
             </div>
           </div>
@@ -179,15 +179,15 @@ export default function TarifsPage() {
                   <div className="flex items-end gap-1 mt-3">
                     {plan.id === 'pro' ? (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '11€' : '15€'}</span>
+                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '12€' : '15€'}</span>
                         <span className="text-brun-light text-sm mb-1">/mois HT</span>
-                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">135€/an</span>}
+                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">144€/an</span>}
                       </>
                     ) : plan.id === 'multi' ? (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '22€' : '30€'}</span>
+                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '24€' : '30€'}</span>
                         <span className="text-brun-light text-sm mb-1">/mois HT</span>
-                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">270€/an</span>}
+                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">288€/an</span>}
                       </>
                     ) : (
                       <>
