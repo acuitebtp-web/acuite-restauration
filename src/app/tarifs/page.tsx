@@ -14,7 +14,7 @@ const PLANS = [
     name: 'Gratuit',
     price: '0€',
     period: '',
-    emoji: '🌱',
+    emoji: '',
     description: "Pour découvrir l'outil",
     priceId: null,
     features: [
@@ -40,7 +40,7 @@ const PLANS = [
     name: 'Pro',
     price: '15€',
     period: '/mois HT',
-    emoji: '🥕',
+    emoji: '',
     description: 'Pour les restaurateurs actifs',
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_PRO,
     features: [
@@ -63,7 +63,7 @@ const PLANS = [
     name: 'Multi',
     price: '30€',
     period: '/mois HT',
-    emoji: '🧺',
+    emoji: '',
     description: 'Pour les groupes & franchises',
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_MULTI,
     features: [
@@ -129,7 +129,6 @@ export default function TarifsPage() {
 
           {/* Header */}
           <div className="text-center mb-10">
-            <span className="text-4xl block mb-3">🧺</span>
             <h1 className="font-lora text-4xl font-bold text-brun mb-3">
               Des tarifs simples et transparents
             </h1>
@@ -171,7 +170,7 @@ export default function TarifsPage() {
                   </div>
                 )}
 
-                <div className="text-4xl mb-3">{plan.emoji}</div>
+                {plan.emoji && <div className="text-4xl mb-3">{plan.emoji}</div>}
 
                 <div className="mb-5">
                   <h2 className="font-lora text-xl font-bold text-brun">{plan.name}</h2>

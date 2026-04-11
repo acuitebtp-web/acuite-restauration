@@ -39,7 +39,7 @@ export default function LandingPage() {
               en 30 secondes
             </h1>
             <p className="text-brun-mid text-lg mb-8 max-w-md mx-auto lg:mx-0 leading-relaxed">
-              Saisissez votre plat, l'IA génère les ingrédients, vous obtenez le coût matière, la marge et le prix conseillé — en temps réel.
+              Saisissez votre plat, l'IA génère les ingrédients, vous obtenez le coût matière, la marge et le prix conseillé en temps réel.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
               <Link href="/outil">
@@ -296,7 +296,7 @@ export default function LandingPage() {
                 name: 'Thomas R.',
                 role: 'Chef propriétaire, bistrot parisien',
                 emoji: '👨‍🍳',
-                text: "En 2 ans, je n'avais jamais calculé précisément mon food cost. Avec Acuité, j'ai découvert que 3 plats me faisaient perdre de l'argent. Revu les prix, marge passée de 58% à 71% en un mois.",
+                text: "En 2 ans, je n'avais jamais calculé précisément mon food cost. Avec Costyfood, j'ai découvert que 3 plats me faisaient perdre de l'argent. Revu les prix, marge passée de 58% à 71% en un mois.",
                 stars: 5,
               },
               {
@@ -384,8 +384,7 @@ export default function LandingPage() {
               <div className="bg-white rounded-2xl border border-citron/30 overflow-hidden shadow-sm">
                 <div className="bg-citron px-5 py-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-brun text-lg">🌿</span>
-                    <p className="text-brun font-semibold text-sm">En ce moment — {seasonLabel}</p>
+                    <p className="text-brun font-semibold text-sm">Produits de saison à acheter maintenant — {seasonLabel}</p>
                   </div>
                   <Link href="/saison" className="text-xs text-brun-mid font-semibold hover:text-brun underline">
                     Tout voir →
