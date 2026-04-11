@@ -394,10 +394,74 @@ export const DEFAULT_INGREDIENTS: Record<string, number> = {
 
 export const INGREDIENT_NAMES = Object.keys(DEFAULT_INGREDIENTS).sort()
 
+// ── Normalisation ────────────────────────────────────────────────────────────
+const normalize = (s: string): string =>
+  s.toLowerCase()
+   .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // accents
+   .replace(/[''`]/g, '')
+   .replace(/[^a-z0-9\s]/g, ' ')
+   .replace(/\s+/g, ' ')
+   .trim()
+
+const STOP_WORDS = new Set(['de', 'du', 'des', 'le', 'la', 'les', 'en', 'et', 'au', 'aux', 'un', 'une', 'a', 'l'])
+
+const keywords = (s: string): string[] =>
+  normalize(s).split(' ')
+    .filter(w => w.length > 1 && !STOP_WORDS.has(w))
+    .map(w => w.length > 3 && w.endsWith('s') ? w.slice(0, -1) : w) // pluriel → singulier
+
+// Cache normalisé construit une seule fois
+const NORMALIZED_CACHE: Array<{ key: string; normKey: string; kws: string[]; price: number }> =
+  Object.entries(DEFAULT_INGREDIENTS).map(([key, price]) => ({
+    key,
+    normKey: normalize(key),
+    kws: keywords(key),
+    price,
+  }))
+
 export const getPriceForIngredient = (
   name: string,
   customPrices: Record<string, number> = {}
 ): number => {
-  if (customPrices[name]) return customPrices[name]
-  return DEFAULT_INGREDIENTS[name] ?? 5.0
+  // 1. Prix personnalisé (exact)
+  if (customPrices[name] != null) return customPrices[name]
+
+  // 2. Correspondance exacte
+  if (DEFAULT_INGREDIENTS[name] != null) return DEFAULT_INGREDIENTS[name]
+
+  const normName = normalize(name)
+
+  // 3. Correspondance normalisée exacte
+  const exactNorm = NORMALIZED_CACHE.find(e => e.normKey === normName)
+  if (exactNorm) return exactNorm.price
+
+  // 4. Matching par mots-clés avec score
+  const lookupKws = keywords(name)
+  if (lookupKws.length === 0) return 5.0
+
+  let bestPrice = 5.0
+  let bestScore = 0
+
+  for (const entry of NORMALIZED_CACHE) {
+    let score = 0
+
+    for (const lw of lookupKws) {
+      for (const ek of entry.kws) {
+        if (ek === lw) score += lw.length * 2          // mot exact
+        else if (ek.startsWith(lw) || lw.startsWith(ek)) score += lw.length // préfixe
+        else if (ek.includes(lw) || lw.includes(ek)) score += Math.min(lw.length, ek.length) // contenu
+      }
+    }
+
+    // Bonus si le premier mot-clé de la recherche est dans la clé
+    if (lookupKws[0] && entry.normKey.includes(lookupKws[0])) score += 4
+
+    if (score > bestScore) {
+      bestScore = score
+      bestPrice = entry.price
+    }
+  }
+
+  // Seuil minimum : au moins un mot significatif (longueur ≥ 3) doit avoir matché
+  return bestScore >= 6 ? bestPrice : 5.0
 }
