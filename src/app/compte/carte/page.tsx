@@ -66,6 +66,7 @@ export default function CartePage() {
   const [scannedDishes, setScannedDishes] = useState<ScannedDish[]>([])
   const [importLoading, setImportLoading] = useState(false)
   const [importDone, setImportDone] = useState(0)
+  const [importPhase, setImportPhase] = useState<'inserting' | 'generating' | 'done' | ''>('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -237,10 +238,11 @@ export default function CartePage() {
     if (!user) return
     const toImport = scannedDishes.filter(d => d.selected)
     setImportLoading(true)
+    setImportPhase('inserting')
+    setImportDone(0)
     setScanError('')
 
-    // Import direct en 1 seule requête — pas d'appel IA par plat (trop lent)
-    // Les ingrédients se génèrent à la demande depuis l'outil
+    // 1. Insertion en batch
     const rows = toImport.map(d => ({
       user_id: user.id,
       name: d.name,
@@ -256,19 +258,60 @@ export default function CartePage() {
       notes: d.description ?? '',
     }))
 
-    const { error: insertError } = await supabase.from('dishes').insert(rows)
+    const { data: inserted, error: insertError } = await supabase
+      .from('dishes')
+      .insert(rows)
+      .select()
 
-    if (insertError) {
-      console.error('Insert error:', insertError.message)
-      setScanError(`Erreur d'import : ${insertError.message}`)
+    if (insertError || !inserted) {
+      console.error('Insert error:', insertError?.message)
+      setScanError(`Erreur d'import : ${insertError?.message}`)
       setImportLoading(false)
+      setImportPhase('')
       return
     }
 
-    // Recharger les plats
+    // 2. Génération food costs séquentielle (côté client — pas de limite serveur)
+    setImportPhase('generating')
+
+    for (let i = 0; i < inserted.length; i++) {
+      const dish = inserted[i]
+      try {
+        const res = await fetch('/api/ai/ingredients', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: dish.name }),
+        })
+        const aiData = await res.json()
+        if (!aiData.ingredients?.length) {
+          setImportDone(i + 1)
+          continue
+        }
+
+        const ingredients = aiData.ingredients.map((ing: { name: string; qty: number }) => {
+          const price_per_kg = getPriceForIngredient(ing.name, {})
+          return { name: ing.name, qty_grams: ing.qty, price_per_kg, cost: price_per_kg * ing.qty / 1000 }
+        })
+
+        const metrics = calculateDishMetrics(ingredients, 1, 30, {})
+        const priceAdvised = dish.price_advised > 0 ? dish.price_advised : metrics.priceAdvised
+
+        await supabase.from('dishes').update({
+          ingredients,
+          total_cost: metrics.totalCost,
+          price_advised: priceAdvised,
+          margin_pct: metrics.marginPct,
+        }).eq('id', dish.id)
+      } catch { /* continue avec le plat suivant */ }
+
+      setImportDone(i + 1)
+      if (i < inserted.length - 1) await new Promise(r => setTimeout(r, 400))
+    }
+
+    // 3. Recharger tout depuis Supabase
     const { data } = await supabase.from('dishes').select('*').eq('user_id', user.id)
     setDishes(data || [])
-    setImportDone(toImport.length)
+    setImportPhase('done')
     setImportLoading(false)
 
     // Fermer après 2s
@@ -277,6 +320,7 @@ export default function CartePage() {
       setScanPreview(null)
       setScannedDishes([])
       setImportDone(0)
+      setImportPhase('')
     }, 2000)
   }
 
@@ -332,10 +376,11 @@ export default function CartePage() {
                   size="sm"
                   loading={generatingFoodCosts}
                   onClick={handleGenerateFoodCosts}
+                  title="Calculer les food costs des plats sans ingrédients"
                 >
                   {generatingFoodCosts
-                    ? `Calcul food costs… (${foodCostProgress.done}/${foodCostProgress.total})`
-                    : `Calculer les food costs (${dishes.filter(d => !d.ingredients || d.ingredients.length === 0).length} plats)`
+                    ? `Food costs… (${foodCostProgress.done}/${foodCostProgress.total})`
+                    : `Recalculer food costs (${dishes.filter(d => !d.ingredients || d.ingredients.length === 0).length})`
                   }
                 </Button>
               )}
@@ -709,24 +754,43 @@ export default function CartePage() {
             </div>
 
             {/* Import */}
-            {importDone > 0 && (
+            {importPhase === 'done' && (
               <div className="bg-sauge-pale text-sauge text-sm font-medium px-4 py-2.5 rounded-xl mb-3 text-center">
-                ✓ {importDone} plat{importDone > 1 ? 's' : ''} importé{importDone > 1 ? 's' : ''} avec succès
+                ✓ {importDone} plat{importDone > 1 ? 's' : ''} importé{importDone > 1 ? 's' : ''} avec food costs calculés
               </div>
             )}
+
+            {/* Barre de progression pendant la génération */}
+            {importPhase === 'generating' && (
+              <div className="mb-3">
+                <div className="flex justify-between text-xs text-brun-light mb-1.5">
+                  <span>Calcul des food costs…</span>
+                  <span>{importDone}/{scannedDishes.filter(d => d.selected).length}</span>
+                </div>
+                <div className="w-full bg-brun-pale/30 rounded-full h-2">
+                  <div
+                    className="bg-orange h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${(importDone / scannedDishes.filter(d => d.selected).length) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
             <Button
               className="w-full"
               loading={importLoading}
-              disabled={scannedDishes.filter(d => d.selected).length === 0}
+              disabled={scannedDishes.filter(d => d.selected).length === 0 || importPhase === 'done'}
               onClick={handleImport}
             >
-              {importLoading
-                ? `Import en cours… (${importDone}/${scannedDishes.filter(d => d.selected).length})`
-                : `Importer ${scannedDishes.filter(d => d.selected).length} plat${scannedDishes.filter(d => d.selected).length > 1 ? 's' : ''}`
+              {importPhase === 'inserting'
+                ? 'Insertion en base…'
+                : importPhase === 'generating'
+                  ? `Calcul food costs… (${importDone}/${scannedDishes.filter(d => d.selected).length})`
+                  : `Importer ${scannedDishes.filter(d => d.selected).length} plat${scannedDishes.filter(d => d.selected).length > 1 ? 's' : ''} avec food costs`
               }
             </Button>
             <p className="text-xs text-brun-light mt-2 text-center">
-              L'IA génère les ingrédients et calcule le food cost pour chaque plat importé
+              L'IA génère les ingrédients et calcule le food cost de chaque plat automatiquement
             </p>
           </div>
         )}
