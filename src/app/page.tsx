@@ -8,7 +8,7 @@ import { getSeasonalForMonth, getCurrentSeasonLabel } from '@/lib/seasons'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Calculez votre food cost en 30 secondes — Acuité Restauration',
+  title: 'Calculez votre food cost en 30 secondes — Costyfood',
   description: 'Outil SaaS pour restaurateurs : calcul food cost instantané basé sur les cotations FranceAgriMer, analyse de carte, fiches techniques PDF.',
   openGraph: {
     title: 'Calculez votre food cost en 30 secondes',
@@ -74,7 +74,7 @@ export default function LandingPage() {
                 <div className="w-3 h-3 rounded-full bg-tomate" />
                 <div className="w-3 h-3 rounded-full bg-citron" />
                 <div className="w-3 h-3 rounded-full bg-sauge" />
-                <span className="ml-2 text-xs text-brun-light">acuite-restauration.fr/outil</span>
+                <span className="ml-2 text-xs text-brun-light">costyfood.fr/outil</span>
               </div>
               <div className="bg-sauge-pale rounded-xl p-3 text-sm text-brun-mid italic mb-4">
                 "Magret de canard aux cerises, sauce au porto..."

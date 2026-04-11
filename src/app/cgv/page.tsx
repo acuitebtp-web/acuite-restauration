@@ -19,13 +19,13 @@ export default function CgvPage() {
             <section>
               <h2 className="font-lora text-xl font-bold text-brun mb-3">1. Objet</h2>
               <p>
-                Les présentes Conditions Générales de Vente (CGV) régissent l'utilisation des services payants proposés par Acuité Restauration via le site acuite-restauration.fr. Tout accès à un plan payant implique l'acceptation pleine et entière des présentes CGV.
+                Les présentes Conditions Générales de Vente (CGV) régissent l'utilisation des services payants proposés par Costyfood via le site costyfood.fr. Tout accès à un plan payant implique l'acceptation pleine et entière des présentes CGV.
               </p>
             </section>
 
             <section>
               <h2 className="font-lora text-xl font-bold text-brun mb-3">2. Services proposés</h2>
-              <p>Acuité Restauration propose trois plans d'abonnement :</p>
+              <p>Costyfood propose trois plans d'abonnement :</p>
               <div className="mt-3 space-y-2">
                 {[
                   { plan: 'Gratuit', desc: '3 plats sauvegardés, 3 calculs IA, accès au calculateur food cost. Sans engagement.' },
@@ -65,7 +65,7 @@ export default function CgvPage() {
             <section>
               <h2 className="font-lora text-xl font-bold text-brun mb-3">5. Résiliation et remboursement</h2>
               <p>
-                Vous pouvez résilier votre abonnement à tout moment depuis votre espace "Facturation". La résiliation prend effet à la fin de la période en cours — aucun remboursement au prorata n'est effectué. Toutefois, dans le cadre de notre garantie satisfait ou remboursé, tout abonnement peut être remboursé intégralement dans les <strong>14 premiers jours</strong> suivant la souscription, sur simple demande à contact@acuite-restauration.fr.
+                Vous pouvez résilier votre abonnement à tout moment depuis votre espace "Facturation". La résiliation prend effet à la fin de la période en cours — aucun remboursement au prorata n'est effectué. Toutefois, dans le cadre de notre garantie satisfait ou remboursé, tout abonnement peut être remboursé intégralement dans les <strong>14 premiers jours</strong> suivant la souscription, sur simple demande à contact@costyfood.fr.
               </p>
             </section>
 
@@ -92,7 +92,7 @@ export default function CgvPage() {
 
             <div className="bg-sauge-pale border border-sauge-light rounded-2xl p-5 text-sm">
               <p className="font-semibold text-brun mb-1">Contact</p>
-              <p>Pour toute question relative à ces CGV : <a href="mailto:contact@acuite-restauration.fr" className="text-orange underline">contact@acuite-restauration.fr</a></p>
+              <p>Pour toute question relative à ces CGV : <a href="mailto:contact@costyfood.fr" className="text-orange underline">contact@costyfood.fr</a></p>
             </div>
           </div>
         </div>

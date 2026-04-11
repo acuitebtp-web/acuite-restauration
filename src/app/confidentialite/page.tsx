@@ -19,8 +19,8 @@ export default function ConfidentialitePage() {
             <section>
               <h2 className="font-lora text-xl font-bold text-brun mb-3">1. Responsable du traitement</h2>
               <div className="bg-white border border-brun-pale rounded-2xl p-5 text-sm space-y-1">
-                <p><strong>Acuité Restauration</strong></p>
-                <p>Email : contact@acuite-restauration.fr</p>
+                <p><strong>Costyfood</strong></p>
+                <p>Email : contact@costyfood.fr</p>
                 <p>Responsable : Basile Bonnin</p>
               </div>
             </section>
@@ -105,7 +105,7 @@ export default function ConfidentialitePage() {
                 ))}
               </div>
               <p className="mt-4 text-sm">
-                Pour exercer ces droits : <a href="mailto:contact@acuite-restauration.fr" className="text-orange underline">contact@acuite-restauration.fr</a>. Réponse sous 30 jours. Vous pouvez également saisir la <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-orange underline">CNIL</a>.
+                Pour exercer ces droits : <a href="mailto:contact@costyfood.fr" className="text-orange underline">contact@costyfood.fr</a>. Réponse sous 30 jours. Vous pouvez également saisir la <a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer" className="text-orange underline">CNIL</a>.
               </p>
             </section>
 

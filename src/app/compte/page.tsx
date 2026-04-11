@@ -43,7 +43,7 @@ export default function ComptePage() {
           {welcome && (
             <div className="bg-sauge-pale border border-sauge-light text-sauge font-medium text-sm px-5 py-3 rounded-xl mb-6 flex items-center gap-2">
               <span className="text-lg">🥬</span>
-              Votre adresse email a bien été confirmée. Bienvenue sur Acuité Restauration !
+              Votre adresse email a bien été confirmée. Bienvenue sur Costyfood !
             </div>
           )}
 

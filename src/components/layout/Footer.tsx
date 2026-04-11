@@ -8,7 +8,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">🥬</span>
-              <span className="font-lora text-white font-bold text-lg">Acuité Restauration</span>
+              <span className="font-lora text-white font-bold text-lg">Costyfood</span>
             </div>
             <p className="text-sm leading-relaxed">
               Outil SaaS pour restaurateurs professionnels. Calculez votre food cost et analysez votre carte en temps réel.
@@ -38,7 +38,7 @@ export function Footer() {
           </div>
         </div>
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-3 text-xs">
-          <p>© {new Date().getFullYear()} Acuité Restauration. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} Costyfood. Tous droits réservés.</p>
           <p className="flex items-center gap-1.5">
             <span>🥬</span> Prix basés sur les cotations FranceAgriMer
           </p>

@@ -18,10 +18,10 @@ export default function MentionsLegalesPage() {
           <div className="space-y-8 text-brun-mid leading-relaxed">
             <section>
               <h2 className="font-lora text-xl font-bold text-brun mb-3">1. Éditeur du site</h2>
-              <p>Le site <strong>acuite-restauration.fr</strong> est édité par :</p>
+              <p>Le site <strong>costyfood.fr</strong> est édité par :</p>
               <div className="mt-3 bg-white border border-brun-pale rounded-2xl p-5 space-y-1 text-sm">
-                <p><strong>Acuité Restauration</strong></p>
-                <p>Email : contact@acuite-restauration.fr</p>
+                <p><strong>Costyfood</strong></p>
+                <p>Email : contact@costyfood.fr</p>
                 <p>Directeur de la publication : Basile Bonnin</p>
               </div>
             </section>
@@ -38,7 +38,7 @@ export default function MentionsLegalesPage() {
             <section>
               <h2 className="font-lora text-xl font-bold text-brun mb-3">3. Propriété intellectuelle</h2>
               <p>
-                L'ensemble du contenu de ce site (textes, images, logos, code source) est la propriété exclusive d'Acuité Restauration, sauf mention contraire. Toute reproduction, même partielle, est interdite sans autorisation écrite préalable.
+                L'ensemble du contenu de ce site (textes, images, logos, code source) est la propriété exclusive d'Costyfood, sauf mention contraire. Toute reproduction, même partielle, est interdite sans autorisation écrite préalable.
               </p>
             </section>
 
@@ -52,7 +52,7 @@ export default function MentionsLegalesPage() {
             <section>
               <h2 className="font-lora text-xl font-bold text-brun mb-3">5. Limitation de responsabilité</h2>
               <p>
-                Les informations contenues sur ce site sont fournies à titre indicatif. Les prix des ingrédients sont basés sur les cotations FranceAgriMer et peuvent ne pas refléter les prix réels de votre fournisseur. Acuité Restauration ne saurait être tenu responsable des décisions prises sur la base de ces données.
+                Les informations contenues sur ce site sont fournies à titre indicatif. Les prix des ingrédients sont basés sur les cotations FranceAgriMer et peuvent ne pas refléter les prix réels de votre fournisseur. Costyfood ne saurait être tenu responsable des décisions prises sur la base de ces données.
               </p>
             </section>
 

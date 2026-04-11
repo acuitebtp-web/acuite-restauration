@@ -6,18 +6,18 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Acuité Restauration — Calculez votre food cost en 30 secondes',
-    template: '%s | Acuité Restauration',
+    default: 'Costyfood — Calculez votre food cost en 30 secondes',
+    template: '%s | Costyfood',
   },
   description: 'Outil SaaS pour restaurateurs : calcul food cost, analyse de carte, fiches techniques PDF. Basé sur les cotations FranceAgriMer.',
   keywords: ['food cost', 'restaurateur', 'coût matière', 'menu engineering', 'fiche technique'],
-  authors: [{ name: 'Acuité Restauration' }],
+  authors: [{ name: 'Costyfood' }],
   openGraph: {
-    title: 'Acuité Restauration — Calculez votre food cost en 30 secondes',
+    title: 'Costyfood — Calculez votre food cost en 30 secondes',
     description: 'Calculez votre food cost et analysez votre carte en temps réel.',
     type: 'website',
     locale: 'fr_FR',
-    siteName: 'Acuité Restauration',
+    siteName: 'Costyfood',
   },
 }
 

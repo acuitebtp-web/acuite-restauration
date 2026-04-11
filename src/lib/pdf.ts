@@ -16,7 +16,7 @@ export const generateDishPDF = async (dish: Dish, profile: Profile) => {
   doc.setFontSize(10)
   doc.setTextColor(160, 116, 90) // brun-light
   doc.setFont('helvetica', 'normal')
-  doc.text('Acuité Restauration', 20, 15)
+  doc.text('Costyfood', 20, 15)
   doc.text(`Généré le ${today}`, 20, 22)
 
   doc.setFontSize(22)
@@ -129,7 +129,7 @@ export const generateDishPDF = async (dish: Dish, profile: Profile) => {
   doc.setFontSize(8)
   doc.setTextColor(160, 116, 90)
   doc.setFont('helvetica', 'italic')
-  doc.text('Généré par Acuité Restauration — acuite-restauration.fr', 105, 287, { align: 'center' })
+  doc.text('Généré par Costyfood — costyfood.fr', 105, 287, { align: 'center' })
   doc.text(`Prix basés sur cotations FranceAgriMer — ${today}`, 105, 292, { align: 'center' })
 
   doc.save(`fiche-${dish.name.toLowerCase().replace(/[\s/]+/g, '-')}.pdf`)
