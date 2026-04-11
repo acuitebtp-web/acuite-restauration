@@ -9,7 +9,8 @@ import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase, Dish } from '@/lib/supabase'
-import { formatEuros, formatPct } from '@/lib/calculations'
+import { formatEuros, formatPct, calculateDishMetrics } from '@/lib/calculations'
+import { getPriceForIngredient } from '@/lib/ingredients'
 
 interface ScannedDish {
   name: string
@@ -49,6 +50,10 @@ export default function CartePage() {
   const [filterCategory, setFilterCategory] = useState<string>('all')
   const [sortKey, setSortKey] = useState<keyof DishWithStatus>('name')
   const [sortAsc, setSortAsc] = useState(true)
+
+  // Génération food costs en arrière-plan
+  const [generatingFoodCosts, setGeneratingFoodCosts] = useState(false)
+  const [foodCostProgress, setFoodCostProgress] = useState({ done: 0, total: 0 })
 
   // Scan carte IA
   const [showScanModal, setShowScanModal] = useState(false)
@@ -131,6 +136,57 @@ export default function CartePage() {
   const toggleSort = (key: keyof DishWithStatus) => {
     if (sortKey === key) setSortAsc(!sortAsc)
     else { setSortKey(key); setSortAsc(true) }
+  }
+
+  // ── Génération food costs pour plats sans ingrédients ─────────────────────
+  const handleGenerateFoodCosts = async () => {
+    const empty = dishes.filter(d => !d.ingredients || d.ingredients.length === 0)
+    if (empty.length === 0) return
+    setGeneratingFoodCosts(true)
+    setFoodCostProgress({ done: 0, total: empty.length })
+
+    for (let i = 0; i < empty.length; i++) {
+      const dish = empty[i]
+      try {
+        const res = await fetch('/api/ai/ingredients', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: dish.name }),
+        })
+        const aiData = await res.json()
+        if (!aiData.ingredients?.length) continue
+
+        const ingredients = aiData.ingredients.map((ing: { name: string; qty: number }) => {
+          const price_per_kg = getPriceForIngredient(ing.name, {})
+          return { name: ing.name, qty_grams: ing.qty, price_per_kg, cost: price_per_kg * ing.qty / 1000 }
+        })
+
+        const metrics = calculateDishMetrics(ingredients, 1, 30, {})
+        const priceAdvised = dish.price_advised > 0 ? dish.price_advised : metrics.priceAdvised
+
+        await supabase.from('dishes').update({
+          ingredients,
+          total_cost: metrics.totalCost,
+          price_advised: priceAdvised,
+          margin_pct: metrics.marginPct,
+        }).eq('id', dish.id)
+
+        setDishes(prev => prev.map(d => d.id === dish.id
+          ? { ...d, ingredients, total_cost: metrics.totalCost, margin_pct: metrics.marginPct }
+          : d
+        ))
+      } catch { /* continue */ }
+
+      setFoodCostProgress({ done: i + 1, total: empty.length })
+      // Pause 500ms entre chaque pour ne pas saturer l'API
+      if (i < empty.length - 1) await new Promise(r => setTimeout(r, 500))
+    }
+
+    // Recharger depuis Supabase pour avoir les données à jour
+    const { data } = await supabase.from('dishes').select('*').eq('user_id', user!.id)
+    setDishes(data || [])
+    setGeneratingFoodCosts(false)
+    setFoodCostProgress({ done: 0, total: 0 })
   }
 
   // ── Scan carte IA ──────────────────────────────────────────────────────────
@@ -259,6 +315,19 @@ export default function CartePage() {
                 </svg>
                 Scanner ma carte
               </Button>
+              {dishes.some(d => !d.ingredients || d.ingredients.length === 0) && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  loading={generatingFoodCosts}
+                  onClick={handleGenerateFoodCosts}
+                >
+                  {generatingFoodCosts
+                    ? `Calcul food costs… (${foodCostProgress.done}/${foodCostProgress.total})`
+                    : `Calculer les food costs (${dishes.filter(d => !d.ingredients || d.ingredients.length === 0).length} plats)`
+                  }
+                </Button>
+              )}
               <Button variant="secondary" size="sm" onClick={() => setShowPopularityModal(true)}>
                 Saisir la popularité
               </Button>
