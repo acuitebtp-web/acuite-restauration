@@ -233,6 +233,33 @@ export default function OutilPage() {
     }
   }
 
+  const handleApplySuggestion = async (s: { description: string }) => {
+    if (!dishName) return
+    const applyPrompt = `${dishName} — Applique cette optimisation : ${s.description}`
+    setMarginSuggestions(null)
+    setAiLoading(true)
+    setAiError('')
+    try {
+      const res = await fetch('/api/ai/ingredients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: applyPrompt }),
+      })
+      const data = await res.json()
+      if (data.ingredients) {
+        const mapped: Ingredient[] = data.ingredients.map((ing: { name: string; qty: number }) => {
+          const pricePerKg = getPriceForIngredient(ing.name, customPricesMap)
+          return { name: ing.name, qty_grams: ing.qty, price_per_kg: pricePerKg, cost: pricePerKg * ing.qty / 1000 }
+        })
+        setIngredients(mapped)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
   const handleSuggestMargin = async () => {
     if (!metrics || !dishName) return
     setMarginLoading(true)
@@ -683,7 +710,13 @@ export default function OutilPage() {
                               <span className="bg-white text-brun-mid text-xs font-medium px-2 py-0.5 rounded-full border border-brun-pale">{s.newFoodCost}</span>
                             </div>
                           </div>
-                          <p className="text-xs text-brun-mid leading-relaxed">{s.description}</p>
+                          <p className="text-xs text-brun-mid leading-relaxed mb-2">{s.description}</p>
+                          <button
+                            onClick={() => handleApplySuggestion(s)}
+                            className="text-xs font-semibold text-sauge bg-white border border-sauge-light px-3 py-1.5 rounded-lg hover:bg-sauge hover:text-white transition-colors"
+                          >
+                            ✨ Appliquer cette suggestion
+                          </button>
                         </div>
                       ))}
                       <button

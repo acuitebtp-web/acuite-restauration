@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Nav } from '@/components/layout/Nav'
@@ -8,6 +8,11 @@ import { Card } from '@/components/ui/Card'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase, Dish } from '@/lib/supabase'
 import { formatEuros, formatPct } from '@/lib/calculations'
+
+function getDishFoodCost(dish: Dish): number | null {
+  if (!dish.total_cost || !dish.price_advised || !dish.price_advised) return null
+  return (dish.total_cost / (dish.covers || 1)) / dish.price_advised * 100
+}
 
 export default function ComptePage() {
   const { user, profile, plan, isPro } = useAuth()
@@ -24,13 +29,25 @@ export default function ComptePage() {
       .select('*')
       .eq('user_id', user.id)
       .order('updated_at', { ascending: false })
-      .limit(5)
       .then(({ data }) => {
         setDishes(data || [])
         setLoading(false)
       })
   }, [user])
 
+  const kpis = useMemo(() => {
+    const withCost = dishes.filter(d => getDishFoodCost(d) !== null)
+    if (withCost.length === 0) return null
+    const foodCosts = withCost.map(d => getDishFoodCost(d) as number)
+    const avg = foodCosts.reduce((a, b) => a + b, 0) / foodCosts.length
+    const toOptimize = withCost.filter(d => (getDishFoodCost(d) as number) > 33)
+    const best = withCost.reduce((a, b) =>
+      (getDishFoodCost(a) as number) < (getDishFoodCost(b) as number) ? a : b
+    )
+    return { avg, toOptimize: toOptimize.length, total: withCost.length, best }
+  }, [dishes])
+
+  const recentDishes = dishes.slice(0, 5)
   const planLabel = plan === 'pro' ? 'Pro' : plan === 'multi' ? 'Multi' : 'Gratuit'
   const planVariant = isPro ? 'green' : 'gray'
 
@@ -68,7 +85,7 @@ export default function ComptePage() {
           </div>
 
           {/* Quick nav cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <Link href="/outil">
               <Card className="hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer h-full">
                 <div className="text-3xl mb-3">🧮</div>
@@ -99,6 +116,42 @@ export default function ComptePage() {
             </Link>
           </div>
 
+          {/* KPIs */}
+          {!loading && kpis && (
+            <div className="mb-8">
+              {kpis.toOptimize > 0 && (
+                <div className="flex items-center gap-2.5 bg-tomate-pale border border-tomate/20 text-tomate text-sm font-medium px-4 py-3 rounded-xl mb-4">
+                  <span className="text-base">⚠️</span>
+                  <span>{kpis.toOptimize} plat{kpis.toOptimize > 1 ? 's' : ''} avec un food cost &gt; 33% — pensez à les optimiser</span>
+                  <Link href="/compte/plats" className="ml-auto text-xs underline hover:no-underline shrink-0">Voir →</Link>
+                </div>
+              )}
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-white border border-brun-pale rounded-2xl px-4 py-4 text-center">
+                  <p className="text-xs text-brun-light mb-1">Food cost moyen</p>
+                  <p className={`font-lora text-2xl font-bold ${kpis.avg <= 28 ? 'text-sauge' : kpis.avg <= 33 ? 'text-orange' : 'text-tomate'}`}>
+                    {kpis.avg.toFixed(1)}%
+                  </p>
+                  <p className="text-xs text-brun-light mt-1">sur {kpis.total} plat{kpis.total > 1 ? 's' : ''}</p>
+                </div>
+                <div className="bg-white border border-brun-pale rounded-2xl px-4 py-4 text-center">
+                  <p className="text-xs text-brun-light mb-1">Meilleure marge</p>
+                  <p className="font-lora text-2xl font-bold text-sauge truncate text-ellipsis">
+                    {kpis.best.name.length > 12 ? kpis.best.name.slice(0, 12) + '…' : kpis.best.name}
+                  </p>
+                  <p className="text-xs text-sauge mt-1">{formatPct(getDishFoodCost(kpis.best) as number)} food cost</p>
+                </div>
+                <div className="bg-white border border-brun-pale rounded-2xl px-4 py-4 text-center">
+                  <p className="text-xs text-brun-light mb-1">À optimiser</p>
+                  <p className={`font-lora text-2xl font-bold ${kpis.toOptimize === 0 ? 'text-sauge' : 'text-tomate'}`}>
+                    {kpis.toOptimize === 0 ? '✓' : kpis.toOptimize}
+                  </p>
+                  <p className="text-xs text-brun-light mt-1">{kpis.toOptimize === 0 ? 'Tout est ok' : 'food cost > 33%'}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Derniers plats */}
           <div>
             <div className="flex items-center justify-between mb-4">
@@ -116,7 +169,7 @@ export default function ComptePage() {
                   <div key={i} className="h-16 bg-brun-pale/30 rounded-xl animate-pulse" />
                 ))}
               </div>
-            ) : dishes.length === 0 ? (
+            ) : recentDishes.length === 0 ? (
               <Card className="text-center py-12">
                 <span className="text-5xl block mb-4">🥗</span>
                 <p className="text-brun-light mb-4">Aucun plat sauvegardé pour l'instant</p>
@@ -126,29 +179,32 @@ export default function ComptePage() {
               </Card>
             ) : (
               <div className="space-y-3">
-                {dishes.map((dish) => (
-                  <Card key={dish.id} className="flex items-center justify-between p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">🍴</span>
-                      <div>
-                        <h3 className="font-semibold text-brun">{dish.name}</h3>
-                        <p className="text-xs text-brun-light capitalize">{dish.category}</p>
+                {recentDishes.map((dish) => {
+                  const fc = getDishFoodCost(dish)
+                  return (
+                    <Card key={dish.id} className="flex items-center justify-between p-4 hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🍴</span>
+                        <div>
+                          <h3 className="font-semibold text-brun">{dish.name}</h3>
+                          <p className="text-xs text-brun-light capitalize">{dish.category}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center gap-4 text-right">
-                      <div className="hidden sm:block">
-                        <p className="text-xs text-brun-light">Food cost</p>
-                        <p className={`font-bold text-sm ${dish.margin_pct > 65 ? 'text-sauge' : dish.margin_pct > 60 ? 'text-orange' : 'text-tomate'}`}>
-                          {dish.total_cost && dish.price_advised ? formatPct((dish.total_cost / (dish.covers || 1)) / dish.price_advised * 100) : '-'}
-                        </p>
+                      <div className="flex items-center gap-4 text-right">
+                        <div className="hidden sm:block">
+                          <p className="text-xs text-brun-light">Food cost</p>
+                          <p className={`font-bold text-sm ${fc === null ? 'text-brun-light' : fc <= 28 ? 'text-sauge' : fc <= 33 ? 'text-orange' : 'text-tomate'}`}>
+                            {fc !== null ? formatPct(fc) : '-'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-brun-light">Prix conseillé</p>
+                          <p className="font-bold text-sm text-brun">{formatEuros(dish.price_advised)}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs text-brun-light">Prix conseillé</p>
-                        <p className="font-bold text-sm text-brun">{formatEuros(dish.price_advised)}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                    </Card>
+                  )
+                })}
               </div>
             )}
           </div>

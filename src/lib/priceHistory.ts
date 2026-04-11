@@ -1,4 +1,5 @@
 import { DEFAULT_INGREDIENTS } from './ingredients'
+import { supabase } from './supabase'
 
 export interface PriceChange {
   ingredient: string
@@ -54,6 +55,21 @@ export function getBonsPlans(): PriceChange[] {
 
 export function getHausses(): PriceChange[] {
   return getPriceChanges().filter(c => c.direction === 'up').slice(0, 4)
+}
+
+// Récupère les vraies variations depuis Supabase (vue price_changes)
+// Retombe sur les données simulées si la table n'existe pas encore
+export async function getLivePriceChanges(): Promise<PriceChange[]> {
+  const { data, error } = await supabase.from('price_changes').select('*')
+  if (error || !data || data.length === 0) return getPriceChanges()
+  return data.map((row: { ingredient: string; current_price: number; previous_price: number; change_pct: number }) => ({
+    ingredient: row.ingredient,
+    emoji: SIMULATED_CHANGES[row.ingredient]?.emoji ?? '🥬',
+    currentPrice: row.current_price,
+    previousPrice: row.previous_price,
+    changePct: row.change_pct,
+    direction: row.change_pct > 0 ? 'up' : 'down',
+  })) as PriceChange[]
 }
 
 // SQL à exécuter dans Supabase pour activer le suivi réel des prix :
