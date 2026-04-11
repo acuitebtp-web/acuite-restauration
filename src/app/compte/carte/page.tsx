@@ -50,12 +50,22 @@ export default function CartePage() {
   const [popularitySaving, setPopularitySaving] = useState(false)
   const [view, setView] = useState<'table' | 'matrix'>('table')
   const [filterCategory, setFilterCategory] = useState<string>('all')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
   const [sortKey, setSortKey] = useState<keyof DishWithStatus>('name')
   const [sortAsc, setSortAsc] = useState(true)
 
   // Génération food costs en arrière-plan
   const [generatingFoodCosts, setGeneratingFoodCosts] = useState(false)
   const [foodCostProgress, setFoodCostProgress] = useState({ done: 0, total: 0 })
+
+  // Multi-select
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [bulkDeleting, setBulkDeleting] = useState(false)
+
+  // Dish detail modal
+  const [selectedDish, setSelectedDish] = useState<DishWithStatus | null>(null)
+  const [editedIngredients, setEditedIngredients] = useState<import('@/lib/supabase').Ingredient[]>([])
+  const [dishSaving, setDishSaving] = useState(false)
 
   // Scan carte IA
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -117,13 +127,14 @@ export default function CartePage() {
   const filtered = useMemo(() => {
     let d = dishesWithStatus
     if (filterCategory !== 'all') d = d.filter(dish => dish.category === filterCategory)
+    if (filterStatus !== 'all') d = d.filter(dish => dish.status === filterStatus)
     return d.slice().sort((a, b) => {
       const av = a[sortKey], bv = b[sortKey]
       if (typeof av === 'string' && typeof bv === 'string') return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av)
       if (typeof av === 'number' && typeof bv === 'number') return sortAsc ? av - bv : bv - av
       return 0
     })
-  }, [dishesWithStatus, filterCategory, sortKey, sortAsc])
+  }, [dishesWithStatus, filterCategory, filterStatus, sortKey, sortAsc])
 
   // KPIs
   const kpis = useMemo(() => {
@@ -167,16 +178,17 @@ export default function CartePage() {
 
         const metrics = calculateDishMetrics(ingredients, 1, 30, {})
         const priceAdvised = dish.price_advised > 0 ? dish.price_advised : metrics.priceAdvised
+        const margin_pct = priceAdvised > 0 ? ((priceAdvised - metrics.costPerCover) / priceAdvised) * 100 : 0
 
         await supabase.from('dishes').update({
           ingredients,
           total_cost: metrics.totalCost,
           price_advised: priceAdvised,
-          margin_pct: metrics.marginPct,
+          margin_pct,
         }).eq('id', dish.id)
 
         setDishes(prev => prev.map(d => d.id === dish.id
-          ? { ...d, ingredients, total_cost: metrics.totalCost, margin_pct: metrics.marginPct }
+          ? { ...d, ingredients, total_cost: metrics.totalCost, margin_pct, price_advised: priceAdvised }
           : d
         ))
       } catch { /* continue */ }
@@ -295,12 +307,13 @@ export default function CartePage() {
 
         const metrics = calculateDishMetrics(ingredients, 1, 30, {})
         const priceAdvised = dish.price_advised > 0 ? dish.price_advised : metrics.priceAdvised
+        const margin_pct = priceAdvised > 0 ? ((priceAdvised - metrics.costPerCover) / priceAdvised) * 100 : 0
 
         await supabase.from('dishes').update({
           ingredients,
           total_cost: metrics.totalCost,
           price_advised: priceAdvised,
-          margin_pct: metrics.marginPct,
+          margin_pct,
         }).eq('id', dish.id)
       } catch { /* continue avec le plat suivant */ }
 
@@ -324,12 +337,40 @@ export default function CartePage() {
     }, 2000)
   }
 
+  // ── Sauvegarde ingrédients modifiés ───────────────────────────────────────
+  const handleSaveDish = async () => {
+    if (!selectedDish || !user) return
+    setDishSaving(true)
+    const updatedIngredients = editedIngredients.map(ing => ({
+      ...ing,
+      cost: ing.price_per_kg * ing.qty_grams / 1000,
+    }))
+    const totalCost = updatedIngredients.reduce((sum, ing) => sum + ing.cost, 0)
+    const costPerCover = (selectedDish.covers || 1) > 0 ? totalCost / (selectedDish.covers || 1) : totalCost
+    const priceAdvised = selectedDish.price_advised > 0 ? selectedDish.price_advised : costPerCover / 0.30
+    const margin_pct = priceAdvised > 0 ? ((priceAdvised - costPerCover) / priceAdvised) * 100 : 0
+    await supabase.from('dishes').update({ ingredients: updatedIngredients, total_cost: totalCost, margin_pct }).eq('id', selectedDish.id)
+    setDishes(prev => prev.map(d => d.id === selectedDish.id ? { ...d, ingredients: updatedIngredients, total_cost: totalCost, margin_pct } : d))
+    setDishSaving(false)
+    setSelectedDish(null)
+  }
+
   // ── Suppression d'un plat ──────────────────────────────────────────────────
   const handleDelete = async () => {
     if (!deleteId) return
     await supabase.from('dishes').delete().eq('id', deleteId)
     setDishes(prev => prev.filter(d => d.id !== deleteId))
     setDeleteId(null)
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return
+    if (!confirm(`Supprimer ${selectedIds.size} plat${selectedIds.size > 1 ? 's' : ''} ? Cette action est irréversible.`)) return
+    setBulkDeleting(true)
+    await supabase.from('dishes').delete().in('id', Array.from(selectedIds))
+    setDishes(prev => prev.filter(d => !selectedIds.has(d.id)))
+    setSelectedIds(new Set())
+    setBulkDeleting(false)
   }
 
   if (!isPro) {
@@ -441,7 +482,7 @@ export default function CartePage() {
           ) : view === 'table' ? (
             <>
               {/* Filtres */}
-              <div className="flex gap-2 mb-4 flex-wrap">
+              <div className="flex gap-2 mb-4 flex-wrap items-center">
                 {['all', 'entrée', 'plat', 'dessert', 'autre'].map(cat => {
                   const isActive = filterCategory === cat
                   return (
@@ -454,13 +495,60 @@ export default function CartePage() {
                     </button>
                   )
                 })}
+                <span className="w-px h-5 bg-brun-pale mx-1" />
+                {(['all', 'etoile', 'vache', 'mystere', 'poids_mort'] as const).map(s => {
+                  const isActive = filterStatus === s
+                  const conf = s !== 'all' ? STATUS_CONFIG[s] : null
+                  return (
+                    <button
+                      key={s}
+                      onClick={() => setFilterStatus(s)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${isActive ? 'bg-brun text-white border-brun shadow-sm' : 'bg-white border-brun-pale text-brun-mid hover:bg-creme'}`}
+                    >
+                      {conf ? `${conf.icon} ${conf.label}` : 'Tous statuts'}
+                    </button>
+                  )
+                })}
               </div>
+
+              {/* Bulk delete */}
+              {selectedIds.size > 0 && (
+                <div className="flex items-center gap-3 mb-3">
+                  <button
+                    onClick={handleBulkDelete}
+                    disabled={bulkDeleting}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white font-semibold rounded-xl text-sm transition-colors"
+                  >
+                    {bulkDeleting ? 'Suppression…' : `Supprimer la sélection (${selectedIds.size})`}
+                  </button>
+                  <button
+                    onClick={() => setSelectedIds(new Set())}
+                    className="text-sm text-brun-light hover:text-brun"
+                  >
+                    Désélectionner tout
+                  </button>
+                </div>
+              )}
 
               {/* Tableau */}
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-brun-pale">
+                      <th className="pb-3 px-2 w-8">
+                        <input
+                          type="checkbox"
+                          className="rounded"
+                          checked={filtered.length > 0 && filtered.every(d => selectedIds.has(d.id))}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              setSelectedIds(prev => new Set([...prev, ...filtered.map(d => d.id)]))
+                            } else {
+                              setSelectedIds(prev => { const next = new Set(prev); filtered.forEach(d => next.delete(d.id)); return next })
+                            }
+                          }}
+                        />
+                      </th>
                       {[
                         { key: 'name', label: 'Plat' },
                         { key: 'category', label: 'Catégorie' },
@@ -488,8 +576,21 @@ export default function CartePage() {
                         <tr
                           key={dish.id}
                           className="border-b border-brun-pale/50 hover:bg-creme transition-colors cursor-pointer group"
-                          onClick={() => router.push(`/outil?prompt=${encodeURIComponent(dish.name)}`)}
+                          onClick={() => { setSelectedDish(dish); setEditedIngredients(dish.ingredients ? [...dish.ingredients] : []) }}
                         >
+                          <td className="py-3 px-2 w-8" onClick={e => e.stopPropagation()}>
+                            <input
+                              type="checkbox"
+                              className="rounded"
+                              checked={selectedIds.has(dish.id)}
+                              onChange={() => setSelectedIds(prev => {
+                                const next = new Set(prev)
+                                if (next.has(dish.id)) next.delete(dish.id)
+                                else next.add(dish.id)
+                                return next
+                              })}
+                            />
+                          </td>
                           <td className="py-3 px-2 font-medium text-brun group-hover:text-orange transition-colors">
                             {dish.name}
                           </td>
@@ -583,6 +684,76 @@ export default function CartePage() {
           )}
         </div>
       </div>
+
+      {/* Modale détail plat */}
+      {selectedDish && (() => {
+        const liveTotalCost = editedIngredients.reduce((s, i) => s + i.price_per_kg * i.qty_grams / 1000, 0)
+        const livePriceAdvised = selectedDish.price_advised > 0 ? selectedDish.price_advised : liveTotalCost / 0.30
+        const liveFoodCostPct = livePriceAdvised > 0 ? liveTotalCost / livePriceAdvised * 100 : 0
+        const statusConf = STATUS_CONFIG[selectedDish.status]
+        return (
+          <Modal open={!!selectedDish} onClose={() => setSelectedDish(null)} title={selectedDish.name} maxWidth="max-w-2xl">
+            {/* KPIs */}
+            <div className="grid grid-cols-3 gap-3 mb-6">
+              <div className="bg-creme rounded-xl p-3 text-center">
+                <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-1">Food cost live</p>
+                <p className={`font-lora text-xl font-bold ${liveFoodCostPct <= 28 ? 'text-sauge' : liveFoodCostPct <= 35 ? 'text-orange' : 'text-red-500'}`}>
+                  {formatPct(liveFoodCostPct)}
+                </p>
+              </div>
+              <div className="bg-creme rounded-xl p-3 text-center">
+                <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-1">Prix de vente</p>
+                <p className="font-lora text-xl font-bold text-brun">{formatEuros(selectedDish.price_advised)}</p>
+              </div>
+              <div className="bg-creme rounded-xl p-3 text-center">
+                <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-1">Statut</p>
+                <Badge variant={statusConf.variant}>{statusConf.icon} {statusConf.label}</Badge>
+              </div>
+            </div>
+
+            {/* Ingrédients */}
+            {editedIngredients.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-brun-light text-sm mb-4">Aucun ingrédient calculé — cliquez sur &laquo;&nbsp;Calculer food cost&nbsp;&raquo; depuis la liste</p>
+                <Button variant="secondary" size="sm" onClick={() => setSelectedDish(null)}>Fermer</Button>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-2 max-h-72 overflow-y-auto mb-5">
+                  {editedIngredients.map((ing, idx) => (
+                    <div key={idx} className="flex items-center gap-3 px-3 py-2 bg-white border border-brun-pale rounded-xl">
+                      <span className="flex-1 font-medium text-brun text-sm">{ing.name}</span>
+                      <span className="text-xs text-brun-light w-12 text-right">{ing.qty_grams}g</span>
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          className="w-20 text-sm border border-brun-pale rounded-lg px-2 py-1 text-right focus:outline-none focus:border-orange"
+                          value={ing.price_per_kg}
+                          onClick={e => e.stopPropagation()}
+                          onChange={e => {
+                            const val = parseFloat(e.target.value) || 0
+                            setEditedIngredients(prev => prev.map((it, i) => i === idx ? { ...it, price_per_kg: val, cost: val * it.qty_grams / 1000 } : it))
+                          }}
+                        />
+                        <span className="text-xs text-brun-light">€/kg</span>
+                      </div>
+                      <span className="text-sm font-semibold text-brun w-16 text-right">
+                        {(ing.price_per_kg * ing.qty_grams / 1000).toFixed(3)} €
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="secondary" className="flex-1" onClick={() => setSelectedDish(null)}>Annuler</Button>
+                  <Button className="flex-1" loading={dishSaving} onClick={handleSaveDish}>Sauvegarder</Button>
+                </div>
+              </>
+            )}
+          </Modal>
+        )
+      })()}
 
       {/* Modale popularité */}
       <Modal open={showPopularityModal} onClose={() => setShowPopularityModal(false)} title="Saisir la popularité" maxWidth="max-w-lg">
