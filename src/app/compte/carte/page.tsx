@@ -192,7 +192,6 @@ export default function CartePage() {
       target_food_cost: 30,
       total_cost: 0,
       price_advised: d.price ? Number(d.price) : 0,
-      price_actual: d.price ? Number(d.price) : null,
       margin_pct: 0,
       allergens: [],
       notes: d.description ?? '',
