@@ -12,7 +12,7 @@ export const SEASONAL_INGREDIENTS: SeasonalIngredient[] = [
   // ── LÉGUMES ──
   { name: 'Asperge verte', emoji: '🌿', category: 'légume', months: [4,5,6], peakMonths: [5], priceKey: 'Asperge verte', tip: 'Pleine saison : qualité maximale, prix au plus bas' },
   { name: 'Asperge blanche', emoji: '🤍', category: 'légume', months: [4,5,6], peakMonths: [5], priceKey: 'Asperge blanche', tip: 'À associer avec un beurre mousseux ou sauce hollandaise' },
-  { name: 'Petit pois frais', emoji: '💚', category: 'légume', months: [5,6,7], peakMonths: [6], priceKey: 'Petit pois', tip: 'Sucrés et tendres — velouté ou à la française' },
+  { name: 'Petit pois frais', emoji: '💚', category: 'légume', months: [5,6,7], peakMonths: [6], priceKey: 'Petits pois frais', tip: 'Sucrés et tendres — velouté ou à la française' },
   { name: 'Artichaut violet', emoji: '💜', category: 'légume', months: [4,5,6,9,10], priceKey: 'Artichaut', tip: 'Associer avec du foie gras ou un tartare' },
   { name: 'Tomate', emoji: '🍅', category: 'légume', months: [6,7,8,9,10], peakMonths: [8], priceKey: 'Tomate cerise', tip: 'Pleine saison estivale — gaspacho, carpaccio' },
   { name: 'Courgette', emoji: '🥒', category: 'légume', months: [6,7,8,9], peakMonths: [7], priceKey: 'Courgette', tip: 'Fleurs de courgette disponibles en juillet' },
@@ -22,8 +22,8 @@ export const SEASONAL_INGREDIENTS: SeasonalIngredient[] = [
   { name: 'Céleri rave', emoji: '⚪', category: 'légume', months: [10,11,12,1,2,3], priceKey: 'Céleri rave', tip: 'Rémoulade ou purée pour accompagner Saint-Jacques' },
   { name: 'Poireau', emoji: '🌱', category: 'légume', months: [10,11,12,1,2,3], priceKey: 'Poireau', tip: 'Fondue de poireaux, vichyssoise' },
   { name: 'Épinard frais', emoji: '🥬', category: 'légume', months: [3,4,5,9,10], priceKey: 'Épinard frais', tip: 'En saison : saveur délicate pour pasta ou accompagnement' },
-  { name: 'Morille', emoji: '🍄', category: 'champignon', months: [3,4,5], peakMonths: [4], priceKey: 'Morille fraîche', tip: 'La saison dure 6 semaines — sauce crème, volaille, ris de veau' },
-  { name: 'Cèpe', emoji: '🍄', category: 'champignon', months: [9,10,11], peakMonths: [10], priceKey: 'Cèpe', tip: 'Automne : arôme boisé intense, parfait sauté ou en velouté' },
+  { name: 'Morille', emoji: '🍄', category: 'champignon', months: [3,4,5], peakMonths: [4], priceKey: 'Morilles fraîches', tip: 'La saison dure 6 semaines — sauce crème, volaille, ris de veau' },
+  { name: 'Cèpe', emoji: '🍄', category: 'champignon', months: [9,10,11], peakMonths: [10], priceKey: 'Cèpes frais', tip: 'Automne : arôme boisé intense, parfait sauté ou en velouté' },
   { name: 'Truffe noire', emoji: '⚫', category: 'champignon', months: [12,1,2], peakMonths: [1], priceKey: 'Truffe noire Périgord', tip: 'Pleine saison jan-fév : prix au meilleur niveau relatif' },
   // ── FRUITS ──
   { name: 'Fraise Gariguette', emoji: '🍓', category: 'fruit', months: [4,5,6], peakMonths: [5], priceKey: 'Fraise Gariguette', tip: 'Mai : pic de saison, qualité et prix optimaux' },
