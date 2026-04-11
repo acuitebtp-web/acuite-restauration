@@ -12,9 +12,11 @@ export const metadata: Metadata = {
   description: 'Outil SaaS pour restaurateurs : calcul food cost, analyse de carte, fiches techniques PDF. Basé sur les cotations FranceAgriMer.',
   keywords: ['food cost', 'restaurateur', 'coût matière', 'menu engineering', 'fiche technique'],
   authors: [{ name: 'Costyfood' }],
+  metadataBase: new URL('https://costyfood.fr'),
   openGraph: {
     title: 'Costyfood — Calculez votre food cost en 30 secondes',
     description: 'Calculez votre food cost et analysez votre carte en temps réel.',
+    url: 'https://costyfood.fr',
     type: 'website',
     locale: 'fr_FR',
     siteName: 'Costyfood',
