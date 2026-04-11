@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 36" fill="none">
-  <!-- Icône : assiette stylisée -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 36" fill="none">
+  <!-- Icône : assiette + fourchette -->
   <circle cx="18" cy="18" r="14" stroke="#F2854A" stroke-width="2"/>
   <circle cx="18" cy="18" r="8" stroke="#F2854A" stroke-width="1.5"/>
   <path d="M18 8 L18 6 M18 30 L18 28 M8 18 L6 18 M30 18 L28 18" stroke="#F2854A" stroke-width="1.5" stroke-linecap="round"/>
-  <!-- Texte : Acuité -->
-  <text x="38" y="14" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#2C1A0E" font-style="italic">Acuité</text>
-  <!-- Texte : Restauration -->
-  <text x="38" y="27" font-family="system-ui, sans-serif" font-size="9" font-weight="600" fill="#6B4226" letter-spacing="1.5">RESTAURATION</text>
+  <!-- Texte : Costy en brun foncé -->
+  <text x="40" y="23" font-family="Georgia, 'Times New Roman', serif" font-size="19" font-weight="700" fill="#2C1A0E" font-style="italic">Costy</text>
+  <!-- Texte : food en orange -->
+  <text x="98" y="23" font-family="Georgia, 'Times New Roman', serif" font-size="19" font-weight="700" fill="#F2854A" font-style="italic">food</text>
 </svg>

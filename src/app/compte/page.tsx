@@ -160,7 +160,7 @@ export default function ComptePage() {
                 <span className="text-4xl">🥕</span>
                 <div>
                   <h3 className="font-lora text-xl font-bold text-brun">Analysez votre carte complète</h3>
-                  <p className="text-brun-mid text-sm mt-1">Menu engineering, export PDF, prix personnalisés — Plan Pro à 19€/mois</p>
+                  <p className="text-brun-mid text-sm mt-1">Menu engineering, export PDF, prix personnalisés — Plan Pro à 15€/mois</p>
                 </div>
               </div>
               <Link href="/tarifs" className="shrink-0">
