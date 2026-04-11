@@ -196,7 +196,6 @@ export default function CartePage() {
       margin_pct: 0,
       allergens: [],
       notes: d.description ?? '',
-      popularity: null,
     }))
 
     const { error: insertError } = await supabase.from('dishes').insert(rows)
