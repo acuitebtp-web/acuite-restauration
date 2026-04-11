@@ -9,9 +9,8 @@ import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase, Dish } from '@/lib/supabase'
-import { formatEuros, formatPct } from '@/lib/calculations'
+import { formatEuros, formatPct, calculateDishMetrics } from '@/lib/calculations'
 import { getPriceForIngredient } from '@/lib/ingredients'
-import { calculateDishMetrics } from '@/lib/calculations'
 
 interface ScannedDish {
   name: string
@@ -180,10 +179,12 @@ export default function CartePage() {
     if (!user) return
     const toImport = scannedDishes.filter(d => d.selected)
     setImportLoading(true)
+    setScanError('')
     let count = 0
+
     for (const d of toImport) {
       try {
-        // Générer les ingrédients via l'IA
+        // 1. Générer les ingrédients via l'IA
         const res = await fetch('/api/ai/ingredients', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -194,34 +195,58 @@ export default function CartePage() {
           const price_per_kg = getPriceForIngredient(ing.name, {})
           return { name: ing.name, qty_grams: ing.qty, price_per_kg, cost: price_per_kg * ing.qty / 1000 }
         })
+
+        // 2. Calculer les métriques
         const metrics = ingredients.length > 0 ? calculateDishMetrics(ingredients, 1, 30, {}) : null
-        await supabase.from('dishes').insert({
+        const priceActual = d.price ? Number(d.price) : null
+        const priceAdvised = priceActual ?? metrics?.priceAdvised ?? 0
+
+        // 3. Insérer dans Supabase
+        const { error: insertError } = await supabase.from('dishes').insert({
           user_id: user.id,
           name: d.name,
-          category: d.category,
+          category: d.category ?? 'plat',
           ingredients,
           covers: 1,
           is_shared: false,
           target_food_cost: 30,
           total_cost: metrics?.totalCost ?? 0,
-          price_advised: d.price ?? metrics?.priceAdvised ?? 0,
-          price_actual: d.price ?? null,
+          price_advised: priceAdvised,
+          price_actual: priceActual,
           margin_pct: metrics?.marginPct ?? 0,
           allergens: [],
           notes: d.description ?? '',
           popularity: null,
         })
-        count++
-        setImportDone(count)
-      } catch { /* continue */ }
+
+        if (insertError) {
+          console.error('Insert error for', d.name, insertError.message)
+        } else {
+          count++
+          setImportDone(count)
+        }
+      } catch (err) {
+        console.error('Import error for', d.name, err)
+      }
     }
-    // Recharger les plats
+
+    // 4. Recharger les plats depuis Supabase
     const { data } = await supabase.from('dishes').select('*').eq('user_id', user.id)
     setDishes(data || [])
     setImportLoading(false)
-    setShowScanModal(false)
-    setScanPreview(null)
-    setScannedDishes([])
+
+    // 5. Afficher le résultat puis fermer après 2s
+    if (count === 0) {
+      setScanError(`Échec de l'import — vérifiez votre connexion et réessayez.`)
+    } else {
+      setImportDone(count)
+      setTimeout(() => {
+        setShowScanModal(false)
+        setScanPreview(null)
+        setScannedDishes([])
+        setImportDone(0)
+      }, 2000)
+    }
   }
 
   if (!isPro) {
