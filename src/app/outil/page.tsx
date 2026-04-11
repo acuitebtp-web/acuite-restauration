@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Nav } from '@/components/layout/Nav'
 import { Button } from '@/components/ui/Button'
 import { Input, Textarea } from '@/components/ui/Input'
@@ -49,6 +50,7 @@ const ALLERGENS_LIST = [
 
 export default function OutilPage() {
   const { user, isPro } = useAuth()
+  const searchParams = useSearchParams()
   const [customPrices, setCustomPrices] = useState<CustomPrice[]>([])
   const [aiPrompt, setAiPrompt] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
@@ -79,6 +81,12 @@ export default function OutilPage() {
   const [saveLoading, setSaveLoading] = useState(false)
 
   const { signUp } = useAuth()
+
+  // Pré-remplir depuis ?prompt= (lien depuis /saison ou suggestions)
+  useEffect(() => {
+    const prompt = searchParams.get('prompt')
+    if (prompt) setAiPrompt(decodeURIComponent(prompt))
+  }, [searchParams])
 
   // Raccourci Cmd+Enter / Ctrl+Enter pour générer
   useEffect(() => {

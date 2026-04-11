@@ -126,7 +126,7 @@ export default function CartePage() {
             <p className="text-brun-light text-sm mb-6">
               Classez chaque plat selon sa popularité et sa rentabilité (menu engineering).
               Identifiez vos Étoiles, Vaches à lait, Mystères et Poids morts.
-              <br /><strong>Plan Pro à 19€/mois</strong> — sans engagement.
+              <br /><strong>Plan Pro à 15€/mois</strong> — sans engagement.
             </p>
             <Link href="/tarifs"><Button>Voir le plan Pro</Button></Link>
           </Card>
@@ -204,15 +204,18 @@ export default function CartePage() {
             <>
               {/* Filtres */}
               <div className="flex gap-2 mb-4 flex-wrap">
-                {['all', 'entrée', 'plat', 'dessert', 'autre'].map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setFilterCategory(cat)}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${filterCategory === cat ? 'bg-orange text-white' : 'bg-white border border-brun-pale text-brun-mid hover:bg-creme'}`}
-                  >
-                    {cat === 'all' ? 'Tous' : cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  </button>
-                ))}
+                {['all', 'entrée', 'plat', 'dessert', 'autre'].map(cat => {
+                  const isActive = filterCategory === cat
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setFilterCategory(cat)}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${isActive ? 'bg-orange text-white border-orange shadow-sm' : 'bg-white border-brun-pale text-brun-mid hover:bg-creme'}`}
+                    >
+                      {cat === 'all' ? 'Tous' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </button>
+                  )
+                })}
               </div>
 
               {/* Tableau */}
@@ -274,7 +277,7 @@ export default function CartePage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <ScatterChart margin={{ top: 20, right: 20, bottom: 40, left: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#E8D5C4" />
-                    <XAxis dataKey="marginPerCover" name="Marge €" unit="€" tick={{ fontSize: 11 }}>
+                    <XAxis dataKey="marginPerCover" name="Marge €" unit="€" tick={{ fontSize: 11 }} tickFormatter={(v) => Number(v).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}>
                       <Label value="Marge brute (€)" offset={-10} position="insideBottom" style={{ fontSize: 12, fill: '#6B4226' }} />
                     </XAxis>
                     <YAxis dataKey="popularity" name="Popularité" tick={{ fontSize: 11 }}>
