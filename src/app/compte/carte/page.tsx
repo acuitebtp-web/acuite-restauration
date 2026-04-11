@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Nav } from '@/components/layout/Nav'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -41,6 +42,7 @@ const STATUS_CONFIG: Record<MenuStatus, { label: string; icon: string; variant: 
 
 export default function CartePage() {
   const { user, isPro } = useAuth()
+  const router = useRouter()
   const [dishes, setDishes] = useState<Dish[]>([])
   const [loading, setLoading] = useState(true)
   const [popularityMap, setPopularityMap] = useState<Record<string, number>>({})
@@ -56,6 +58,7 @@ export default function CartePage() {
   const [foodCostProgress, setFoodCostProgress] = useState({ done: 0, total: 0 })
 
   // Scan carte IA
+  const [deleteId, setDeleteId] = useState<string | null>(null)
   const [showScanModal, setShowScanModal] = useState(false)
   const [scanPreview, setScanPreview] = useState<string | null>(null)
   const [scanLoading, setScanLoading] = useState(false)
@@ -277,6 +280,14 @@ export default function CartePage() {
     }, 2000)
   }
 
+  // ── Suppression d'un plat ──────────────────────────────────────────────────
+  const handleDelete = async () => {
+    if (!deleteId) return
+    await supabase.from('dishes').delete().eq('id', deleteId)
+    setDishes(prev => prev.filter(d => d.id !== deleteId))
+    setDeleteId(null)
+  }
+
   if (!isPro) {
     return (
       <>
@@ -422,14 +433,21 @@ export default function CartePage() {
                           {col.label} {sortKey === col.key ? (sortAsc ? '↑' : '↓') : ''}
                         </th>
                       ))}
+                      <th className="text-right text-xs font-semibold text-brun-light uppercase tracking-wide pb-3 px-2" />
                     </tr>
                   </thead>
                   <tbody>
                     {filtered.map(dish => {
                       const conf = STATUS_CONFIG[dish.status]
                       return (
-                        <tr key={dish.id} className="border-b border-brun-pale/50 hover:bg-creme transition-colors">
-                          <td className="py-3 px-2 font-medium text-brun">{dish.name}</td>
+                        <tr
+                          key={dish.id}
+                          className="border-b border-brun-pale/50 hover:bg-creme transition-colors cursor-pointer group"
+                          onClick={() => router.push(`/outil?prompt=${encodeURIComponent(dish.name)}`)}
+                        >
+                          <td className="py-3 px-2 font-medium text-brun group-hover:text-orange transition-colors">
+                            {dish.name}
+                          </td>
                           <td className="py-3 px-2 text-sm text-brun-light capitalize">{dish.category}</td>
                           <td className="py-3 px-2">
                             <span className={`text-sm font-bold ${dish.foodCostPct <= 28 ? 'text-sauge' : dish.foodCostPct <= 35 ? 'text-orange' : 'text-red-500'}`}>
@@ -443,6 +461,17 @@ export default function CartePage() {
                             <Badge variant={conf.variant}>
                               {conf.icon} {conf.label}
                             </Badge>
+                          </td>
+                          <td className="py-3 px-2 text-right">
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setDeleteId(dish.id) }}
+                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-red-50 text-brun-light hover:text-red-500"
+                              title="Supprimer ce plat"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
                           </td>
                         </tr>
                       )
@@ -552,6 +581,24 @@ export default function CartePage() {
         >
           Appliquer &amp; sauvegarder
         </Button>
+      </Modal>
+
+      {/* Modale confirmation suppression */}
+      <Modal open={!!deleteId} onClose={() => setDeleteId(null)} title="Supprimer ce plat ?" maxWidth="max-w-sm">
+        <p className="text-sm text-brun-light mb-6">
+          Cette action est irréversible. Le plat sera définitivement supprimé de votre carte.
+        </p>
+        <div className="flex gap-3">
+          <Button variant="secondary" className="flex-1" onClick={() => setDeleteId(null)}>
+            Annuler
+          </Button>
+          <button
+            onClick={handleDelete}
+            className="flex-1 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors text-sm"
+          >
+            Supprimer
+          </button>
+        </div>
       </Modal>
 
       {/* Modale scan carte IA */}
