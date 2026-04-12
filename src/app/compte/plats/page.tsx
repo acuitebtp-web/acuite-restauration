@@ -292,7 +292,7 @@ export default function PlatsPage() {
                 <span className="text-3xl">🥕</span>
                 <div>
                   <h3 className="font-lora text-lg font-bold text-brun">Exportez vos fiches techniques en PDF</h3>
-                  <p className="text-brun-mid text-sm mt-1">Fiches professionnelles prêtes à l'impression — Plan Pro à 19€/mois</p>
+                  <p className="text-brun-mid text-sm mt-1">Fiches professionnelles prêtes à l'impression — Plan Pro à 15€/mois</p>
                 </div>
               </div>
               <Link href="/tarifs" className="shrink-0">

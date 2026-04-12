@@ -208,6 +208,19 @@ export default function OutilPage() {
 
     setSaveLoading(true)
     try {
+      // Vérification limite plan Gratuit (3 plats max) côté client+serveur
+      if (!isPro) {
+        const { count } = await supabase
+          .from('dishes')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+        if (count !== null && count >= 3) {
+          setShowSignupModal(true)
+          setSaveLoading(false)
+          return
+        }
+      }
+
       const dish = {
         user_id: user.id,
         name: dishName,

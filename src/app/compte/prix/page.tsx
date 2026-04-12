@@ -84,7 +84,7 @@ export default function PrixPage() {
             <h2 className="font-lora text-xl font-bold text-brun mb-2">Fonctionnalité Pro</h2>
             <p className="text-brun-light text-sm mb-6">
               Personnalisez les prix de vos ingrédients avec vos propres tarifs fournisseurs.
-              Analysez votre carte complète avec le plan Pro — 19€/mois.
+              Analysez votre carte complète avec le plan Pro — 15€/mois.
             </p>
             <Link href="/tarifs"><Button>Voir le plan Pro</Button></Link>
           </Card>

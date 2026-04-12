@@ -100,7 +100,7 @@ export default function FacturationPage() {
               </p>
               <div className="flex gap-3">
                 <Link href="/tarifs?plan=pro">
-                  <Button>Pro — 19€/mois</Button>
+                  <Button>Pro — 15€/mois</Button>
                 </Link>
                 <Link href="/tarifs?plan=multi">
                   <Button variant="secondary">Multi — 30€/mois</Button>
