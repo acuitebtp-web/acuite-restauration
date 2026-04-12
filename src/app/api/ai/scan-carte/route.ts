@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export const maxDuration = 30
 
@@ -24,6 +26,25 @@ Règles :
 - Maximum 40 plats`
 
 export async function POST(req: NextRequest) {
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll: () => cookieStore.getAll() } }
+  )
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+
+  // Vérifier plan Pro pour scan-carte
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('plan')
+    .eq('id', session.user.id)
+    .single()
+  if (!profile || (profile.plan !== 'pro' && profile.plan !== 'multi')) {
+    return NextResponse.json({ error: 'Fonctionnalité réservée au plan Pro' }, { status: 403 })
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) return NextResponse.json({ error: 'Clé API manquante' }, { status: 503 })
 

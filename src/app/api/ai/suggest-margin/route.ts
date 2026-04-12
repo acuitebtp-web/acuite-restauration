@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export const maxDuration = 30
 
@@ -23,6 +25,15 @@ Retourne UNIQUEMENT un objet JSON valide, sans markdown, sans backticks :
 - Rester dans le style du plat`
 
 export async function POST(req: NextRequest) {
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll: () => cookieStore.getAll() } }
+  )
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+
   const { dishName, ingredients, foodCostPct, costPerCover } = await req.json()
   if (!dishName || !ingredients) {
     return NextResponse.json({ error: 'Données manquantes' }, { status: 400 })

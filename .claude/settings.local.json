@@ -8,7 +8,15 @@
       "Bash(npx --yes framer-motion)",
       "Bash(export PATH=\"$PATH:/usr/local/bin:/opt/homebrew/bin\")",
       "Bash(npm install:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(xargs sed:*)",
+      "Bash(node -e ':*)",
+      "Bash(dig costyfood.fr A +short)",
+      "Bash(dig www.costyfood.fr CNAME +short)",
+      "Bash(sudo dscacheutil:*)",
+      "Bash(sudo killall:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node --input-type=module)"
     ]
   }
 }

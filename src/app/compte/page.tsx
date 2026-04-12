@@ -10,7 +10,7 @@ import { supabase, Dish } from '@/lib/supabase'
 import { formatEuros, formatPct } from '@/lib/calculations'
 
 function getDishFoodCost(dish: Dish): number | null {
-  if (!dish.total_cost || !dish.price_advised || !dish.price_advised) return null
+  if (!dish.total_cost || !dish.price_advised || !dish.covers) return null
   return (dish.total_cost / (dish.covers || 1)) / dish.price_advised * 100
 }
 
@@ -135,11 +135,11 @@ export default function ComptePage() {
                   <p className="text-xs text-brun-light mt-1">sur {kpis.total} plat{kpis.total > 1 ? 's' : ''}</p>
                 </div>
                 <div className="bg-white border border-brun-pale rounded-2xl px-4 py-4 text-center">
-                  <p className="text-xs text-brun-light mb-1">Meilleure marge</p>
+                  <p className="text-xs text-brun-light mb-1">Plat le + rentable</p>
                   <p className="font-lora text-2xl font-bold text-sauge truncate text-ellipsis">
                     {kpis.best.name.length > 12 ? kpis.best.name.slice(0, 12) + '…' : kpis.best.name}
                   </p>
-                  <p className="text-xs text-sauge mt-1">{formatPct(getDishFoodCost(kpis.best) as number)} food cost</p>
+                  <p className="text-xs text-sauge mt-1">{(100 - (getDishFoodCost(kpis.best) as number)).toFixed(1)}% marge</p>
                 </div>
                 <div className="bg-white border border-brun-pale rounded-2xl px-4 py-4 text-center">
                   <p className="text-xs text-brun-light mb-1">À optimiser</p>

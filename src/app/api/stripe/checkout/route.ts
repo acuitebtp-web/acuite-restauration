@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' })
 
 export async function POST(req: NextRequest) {
   try {
-    const { priceId, userId } = await req.json()
+    const cookieStore = await cookies()
+    const supabaseAuth = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { getAll: () => cookieStore.getAll() } }
+    )
+    const { data: { session: authSession } } = await supabaseAuth.auth.getSession()
+    if (!authSession) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
-    if (!priceId || !userId) {
-      return NextResponse.json({ error: 'priceId et userId requis' }, { status: 400 })
+    const { priceId } = await req.json()
+    const userId = authSession.user.id
+
+    if (!priceId) {
+      return NextResponse.json({ error: 'priceId requis' }, { status: 400 })
     }
 
     const supabase = createClient(

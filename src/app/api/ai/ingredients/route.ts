@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { getFallbackClient } from '@/lib/fallback'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 // Augmente le timeout Vercel à 30s (Hobby plan max)
 export const maxDuration = 30
@@ -33,6 +35,15 @@ async function callClaude(prompt: string) {
 
 // ── Handler ────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
+  const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { cookies: { getAll: () => cookieStore.getAll() } }
+  )
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+
   const { prompt } = await req.json()
   if (!prompt || typeof prompt !== 'string') {
     return NextResponse.json({ error: 'Prompt requis' }, { status: 400 })

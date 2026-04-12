@@ -71,10 +71,10 @@ const PLANS = [
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_MULTI,
     features: [
       'Tout le plan Pro',
-      "Jusqu'à 5 établissements",
-      'Bases de prix séparées par site',
-      "Partage d'équipe",
       'Support prioritaire',
+      "Jusqu'à 5 établissements (en développement)",
+      "Bases de prix séparées par site (en développement)",
+      "Partage d'équipe (en développement)",
     ],
     missing: [],
     cta: 'Commencer le plan Multi',

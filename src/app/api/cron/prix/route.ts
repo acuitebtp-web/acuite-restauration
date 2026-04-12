@@ -184,12 +184,14 @@ export async function GET(req: NextRequest) {
     source: 'franceagrimer',
   }))
 
-  const { error } = await supabase.from('ingredient_price_snapshots').insert(rows)
+  const { error } = await supabase
+    .from('ingredient_price_snapshots')
+    .upsert(rows, { onConflict: 'ingredient,source', ignoreDuplicates: true })
 
   if (error) {
     console.error('Cron prix error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ ok: true, inserted: rows.length, at: new Date().toISOString() })
+  return NextResponse.json({ ok: true, upserted: rows.length, at: new Date().toISOString() })
 }
