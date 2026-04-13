@@ -310,7 +310,7 @@ export default function LandingPage() {
                 name: 'Marc D.',
                 role: 'Directeur, groupe de 3 restaurants',
                 emoji: '🧑‍💼',
-                text: "Le plan Multi nous permet de comparer les coûts entre nos établissements. On a identifié des écarts de 15% sur les mêmes plats selon les sites — maintenant tout est aligné.",
+                text: "J'ai enfin un outil qui centralise tous mes calculs. Avant, chaque chef faisait ses fiches à la main dans Excel. Maintenant on a une base commune, des prix cohérents et des marges comparables d'un établissement à l'autre.",
                 stars: 5,
               },
             ].map((t, i) => (
@@ -427,9 +427,9 @@ export default function LandingPage() {
               {
                 name: 'Gratuit',
                 price: '0€',
-                emoji: '🌱',
+                emoji: '',
                 bg: 'bg-white border-brun-pale',
-                features: ['3 plats sauvegardés', 'Calcul food cost', 'IA (3 calculs)'],
+                features: ['3 plats sauvegardés', 'Calcul food cost', 'IA (3 calculs/mois)'],
                 cta: 'Commencer',
                 link: '/inscription',
                 highlight: false,
@@ -437,9 +437,9 @@ export default function LandingPage() {
               {
                 name: 'Pro',
                 price: '15€/mois',
-                emoji: '🥕',
+                emoji: '',
                 bg: 'bg-white border-orange ring-2 ring-orange shadow-xl',
-                features: ['Plats illimités', 'IA illimitée', 'Export PDF', 'Analyse de carte', 'Prix personnalisés'],
+                features: ['Plats illimités', 'IA illimitée', 'Export PDF', 'Scan IA de carte', 'Prix fournisseurs'],
                 cta: 'Essayer le Pro',
                 link: '/tarifs',
                 highlight: true,
@@ -447,7 +447,7 @@ export default function LandingPage() {
               {
                 name: 'Multi',
                 price: '30€/mois',
-                emoji: '🧺',
+                emoji: '',
                 bg: 'bg-white border-brun-pale',
                 features: ['Tout le Pro', '5 établissements', "Partage d'équipe"],
                 cta: 'Voir Multi',
@@ -464,7 +464,6 @@ export default function LandingPage() {
                       </span>
                     </div>
                   )}
-                  <div className="text-3xl mb-3">{plan.emoji}</div>
                   <h3 className="font-lora text-xl font-bold text-brun">{plan.name}</h3>
                   <p className="text-2xl font-bold text-brun mt-2 mb-4">{plan.price}</p>
                   <ul className="space-y-2 mb-6 flex-1">
