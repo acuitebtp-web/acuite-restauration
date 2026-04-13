@@ -167,7 +167,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Oignon jaune':                   0.95,
   'Échalote':                       4.20,
   'Ail':                            5.20,
-  'Champignon de Paris':            5.20,
+  'Champignon de Paris':            5.30,
   'Haricot vert extra-fin':         6.50,
   'Fenouil':                        2.60,
 
