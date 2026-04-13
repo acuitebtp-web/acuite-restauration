@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 7 avril 2026)
+// Référence semaine précédente (semaine du 13 avril 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50, 'Bœuf - Entrecôte': 31.50, 'Bœuf - Faux-filet': 27.80,
@@ -48,8 +48,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Riz arborio': 3.60, 'Pâtes fraîches': 5.20, 'Chocolat noir 70%': 12.50,
 }
 
-// Prix de référence mis à jour manuellement chaque semaine
-// Source : franceagrimer.fr > Marchés > Cotations hebdomadaires
+// Semaine du 13 avril 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
