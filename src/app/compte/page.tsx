@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import { useEffect, useState, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -14,7 +15,7 @@ function getDishFoodCost(dish: Dish): number | null {
   return (dish.total_cost / (dish.covers || 1)) / dish.price_advised * 100
 }
 
-export default function ComptePage() {
+function ComptePageInner() {
   const { user, profile, plan, isPro } = useAuth()
   const [dishes, setDishes] = useState<Dish[]>([])
   const [loading, setLoading] = useState(true)
@@ -227,5 +228,13 @@ export default function ComptePage() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function ComptePage() {
+  return (
+    <Suspense>
+      <ComptePageInner />
+    </Suspense>
   )
 }

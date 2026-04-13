@@ -11,9 +11,17 @@ export async function POST(req: NextRequest) {
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
 
-  const PRICE_TO_PLAN: Record<string, string> = {
-    [process.env.STRIPE_PRICE_PRO || '']: 'pro',
-    [process.env.STRIPE_PRICE_MULTI || '']: 'multi',
+  // Mapping price ID → plan (mensuel ET annuel)
+  // Les clés vides ('') sont ignorées si la variable d'env n'est pas définie
+  const rawMap: Array<[string | undefined, string]> = [
+    [process.env.STRIPE_PRICE_PRO,          'pro'],
+    [process.env.STRIPE_PRICE_PRO_ANNUAL,   'pro'],
+    [process.env.STRIPE_PRICE_MULTI,        'multi'],
+    [process.env.STRIPE_PRICE_MULTI_ANNUAL, 'multi'],
+  ]
+  const PRICE_TO_PLAN: Record<string, string> = {}
+  for (const [priceId, plan] of rawMap) {
+    if (priceId) PRICE_TO_PLAN[priceId] = plan
   }
   const body = await req.text()
   const sig = req.headers.get('stripe-signature')!

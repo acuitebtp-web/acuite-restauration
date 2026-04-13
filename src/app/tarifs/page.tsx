@@ -1,5 +1,6 @@
 // No metadata export here — this is a client component
 'use client'
+import { Suspense } from 'react'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -84,7 +85,7 @@ const PLANS = [
   },
 ]
 
-export default function TarifsPage() {
+function TarifsPageInner() {
   const { user } = useAuth()
   const searchParams = useSearchParams()
   const highlightPlan = searchParams.get('plan')
@@ -284,5 +285,13 @@ export default function TarifsPage() {
       </div>
       <Footer />
     </>
+  )
+}
+
+export default function TarifsPage() {
+  return (
+    <Suspense>
+      <TarifsPageInner />
+    </Suspense>
   )
 }

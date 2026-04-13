@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -7,7 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
 
-export default function ConnexionPage() {
+function ConnexionPageInner() {
   const { signIn, signInWithGoogle } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -135,5 +136,13 @@ export default function ConnexionPage() {
         </div>
       </div>
     </>
+  )
+}
+
+export default function ConnexionPage() {
+  return (
+    <Suspense>
+      <ConnexionPageInner />
+    </Suspense>
   )
 }

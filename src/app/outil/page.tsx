@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Nav } from '@/components/layout/Nav'
@@ -48,7 +49,7 @@ const ALLERGENS_LIST = [
   'Sulfites', 'Lupin', 'Mollusques',
 ]
 
-export default function OutilPage() {
+function OutilPageInner() {
   const { user, isPro } = useAuth()
   const searchParams = useSearchParams()
   const [customPrices, setCustomPrices] = useState<CustomPrice[]>([])
@@ -824,5 +825,13 @@ export default function OutilPage() {
         </p>
       </Modal>
     </>
+  )
+}
+
+export default function OutilPage() {
+  return (
+    <Suspense>
+      <OutilPageInner />
+    </Suspense>
   )
 }
