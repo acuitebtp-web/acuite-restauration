@@ -31,6 +31,7 @@ export default function PlatsPage() {
   const [filterCategory, setFilterCategory] = useState('')
   const [sortCol, setSortCol] = useState<'name' | 'cost' | 'food_cost' | 'margin' | null>(null)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
+  const [costHistory, setCostHistory] = useState<Record<string, number[]>>({})
 
   const handleSort = (col: typeof sortCol) => {
     if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
@@ -44,7 +45,31 @@ export default function PlatsPage() {
       .select('*')
       .eq('user_id', user.id)
       .order('updated_at', { ascending: false })
-      .then(({ data }) => { setDishes(data || []); setLoading(false) })
+      .then(({ data }) => {
+        setDishes(data || [])
+        setLoading(false)
+
+        // Charger l'historique des coûts (dernières 8 valeurs par plat)
+        if (data && data.length > 0) {
+          const dishIds = data.map((d: Dish) => d.id)
+          supabase
+            .from('dish_cost_history')
+            .select('dish_id, food_cost_pct, recorded_at')
+            .in('dish_id', dishIds)
+            .order('recorded_at', { ascending: true })
+            .then(({ data: history }) => {
+              if (!history) return
+              const map: Record<string, number[]> = {}
+              history.forEach((h: { dish_id: string; food_cost_pct: number }) => {
+                if (!map[h.dish_id]) map[h.dish_id] = []
+                map[h.dish_id].push(Number(h.food_cost_pct))
+              })
+              // Garder les 8 dernières valeurs par plat
+              Object.keys(map).forEach(id => { map[id] = map[id].slice(-8) })
+              setCostHistory(map)
+            })
+        }
+      })
   }, [user])
 
   const filteredDishes = useMemo(() => {
@@ -213,6 +238,22 @@ export default function PlatsPage() {
                           <Badge variant={status.color === 'green' ? 'green' : status.color === 'orange' ? 'orange' : 'red'}>
                             {formatPct(foodCostPct)}
                           </Badge>
+                          {/* Mini sparkline food cost */}
+                          {costHistory[dish.id] && costHistory[dish.id].length > 1 && (
+                            <span className="inline-flex items-end gap-px ml-2" title="Évolution food cost">
+                              {costHistory[dish.id].map((v, i) => (
+                                <span
+                                  key={i}
+                                  className="inline-block w-1 rounded-sm"
+                                  style={{
+                                    height: `${Math.max(4, Math.min(16, v / 3))}px`,
+                                    background: v <= 28 ? '#7A9E7E' : v <= 35 ? '#F2854A' : '#EF4444',
+                                    opacity: 0.4 + (i / costHistory[dish.id].length) * 0.6,
+                                  }}
+                                />
+                              ))}
+                            </span>
+                          )}
                         </div>
                         <p className="text-xs text-brun-light capitalize">
                           {dish.category} · {dish.covers} couvert{dish.covers !== 1 ? 's' : ''}

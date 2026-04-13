@@ -237,8 +237,21 @@ function OutilPageInner() {
         allergens,
         notes,
       }
-      const { error } = await supabase.from('dishes').insert(dish)
+      const { data: insertedDish, error } = await supabase.from('dishes').insert(dish).select().single()
       if (error) throw error
+
+      // Enregistrer un snapshot dans l'historique
+      if (insertedDish?.id) {
+        supabase.from('dish_cost_history').insert({
+          dish_id: insertedDish.id,
+          user_id: user.id,
+          total_cost: metrics.totalCost,
+          price_advised: metrics.priceAdvised,
+          food_cost_pct: metrics.foodCostPct,
+          margin_pct: metrics.marginPct,
+        }).then(() => {}) // fire and forget
+      }
+
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (err) {
