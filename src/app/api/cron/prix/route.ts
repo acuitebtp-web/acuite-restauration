@@ -3,6 +3,10 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
+// Référence semaine précédente pour calculer les variations
+// À mettre à jour manuellement chaque semaine avec les valeurs de WEEKLY_PRICES de la semaine précédente
+const PREVIOUS_WEEK_REF: Record<string, number> = {}
+
 // Prix de référence mis à jour manuellement chaque semaine
 // Source : franceagrimer.fr > Marchés > Cotations hebdomadaires
 const WEEKLY_PRICES: Record<string, number> = {
@@ -193,5 +197,76 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ ok: true, upserted: rows.length, at: new Date().toISOString() })
+  // Phase 2 — Alertes email utilisateurs Pro
+  let alertsSent = 0
+  try {
+    const resendKey = process.env.RESEND_API_KEY
+    if (resendKey) {
+      const { Resend } = await import('resend')
+      const resend = new Resend(resendKey)
+
+      // Récupérer tous les profils Pro avec leur email
+      const { data: proProfiles } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('plan', ['pro', 'multi'])
+
+      if (proProfiles?.length) {
+        // Calculer les hausses significatives (> 5%)
+        const hausses = Object.entries(WEEKLY_PRICES)
+          .filter(([ing]) => {
+            // Comparer avec la semaine précédente si disponible
+            const prev = PREVIOUS_WEEK_REF[ing]
+            return prev && ((WEEKLY_PRICES[ing] - prev) / prev) > 0.05
+          })
+          .slice(0, 5)
+          .map(([ing, price]) => ({
+            name: ing,
+            price,
+            prev: PREVIOUS_WEEK_REF[ing] || price,
+            pct: PREVIOUS_WEEK_REF[ing] ? Math.round((price - PREVIOUS_WEEK_REF[ing]) / PREVIOUS_WEEK_REF[ing] * 100) : 0
+          }))
+
+        if (hausses.length > 0) {
+          for (const profile of proProfiles.slice(0, 100)) { // max 100 emails/run
+            if (!profile.email) continue
+            const html = `
+<div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:20px;">
+  <p style="font-size:20px;font-weight:700;color:#2C1A0E;font-style:italic;margin:0 0 20px;">
+    <span>Costy</span><span style="color:#F2854A;">food</span>
+  </p>
+  <h2 style="color:#2C1A0E;font-size:18px;">Alerte prix marchés cette semaine</h2>
+  <p style="color:#A0745A;font-size:14px;">Ces ingrédients ont augmenté de plus de 5% :</p>
+  <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+    ${hausses.map(h => `
+    <tr style="border-bottom:1px solid #E8D5C4;">
+      <td style="padding:10px 4px;font-size:14px;color:#2C1A0E;">${h.name}</td>
+      <td style="padding:10px 4px;text-align:right;font-size:14px;color:#2C1A0E;">${h.price.toFixed(2)} €/kg</td>
+      <td style="padding:10px 4px;text-align:right;">
+        <span style="background:#FEE2E2;color:#EF4444;font-weight:700;font-size:12px;padding:2px 8px;border-radius:20px;">
+          +${h.pct}%
+        </span>
+      </td>
+    </tr>`).join('')}
+  </table>
+  <p style="color:#A0745A;font-size:13px;">Vérifiez l'impact sur vos food costs dans votre <a href="https://costyfood.fr/compte/carte" style="color:#F2854A;">analyse de carte</a>.</p>
+  <p style="color:#C4A882;font-size:11px;margin-top:20px;">Costyfood · <a href="https://costyfood.fr" style="color:#C4A882;">costyfood.fr</a></p>
+</div>`
+            await resend.emails.send({
+              from: 'Costyfood <alertes@costyfood.fr>',
+              to: profile.email,
+              subject: `⚠️ ${hausses.length} ingrédient${hausses.length > 1 ? 's ont' : ' a'} augmenté cette semaine`,
+              html,
+            })
+            alertsSent++
+          }
+        }
+      }
+    }
+  } catch (alertErr) {
+    console.error('Alert emails error:', alertErr)
+    // Ne pas bloquer le cron si les emails échouent
+  }
+
+  return NextResponse.json({ ok: true, upserted: rows.length, alerts_sent: alertsSent, at: new Date().toISOString() })
 }

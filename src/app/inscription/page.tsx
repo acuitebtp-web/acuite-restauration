@@ -32,6 +32,12 @@ export default function InscriptionPage() {
       setError(error)
     } else {
       setSuccess(true)
+    // Envoyer l'email de bienvenue (silencieux si échec)
+    fetch('/api/email/welcome', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: email.split('@')[0] }),
+    }).catch(() => {})
       setTimeout(() => router.push('/onboarding'), 2000)
     }
     setLoading(false)
