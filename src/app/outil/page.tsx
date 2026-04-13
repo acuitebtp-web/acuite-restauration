@@ -144,6 +144,7 @@ function OutilPageInner() {
         body: JSON.stringify({ prompt: aiPrompt }),
       })
       const data = await res.json()
+      if (data.quota_exceeded) { setShowSignupModal(true); return }
       if (!res.ok) {
         // Si clé API manquante → passer au fallback local côté client
         if (res.status === 503) {

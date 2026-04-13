@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 export const maxDuration = 30
@@ -33,6 +34,31 @@ export async function POST(req: NextRequest) {
   )
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+
+  // Vérifier quota IA (plan Gratuit : 3 appels/mois)
+  const serviceSupabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  )
+  const { data: profile } = await serviceSupabase
+    .from('profiles')
+    .select('plan, ai_calls_count, ai_calls_month')
+    .eq('id', session.user.id)
+    .single()
+
+  if (profile && profile.plan === 'free') {
+    const currentMonth = new Date().toISOString().slice(0, 7) // 'YYYY-MM'
+    const callsThisMonth = profile.ai_calls_month === currentMonth ? profile.ai_calls_count : 0
+    if (callsThisMonth >= 3) {
+      return NextResponse.json({ error: 'Quota IA atteint (3/mois). Passez au plan Pro pour un accès illimité.', quota_exceeded: true }, { status: 429 })
+    }
+    // Incrémenter le compteur
+    await serviceSupabase.from('profiles').update({
+      ai_calls_count: callsThisMonth + 1,
+      ai_calls_month: currentMonth,
+    }).eq('id', session.user.id)
+  }
 
   const { dishName, ingredients, foodCostPct, costPerCover } = await req.json()
   if (!dishName || !ingredients) {
