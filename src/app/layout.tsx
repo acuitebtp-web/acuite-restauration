@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   keywords: ['food cost', 'restaurateur', 'coût matière', 'menu engineering', 'fiche technique'],
   authors: [{ name: 'Costyfood' }],
   metadataBase: new URL('https://costyfood.fr'),
+  alternates: {
+    canonical: 'https://costyfood.fr',
+  },
   openGraph: {
     title: 'Costyfood — Calculez votre food cost en 30 secondes',
     description: 'Calculez votre food cost et analysez votre carte en temps réel.',

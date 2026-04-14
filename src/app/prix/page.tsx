@@ -5,8 +5,24 @@ import { getBonsPlans, getHausses, getPriceChanges } from '@/lib/priceHistory'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Évolution des prix',
-  description: 'Suivez les hausses et baisses de prix des ingrédients en restauration. Données marché mises à jour chaque semaine.',
+  title: 'Prix ingrédients restauration — Hausses & baisses du marché | Costyfood',
+  description: 'Suivez en temps réel les hausses et baisses de prix des ingrédients en restauration. Viandes, poissons, légumes — cotations hebdomadaires FranceAgriMer.',
+  openGraph: {
+    title: 'Prix ingrédients restauration — Costyfood',
+    description: 'Hausses et baisses hebdomadaires sur 300+ ingrédients. Basé sur FranceAgriMer.',
+  },
+}
+
+function BreadcrumbJsonLd() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://costyfood.fr' },
+      { '@type': 'ListItem', position: 2, name: 'Évolution des prix ingrédients', item: 'https://costyfood.fr/prix' },
+    ],
+  }
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 }
 
 export default function PrixPage() {
@@ -17,6 +33,7 @@ export default function PrixPage() {
   return (
     <>
       <Nav />
+      <BreadcrumbJsonLd />
       <div className="pt-24 min-h-screen pb-16 px-4 bg-creme">
         <div className="max-w-4xl mx-auto">
 

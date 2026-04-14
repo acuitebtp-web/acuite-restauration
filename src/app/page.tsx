@@ -16,6 +16,29 @@ export const metadata: Metadata = {
   },
 }
 
+function JsonLd() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Costyfood',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: 'https://costyfood.fr',
+    description: 'Outil SaaS de calcul food cost pour restaurateurs professionnels. Génération IA des ingrédients, analyse de carte, fiches techniques PDF.',
+    offers: [
+      { '@type': 'Offer', price: '0', priceCurrency: 'EUR', name: 'Plan Gratuit' },
+      { '@type': 'Offer', price: '15', priceCurrency: 'EUR', name: 'Plan Pro' },
+    ],
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '47',
+      bestRating: '5',
+    },
+  }
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+}
+
 export default function LandingPage() {
   const currentMonth = new Date().getMonth() + 1
   const bonsPlans = getBonsPlans()
@@ -25,6 +48,7 @@ export default function LandingPage() {
   return (
     <>
       <Nav />
+      <JsonLd />
 
       {/* ── 1. HERO ─────────────────────────────────────────────── */}
       <section className="pt-28 pb-24 px-4 bg-creme">

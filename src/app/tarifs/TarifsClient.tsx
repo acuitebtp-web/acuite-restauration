@@ -84,6 +84,36 @@ const PLANS = [
   },
 ]
 
+function TarifsJsonLd() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Puis-je annuler à tout moment ?',
+        acceptedAnswer: { '@type': 'Answer', text: "Oui, sans condition ni pénalité. Votre accès Pro reste actif jusqu'à la fin de la période en cours." },
+      },
+      {
+        '@type': 'Question',
+        name: "D'où viennent les prix des ingrédients ?",
+        acceptedAnswer: { '@type': 'Answer', text: "Ils sont basés sur les cotations officielles FranceAgriMer, mises à jour chaque semaine. Avec le plan Pro, vous pouvez saisir vos propres prix fournisseurs." },
+      },
+      {
+        '@type': 'Question',
+        name: 'Le plan gratuit est-il vraiment gratuit ?',
+        acceptedAnswer: { '@type': 'Answer', text: "Oui, sans limite de durée et sans carte bancaire requise. Vous pouvez calculer le food cost et sauvegarder jusqu'à 3 plats." },
+      },
+      {
+        '@type': 'Question',
+        name: 'Comment fonctionne la facturation ?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Facturation mensuelle via Stripe. Vous recevez une facture HT par email chaque mois.' },
+      },
+    ],
+  }
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+}
+
 function TarifsPageInner() {
   const { user } = useAuth()
   const searchParams = useSearchParams()
@@ -127,6 +157,7 @@ function TarifsPageInner() {
   return (
     <>
       <Nav />
+      <TarifsJsonLd />
       <div className="pt-24 pb-20 px-4 bg-creme min-h-screen">
         <div className="max-w-5xl mx-auto">
 
