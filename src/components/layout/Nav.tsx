@@ -31,6 +31,9 @@ export function Nav() {
           <Link href="/prix" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
             Évolution des prix
           </Link>
+          <Link href="/blog" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
+            Blog
+          </Link>
           {user && (
             <>
               <Link href="/compte/plats" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
@@ -128,6 +131,7 @@ export function Nav() {
           <Link href="/tarifs" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Tarifs</Link>
           <Link href="/saison" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Saison</Link>
           <Link href="/prix" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Évolution des prix</Link>
+          <Link href="/blog" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Blog</Link>
           {user && (
             <>
               <Link href="/compte" className="text-sm font-medium text-brun-mid py-2.5 border-b border-brun-pale/50" onClick={() => setMenuOpen(false)}>Tableau de bord</Link>
