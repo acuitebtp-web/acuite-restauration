@@ -12,7 +12,10 @@ import { formatEuros, formatPct } from '@/lib/calculations'
 
 function getDishFoodCost(dish: Dish): number | null {
   if (!dish.total_cost || !dish.price_advised || !dish.covers) return null
-  return (dish.total_cost / (dish.covers || 1)) / dish.price_advised * 100
+  if (dish.price_advised <= 0) return null
+  const costPerCover = dish.total_cost / dish.covers
+  const fc = (costPerCover / dish.price_advised) * 100
+  return isFinite(fc) ? fc : null
 }
 
 function ComptePageInner() {

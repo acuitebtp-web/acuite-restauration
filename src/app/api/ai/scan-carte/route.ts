@@ -51,6 +51,16 @@ export async function POST(req: NextRequest) {
   const { image, mimeType } = await req.json()
   if (!image) return NextResponse.json({ error: 'Image manquante' }, { status: 400 })
 
+  // Valider le type MIME
+  const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+  if (mimeType && !ALLOWED_MIME_TYPES.includes(mimeType)) {
+    return NextResponse.json({ error: "Type d'image non supporté (jpeg, png, webp uniquement)" }, { status: 415 })
+  }
+  // Limiter la taille : 5 Mo max en base64 ≈ 6.8 Mo de chaîne
+  if (typeof image === 'string' && image.length > 7 * 1024 * 1024) {
+    return NextResponse.json({ error: 'Image trop volumineuse (5 Mo max)' }, { status: 413 })
+  }
+
   try {
     const client = new Anthropic({ apiKey })
     const response = await client.messages.create({
@@ -83,6 +93,9 @@ export async function POST(req: NextRequest) {
     if (!jsonMatch) throw new Error('Réponse non parseable')
 
     const result = JSON.parse(jsonMatch[0])
+    if (!Array.isArray(result.dishes)) {
+      throw new Error('Structure JSON invalide : dishes manquant ou non-array')
+    }
     return NextResponse.json(result)
   } catch (err) {
     console.error('scan-carte error:', err)

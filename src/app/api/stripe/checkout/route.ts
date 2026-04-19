@@ -24,6 +24,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'priceId requis' }, { status: 400 })
     }
 
+    // Whitelist : seuls les price IDs configurés en env sont acceptés
+    const VALID_PRICE_IDS = [
+      process.env.STRIPE_PRICE_PRO,
+      process.env.STRIPE_PRICE_PRO_ANNUAL,
+      process.env.STRIPE_PRICE_MULTI,
+      process.env.STRIPE_PRICE_MULTI_ANNUAL,
+    ].filter((id): id is string => Boolean(id))
+    if (VALID_PRICE_IDS.length > 0 && !VALID_PRICE_IDS.includes(priceId)) {
+      return NextResponse.json({ error: 'Plan invalide' }, { status: 400 })
+    }
+
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,

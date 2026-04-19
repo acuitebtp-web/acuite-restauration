@@ -23,7 +23,8 @@ export async function middleware(req: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession()
 
   // Protect /compte/* — redirect to /connexion if not authenticated
-  if (req.nextUrl.pathname.startsWith('/compte') && !session) {
+  const isProtected = req.nextUrl.pathname.startsWith('/compte') || req.nextUrl.pathname.startsWith('/onboarding')
+  if (isProtected && !session) {
     const redirectUrl = req.nextUrl.clone()
     redirectUrl.pathname = '/connexion'
     redirectUrl.searchParams.set('redirect', req.nextUrl.pathname)
@@ -41,5 +42,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/compte/:path*', '/connexion', '/inscription'],
+  matcher: ['/compte/:path*', '/onboarding', '/connexion', '/inscription'],
 }

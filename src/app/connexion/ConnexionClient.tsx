@@ -12,7 +12,9 @@ function ConnexionPageInner() {
   const { signIn, signInWithGoogle } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/compte'
+  const rawRedirect = searchParams.get('redirect') || '/compte'
+  const isValidRedirect = rawRedirect.startsWith('/') && !rawRedirect.includes('://') && !rawRedirect.startsWith('//')
+  const redirect = isValidRedirect ? rawRedirect : '/compte'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

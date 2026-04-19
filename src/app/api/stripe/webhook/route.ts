@@ -3,6 +3,14 @@ import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
 export async function POST(req: NextRequest) {
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    console.error('STRIPE_WEBHOOK_SECRET non configuré')
+    return NextResponse.json({ error: 'Webhook non configuré' }, { status: 503 })
+  }
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('STRIPE_SECRET_KEY non configurée')
+    return NextResponse.json({ error: 'Stripe non configuré' }, { status: 503 })
+  }
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' })
 
   const supabase = createClient(
@@ -43,7 +51,7 @@ export async function POST(req: NextRequest) {
         const priceId = subscription.items.data[0]?.price.id
         const plan = PRICE_TO_PLAN[priceId] || 'pro'
 
-        await supabase
+        const { data: updatedRows, error: updateError } = await supabase
           .from('profiles')
           .update({
             plan,
@@ -51,6 +59,25 @@ export async function POST(req: NextRequest) {
             stripe_customer_id: session.customer as string,
           })
           .eq('stripe_customer_id', session.customer as string)
+          .select('id')
+        if (updateError || !updatedRows?.length) {
+          // Fallback : chercher par user_id dans les metadata Stripe
+          const customerId = session.customer as string
+          const customer = await stripe.customers.retrieve(customerId) as Stripe.Customer
+          const supabaseUserId = customer.metadata?.supabase_user_id
+          if (supabaseUserId) {
+            await supabase
+              .from('profiles')
+              .update({
+                plan,
+                stripe_subscription_id: subscription.id,
+                stripe_customer_id: customerId,
+              })
+              .eq('id', supabaseUserId)
+          } else {
+            console.error('Webhook: aucun profil trouvé pour customer', customerId)
+          }
+        }
         break
       }
 

@@ -24,7 +24,13 @@ export async function POST(req: NextRequest) {
   const email = session.user.email
   if (!email) return NextResponse.json({ ok: true, skipped: true })
 
-  const { firstName } = await req.json().catch(() => ({ firstName: '' }))
+  const body = await req.json().catch(() => ({}))
+  const rawFirstName = typeof body?.firstName === 'string' ? body.firstName : ''
+  const firstName = rawFirstName
+    .trim()
+    .slice(0, 50)
+    .replace(/[<>"'&]/g, '')
+    || 'chef'
   const name = firstName || email.split('@')[0]
 
   const html = `

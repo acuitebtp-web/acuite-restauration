@@ -31,7 +31,11 @@ async function callClaude(prompt: string) {
   // Extraire le JSON même si Claude ajoute du texte autour
   const jsonMatch = text.match(/\{[\s\S]*\}/)
   if (!jsonMatch) throw new Error(`Réponse Claude non parseable: ${text.substring(0, 100)}`)
-  return JSON.parse(jsonMatch[0])
+  const parsed = JSON.parse(jsonMatch[0])
+  if (!parsed.dishName || !Array.isArray(parsed.ingredients)) {
+    throw new Error('Structure JSON invalide retournée par Claude')
+  }
+  return parsed
 }
 
 // ── Handler ────────────────────────────────────────────────────────────────────
@@ -73,6 +77,9 @@ export async function POST(req: NextRequest) {
   const { prompt } = await req.json()
   if (!prompt || typeof prompt !== 'string') {
     return NextResponse.json({ error: 'Prompt requis' }, { status: 400 })
+  }
+  if (prompt.length > 500) {
+    return NextResponse.json({ error: 'Requête trop longue (500 caractères max)' }, { status: 400 })
   }
 
   // 1. Essai avec Claude
