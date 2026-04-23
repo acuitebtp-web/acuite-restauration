@@ -40,6 +40,16 @@ async function callClaude(prompt: string) {
 
 // ── Handler ────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
+  // Lire le body en premier (ne peut être lu qu'une seule fois)
+  const { prompt } = await req.json()
+  if (!prompt || typeof prompt !== 'string') {
+    return NextResponse.json({ error: 'Prompt requis' }, { status: 400 })
+  }
+  if (prompt.length > 500) {
+    return NextResponse.json({ error: 'Requête trop longue (500 caractères max)' }, { status: 400 })
+  }
+
+  // Vérifier la session — optionnel : l'outil public fonctionne sans compte
   const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,39 +57,32 @@ export async function POST(req: NextRequest) {
     { cookies: { getAll: () => cookieStore.getAll() } }
   )
   const { data: { session } } = await supabase.auth.getSession()
-  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
-  // Vérifier quota IA (plan Gratuit : 3 appels/mois)
-  const serviceSupabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } }
-  )
-  const { data: profile } = await serviceSupabase
-    .from('profiles')
-    .select('plan, ai_calls_count, ai_calls_month')
-    .eq('id', session.user.id)
-    .single()
+  // Quota IA uniquement pour les utilisateurs connectés en plan Free
+  if (session) {
+    const serviceSupabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    )
+    const { data: profile } = await serviceSupabase
+      .from('profiles')
+      .select('plan, ai_calls_count, ai_calls_month')
+      .eq('id', session.user.id)
+      .single()
 
-  if (profile && profile.plan === 'free') {
-    const currentMonth = new Date().toISOString().slice(0, 7) // 'YYYY-MM'
-    const callsThisMonth = profile.ai_calls_month === currentMonth ? profile.ai_calls_count : 0
-    if (callsThisMonth >= 3) {
-      return NextResponse.json({ error: 'Quota IA atteint (3/mois). Passez au plan Pro pour un accès illimité.', quota_exceeded: true }, { status: 429 })
+    if (profile && profile.plan === 'free') {
+      const currentMonth = new Date().toISOString().slice(0, 7) // 'YYYY-MM'
+      const callsThisMonth = profile.ai_calls_month === currentMonth ? profile.ai_calls_count : 0
+      if (callsThisMonth >= 3) {
+        return NextResponse.json({ error: 'Quota IA atteint (3/mois). Passez au plan Pro pour un accès illimité.', quota_exceeded: true }, { status: 429 })
+      }
+      // Incrémenter le compteur
+      await serviceSupabase.from('profiles').update({
+        ai_calls_count: callsThisMonth + 1,
+        ai_calls_month: currentMonth,
+      }).eq('id', session.user.id)
     }
-    // Incrémenter le compteur
-    await serviceSupabase.from('profiles').update({
-      ai_calls_count: callsThisMonth + 1,
-      ai_calls_month: currentMonth,
-    }).eq('id', session.user.id)
-  }
-
-  const { prompt } = await req.json()
-  if (!prompt || typeof prompt !== 'string') {
-    return NextResponse.json({ error: 'Prompt requis' }, { status: 400 })
-  }
-  if (prompt.length > 500) {
-    return NextResponse.json({ error: 'Requête trop longue (500 caractères max)' }, { status: 400 })
   }
 
   // 1. Essai avec Claude
