@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 4 mai 2026)
+// Référence semaine précédente (semaine du 11 mai 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50, 'Bœuf - Entrecôte': 31.50, 'Bœuf - Faux-filet': 27.80,
@@ -32,9 +32,9 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Homard breton - Entier': 55.00, 'Langoustines': 46.50, 'Gambas - Entières': 29.00,
   'Crevettes roses décortiquées': 22.50, 'Crevettes grises': 18.50,
   'Saint-Jacques - Noix': 42.00, 'Moules de bouchot': 3.60, 'Huîtres creuses': 8.20, 'Palourdes': 14.50,
-  'Asperge verte': 9.80, 'Asperge blanche': 9.46, 'Petits pois frais': 5.20,
+  'Asperge verte': 9.80, 'Asperge blanche': 6.90, 'Petits pois frais': 5.20,
   'Épinard frais': 4.20, 'Artichaut': 3.90, 'Courgette': 3.10, 'Aubergine': 3.50,
-  'Poivron rouge': 3.80, 'Tomate cerise': 5.20, 'Tomate ronde': 2.60, 'Poireau': 2.00,
+  'Poivron rouge': 3.80, 'Tomate cerise': 5.20, 'Tomate ronde': 2.50, 'Poireau': 2.00,
   'Céleri rave': 2.00, 'Potiron': 2.20, 'Carotte': 1.00, 'Oignon jaune': 0.95,
   'Échalote': 4.20, 'Ail': 5.20, 'Champignon de Paris': 5.30, 'Haricot vert extra-fin': 6.50,
   'Fenouil': 2.60, 'Morilles fraîches': 135.00, 'Girolles': 42.00,
@@ -48,7 +48,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Riz arborio': 3.60, 'Pâtes fraîches': 5.20, 'Chocolat noir 70%': 13.00,
 }
 
-// Semaine du 4 mai 2026 — source FranceAgriMer
+// Semaine du 11 mai 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -141,7 +141,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Langoustines':                  46.50,
   'Gambas - Entières':             29.00,
   'Crevettes roses décortiquées':  22.50,
-  'Crevettes grises':              18.50,
+  'Crevettes grises':              20.38,
 
   // ── COQUILLAGES ──────────────────────────────
   'Saint-Jacques - Noix':          42.00,   // fin de saison, prix monte
@@ -150,8 +150,8 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Palourdes':                     14.50,
 
   // ── LÉGUMES (saison avril) ───────────────────
-  'Asperge verte':                  9.80,   // saison : prix baisse
-  'Asperge blanche':                6.90,   // saison : prix continue de baisser
+  'Asperge verte':                  9.20,   // saison : prix baisse
+  'Asperge blanche':                6.60,   // saison : prix continue de baisser
   'Petits pois frais':              5.20,   // début saison
   'Épinard frais':                  4.20,
   'Artichaut':                      3.90,
@@ -159,7 +159,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Aubergine':                      3.50,
   'Poivron rouge':                  3.80,
   'Tomate cerise':                  5.20,
-  'Tomate ronde':                   2.50,
+  'Tomate ronde':                   2.45,
   'Poireau':                        2.00,
   'Céleri rave':                    2.00,
   'Potiron':                        2.20,
@@ -187,17 +187,17 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Estragon frais':                10.50,
 
   // ── FRUITS (saison avril) ────────────────────
-  'Fraise Gariguette':             12.00,   // début saison
+  'Fraise Gariguette':             11.00,   // pleine saison
   'Citron jaune':                   2.10,
   'Orange':                         1.90,
   'Mangue':                         3.90,
   'Avocat':                         3.40,
 
   // ── PRODUITS LAITIERS ────────────────────────
-  'Beurre doux':                    9.50,
+  'Beurre doux':                    9.20,
   'Crème liquide 35% MG':           5.30,
   'Crème fraîche épaisse':          4.60,
-  'Lait entier':                    1.25,
+  'Lait entier':                    1.22,
   'Parmesan - Reggiano':           25.00,
   'Comté 18 mois':                 18.50,
   'Mozzarella di bufala':          14.50,
