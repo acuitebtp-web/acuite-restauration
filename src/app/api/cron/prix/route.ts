@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 11 mai 2026)
+// Référence semaine précédente (semaine du 19 mai 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50, 'Bœuf - Entrecôte': 31.50, 'Bœuf - Faux-filet': 27.80,
@@ -30,25 +30,26 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Lieu noir - Filet': 12.50, 'Maquereau - Filet': 8.50, 'Sardine - Fraîche': 5.20,
   'Anchois frais': 8.50, 'Merlu - Filet': 14.50,
   'Homard breton - Entier': 55.00, 'Langoustines': 46.50, 'Gambas - Entières': 29.00,
-  'Crevettes roses décortiquées': 22.50, 'Crevettes grises': 18.50,
+  'Crevettes roses décortiquées': 22.50, 'Crevettes grises': 20.38,
   'Saint-Jacques - Noix': 42.00, 'Moules de bouchot': 3.60, 'Huîtres creuses': 8.20, 'Palourdes': 14.50,
-  'Asperge verte': 9.80, 'Asperge blanche': 6.90, 'Petits pois frais': 5.20,
+  'Asperge verte': 9.20, 'Asperge blanche': 6.60, 'Petits pois frais': 5.20,
   'Épinard frais': 4.20, 'Artichaut': 3.90, 'Courgette': 3.10, 'Aubergine': 3.50,
-  'Poivron rouge': 3.80, 'Tomate cerise': 5.20, 'Tomate ronde': 2.50, 'Poireau': 2.00,
+  'Poivron rouge': 3.80, 'Tomate cerise': 5.20, 'Tomate ronde': 2.45, 'Poireau': 2.00,
   'Céleri rave': 2.00, 'Potiron': 2.20, 'Carotte': 1.00, 'Oignon jaune': 0.95,
   'Échalote': 4.20, 'Ail': 5.20, 'Champignon de Paris': 5.30, 'Haricot vert extra-fin': 6.50,
   'Fenouil': 2.60, 'Morilles fraîches': 135.00, 'Girolles': 42.00,
   'Truffe noire Périgord': 950.00, 'Truffe d\'été': 190.00, 'Cèpes frais': 36.00,
   'Trompette de la mort': 58.00, 'Basilic frais': 12.50, 'Persil plat': 6.20,
   'Coriandre fraîche': 8.20, 'Thym frais': 8.20, 'Estragon frais': 10.50,
-  'Fraise Gariguette': 12.00, 'Citron jaune': 2.10, 'Orange': 1.90, 'Mangue': 3.90, 'Avocat': 3.40,
-  'Beurre doux': 9.50, 'Crème liquide 35% MG': 5.30, 'Crème fraîche épaisse': 4.60,
-  'Lait entier': 1.25, 'Parmesan - Reggiano': 25.00, 'Comté 18 mois': 18.50,
+  'Fraise Gariguette': 11.00, 'Citron jaune': 2.10, 'Orange': 1.90, 'Mangue': 3.90, 'Avocat': 3.40,
+  'Beurre doux': 9.20, 'Crème liquide 35% MG': 5.30, 'Crème fraîche épaisse': 4.60,
+  'Lait entier': 1.22, 'Parmesan - Reggiano': 25.00, 'Comté 18 mois': 18.50,
   'Mozzarella di bufala': 14.50, 'Huile d\'olive vierge extra': 8.90, 'Farine T45': 1.25,
   'Riz arborio': 3.60, 'Pâtes fraîches': 5.20, 'Chocolat noir 70%': 13.00,
 }
 
-// Semaine du 11 mai 2026 — source FranceAgriMer
+// Semaine du 19 mai 2026 — source FranceAgriMer
+// [SUSPECT IGNORÉ] Champignon de Paris : 5.30 → 3.45 = -34.9% > 30% — non mis à jour
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -144,22 +145,22 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Crevettes grises':              20.38,
 
   // ── COQUILLAGES ──────────────────────────────
-  'Saint-Jacques - Noix':          42.00,   // fin de saison, prix monte
+  'Saint-Jacques - Noix':          42.00,   // fin de saison, prix stable
   'Moules de bouchot':              3.60,
   'Huîtres creuses':                8.20,
   'Palourdes':                     14.50,
 
-  // ── LÉGUMES (saison avril) ───────────────────
-  'Asperge verte':                  9.20,   // saison : prix baisse
-  'Asperge blanche':                6.60,   // saison : prix continue de baisser
-  'Petits pois frais':              5.20,   // début saison
+  // ── LÉGUMES (saison mai) ─────────────────────
+  'Asperge verte':                  8.50,   // pleine saison : prix continue de baisser
+  'Asperge blanche':                5.90,   // pleine saison : forte baisse
+  'Petits pois frais':              4.70,   // pleine saison : prix baisse
   'Épinard frais':                  4.20,
   'Artichaut':                      3.90,
-  'Courgette':                      3.10,
+  'Courgette':                      2.70,   // afflux production nationale
   'Aubergine':                      3.50,
   'Poivron rouge':                  3.80,
-  'Tomate cerise':                  5.20,
-  'Tomate ronde':                   2.45,
+  'Tomate cerise':                  4.90,   // légère baisse saisonnière
+  'Tomate ronde':                   2.36,   // marché Rungis mai 2026
   'Poireau':                        2.00,
   'Céleri rave':                    2.00,
   'Potiron':                        2.20,
@@ -167,15 +168,15 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Oignon jaune':                   0.95,
   'Échalote':                       4.20,
   'Ail':                            5.20,
-  'Champignon de Paris':            5.30,
-  'Haricot vert extra-fin':         6.50,
+  'Champignon de Paris':            5.30,   // prix suspect ignoré (cotation -34.9% non confirmée)
+  'Haricot vert extra-fin':         6.20,   // début pleine saison
   'Fenouil':                        2.60,
 
   // ── CHAMPIGNONS ──────────────────────────────
-  'Morilles fraîches':            135.00,   // pic de saison avril
+  'Morilles fraîches':            148.00,   // fin de saison : raréfaction, prix monte
   'Girolles':                      42.00,
-  'Truffe noire Périgord':         950.00,  // hors saison : prix monte
-  'Truffe d\'été':                 190.00,
+  'Truffe noire Périgord':         950.00,  // hors saison : prix stable
+  'Truffe d\'été':                 180.00,  // entrée en saison : légère baisse
   'Cèpes frais':                   36.00,
   'Trompette de la mort':          58.00,
 
@@ -186,18 +187,18 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Thym frais':                     8.20,
   'Estragon frais':                10.50,
 
-  // ── FRUITS (saison avril) ────────────────────
-  'Fraise Gariguette':             11.00,   // pleine saison
+  // ── FRUITS (saison mai) ──────────────────────
+  'Fraise Gariguette':             10.00,   // pic de saison : prix baisse
   'Citron jaune':                   2.10,
   'Orange':                         1.90,
   'Mangue':                         3.90,
   'Avocat':                         3.40,
 
   // ── PRODUITS LAITIERS ────────────────────────
-  'Beurre doux':                    9.20,
+  'Beurre doux':                    8.90,   // marché laitier baissier
   'Crème liquide 35% MG':           5.30,
   'Crème fraîche épaisse':          4.60,
-  'Lait entier':                    1.22,
+  'Lait entier':                    1.20,   // tendance baissière
   'Parmesan - Reggiano':           25.00,
   'Comté 18 mois':                 18.50,
   'Mozzarella di bufala':          14.50,
