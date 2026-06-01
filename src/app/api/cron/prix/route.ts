@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 25 mai 2026)
+// Référence semaine précédente (semaine du 01 juin 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50, 'Bœuf - Entrecôte': 31.50, 'Bœuf - Faux-filet': 27.80,
@@ -32,23 +32,23 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Homard breton - Entier': 55.00, 'Langoustines': 46.50, 'Gambas - Entières': 29.00,
   'Crevettes roses décortiquées': 22.50, 'Crevettes grises': 20.38,
   'Saint-Jacques - Noix': 42.00, 'Moules de bouchot': 3.60, 'Huîtres creuses': 8.20, 'Palourdes': 14.50,
-  'Asperge verte': 8.50, 'Asperge blanche': 5.90, 'Petits pois frais': 4.70,
-  'Épinard frais': 4.20, 'Artichaut': 3.90, 'Courgette': 2.70, 'Aubergine': 3.50,
-  'Poivron rouge': 3.80, 'Tomate cerise': 4.90, 'Tomate ronde': 2.36, 'Poireau': 2.00,
+  'Asperge verte': 7.50, 'Asperge blanche': 5.50, 'Petits pois frais': 4.40,
+  'Épinard frais': 4.20, 'Artichaut': 3.90, 'Courgette': 2.35, 'Aubergine': 3.50,
+  'Poivron rouge': 3.80, 'Tomate cerise': 4.70, 'Tomate ronde': 2.30, 'Poireau': 2.00,
   'Céleri rave': 2.00, 'Potiron': 2.20, 'Carotte': 1.00, 'Oignon jaune': 0.95,
-  'Échalote': 4.20, 'Ail': 5.20, 'Champignon de Paris': 5.30, 'Haricot vert extra-fin': 6.20,
-  'Fenouil': 2.60, 'Morilles fraîches': 148.00, 'Girolles': 42.00,
+  'Échalote': 4.20, 'Ail': 5.20, 'Champignon de Paris': 5.30, 'Haricot vert extra-fin': 5.80,
+  'Fenouil': 2.60, 'Morilles fraîches': 156.00, 'Girolles': 42.00,
   'Truffe noire Périgord': 950.00, 'Truffe d\'été': 180.00, 'Cèpes frais': 36.00,
   'Trompette de la mort': 58.00, 'Basilic frais': 12.50, 'Persil plat': 6.20,
   'Coriandre fraîche': 8.20, 'Thym frais': 8.20, 'Estragon frais': 10.50,
-  'Fraise Gariguette': 10.00, 'Citron jaune': 2.10, 'Orange': 1.90, 'Mangue': 3.90, 'Avocat': 3.40,
-  'Beurre doux': 8.90, 'Crème liquide 35% MG': 5.30, 'Crème fraîche épaisse': 4.60,
-  'Lait entier': 1.20, 'Parmesan - Reggiano': 25.00, 'Comté 18 mois': 18.50,
+  'Fraise Gariguette': 9.20, 'Citron jaune': 2.10, 'Orange': 1.90, 'Mangue': 3.90, 'Avocat': 3.40,
+  'Beurre doux': 8.70, 'Crème liquide 35% MG': 5.30, 'Crème fraîche épaisse': 4.60,
+  'Lait entier': 1.18, 'Parmesan - Reggiano': 25.00, 'Comté 18 mois': 18.50,
   'Mozzarella di bufala': 14.50, 'Huile d\'olive vierge extra': 8.90, 'Farine T45': 1.25,
   'Riz arborio': 3.60, 'Pâtes fraîches': 5.20, 'Chocolat noir 70%': 13.00,
 }
 
-// Semaine du 25 mai 2026 — source FranceAgriMer
+// Semaine du 01 juin 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -125,10 +125,10 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Thon rouge - Pavé':             36.00,
 
   // ── POISSONS COURANTS ────────────────────────
-  'Saumon - Filet':                19.00,
+  'Saumon - Filet':                21.95,   // hausse Rungis : +15.5% (Foodomarket 29/05)
   'Saumon - Pavé':                 21.00,
   'Truite - Filet':                14.50,
-  'Cabillaud - Filet':             16.00,
+  'Cabillaud - Filet':             19.86,   // hausse significative : +24.1% (Foodomarket mai 2026)
   'Cabillaud - Dos':               23.80,
   'Lieu noir - Filet':             12.50,
   'Maquereau - Filet':              8.50,
@@ -139,7 +139,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   // ── CRUSTACÉS ────────────────────────────────
   'Homard breton - Entier':        55.00,
   'Langoustines':                  46.50,
-  'Gambas - Entières':             29.00,
+  'Gambas - Entières':             29.80,
   'Crevettes roses décortiquées':  22.50,
   'Crevettes grises':              20.38,
 
@@ -149,7 +149,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Huîtres creuses':                8.20,
   'Palourdes':                     14.50,
 
-  // ── LÉGUMES (saison mai) ─────────────────────
+  // ── LÉGUMES (saison juin) ────────────────────
   'Asperge verte':                  7.50,   // explosion récolte 2026 : production doublée, prix en forte baisse
   'Asperge blanche':                5.50,   // pleine saison : prix continue de reculer (−63% sur 3 mois)
   'Petits pois frais':              4.40,   // pleine saison : afflux de production nationale
@@ -186,11 +186,11 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Thym frais':                     8.20,
   'Estragon frais':                10.50,
 
-  // ── FRUITS (saison mai) ──────────────────────
+  // ── FRUITS (saison juin) ─────────────────────
   'Fraise Gariguette':              9.20,   // pic de saison : prix continue à baisser
   'Citron jaune':                   2.10,
   'Orange':                         1.90,
-  'Mangue':                         3.90,
+  'Mangue':                         3.66,   // légère baisse : −6.2% (Foodomarket mai 2026)
   'Avocat':                         3.40,
 
   // ── PRODUITS LAITIERS ────────────────────────
