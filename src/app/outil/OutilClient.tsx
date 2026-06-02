@@ -190,7 +190,7 @@ function OutilPageInner() {
     setNewIngQty('')
   }
 
-  const updateIngredient = (index: number, field: 'name' | 'qty_grams', value: string | number) => {
+  const updateIngredient = (index: number, field: 'name' | 'qty_grams' | 'price_per_kg', value: string | number) => {
     setIngredients(prev => prev.map((ing, i) => {
       if (i !== index) return ing
       const updated = { ...ing, [field]: value }
@@ -438,6 +438,20 @@ function OutilPageInner() {
                         />
                         <span className="text-xs text-brun-light">g</span>
                       </div>
+                      {isPro && (
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            title="Prix au kg (modifiable)"
+                            className="w-16 text-sm text-center bg-white border border-orange/40 rounded-lg px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange"
+                            value={ing.price_per_kg}
+                            onChange={(e) => updateIngredient(i, 'price_per_kg', parseFloat(e.target.value) || 0)}
+                          />
+                          <span className="text-xs text-brun-light">€/kg</span>
+                        </div>
+                      )}
                       <span className="text-xs text-brun-light w-14 text-right shrink-0">
                         {ing.cost.toLocaleString('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €
                       </span>
