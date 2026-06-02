@@ -21,6 +21,8 @@ const CATEGORIES = [
   { value: 'autre', label: 'Autres' },
 ]
 
+import type { Ingredient } from '@/lib/supabase'
+
 export default function PlatsPage() {
   const { user, profile, isPro } = useAuth()
   const [dishes, setDishes] = useState<Dish[]>([])
@@ -32,6 +34,10 @@ export default function PlatsPage() {
   const [sortCol, setSortCol] = useState<'name' | 'cost' | 'food_cost' | 'margin' | null>(null)
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
   const [costHistory, setCostHistory] = useState<Record<string, number[]>>({})
+  // Modale prix/kg
+  const [prixDish, setPrixDish] = useState<Dish | null>(null)
+  const [prixIngredients, setPrixIngredients] = useState<Ingredient[]>([])
+  const [prixSaving, setPrixSaving] = useState(false)
 
   const handleSort = (col: typeof sortCol) => {
     if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
@@ -111,6 +117,32 @@ export default function PlatsPage() {
     } finally {
       setPdfLoading(null)
     }
+  }
+
+  const handleSavePrix = async () => {
+    if (!prixDish || !user) return
+    setPrixSaving(true)
+    const updatedIngredients = prixIngredients.map(ing => ({
+      ...ing,
+      cost: ing.price_per_kg * ing.qty_grams / 1000,
+    }))
+    const totalCost = updatedIngredients.reduce((s, i) => s + i.cost, 0)
+    const margin_pct = prixDish.price_advised > 0
+      ? ((prixDish.price_advised - totalCost / (prixDish.covers || 1)) / prixDish.price_advised) * 100
+      : 0
+    const { error } = await supabase.from('dishes').update({
+      ingredients: updatedIngredients,
+      total_cost: totalCost,
+      margin_pct,
+      updated_at: new Date().toISOString(),
+    }).eq('id', prixDish.id).eq('user_id', user.id)
+    setPrixSaving(false)
+    if (error) { alert('Erreur lors de la sauvegarde. Veuillez réessayer.'); return }
+    setDishes(prev => prev.map(d => d.id === prixDish.id
+      ? { ...d, ingredients: updatedIngredients, total_cost: totalCost, margin_pct }
+      : d
+    ))
+    setPrixDish(null)
   }
 
   const atLimit = !isPro && dishes.length >= FREE_LIMIT
@@ -279,6 +311,17 @@ export default function PlatsPage() {
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
+                        {isPro && dish.ingredients?.length > 0 && (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            title="Modifier les prix au kg"
+                            onClick={() => { setPrixDish(dish); setPrixIngredients([...dish.ingredients]) }}
+                            className="text-orange border-orange/40 hover:bg-orange/5"
+                          >
+                            €/kg
+                          </Button>
+                        )}
                         <Link href={`/compte/plats/${dish.id}`}>
                           <Button size="sm" variant="secondary" title="Modifier ce plat">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -343,6 +386,37 @@ export default function PlatsPage() {
           )}
         </div>
       </div>
+
+      {/* Modale prix/kg */}
+      <Modal open={!!prixDish} onClose={() => setPrixDish(null)} title={`Prix au kg — ${prixDish?.name}`} maxWidth="max-w-lg">
+        <div className="space-y-2 max-h-80 overflow-y-auto mb-5">
+          {prixIngredients.map((ing, idx) => (
+            <div key={idx} className="flex items-center gap-3 px-3 py-2 bg-white border border-brun-pale rounded-xl">
+              <span className="flex-1 font-medium text-brun text-sm truncate">{ing.name}</span>
+              <span className="text-xs text-brun-light w-10 text-right shrink-0">{ing.qty_grams}g</span>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                className="w-20 text-sm border border-orange/40 rounded-lg px-2 py-1 text-right focus:outline-none focus:border-orange"
+                value={ing.price_per_kg}
+                onChange={e => {
+                  const val = parseFloat(e.target.value) || 0
+                  setPrixIngredients(prev => prev.map((it, i) => i === idx ? { ...it, price_per_kg: val, cost: val * it.qty_grams / 1000 } : it))
+                }}
+              />
+              <span className="text-xs text-brun-light shrink-0">€/kg</span>
+              <span className="text-sm font-semibold text-brun w-14 text-right shrink-0">
+                {(ing.price_per_kg * ing.qty_grams / 1000).toFixed(3)} €
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-3">
+          <Button variant="secondary" className="flex-1" onClick={() => setPrixDish(null)}>Annuler</Button>
+          <Button className="flex-1" loading={prixSaving} onClick={handleSavePrix}>Sauvegarder</Button>
+        </div>
+      </Modal>
 
       <Modal open={!!deleteId} onClose={() => setDeleteId(null)} title="Supprimer ce plat">
         <p className="text-brun-mid mb-6">Cette action est irréversible. Le plat sera définitivement supprimé.</p>
