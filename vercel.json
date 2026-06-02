@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/prix",
       "schedule": "0 6 * * 1"
+    },
+    {
+      "path": "/api/cron/ping",
+      "schedule": "0 8 */3 * *"
     }
   ]
 }
