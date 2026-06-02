@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/context/AuthContext'
+import { PostHogProvider } from '@/components/PostHogProvider'
+import { PostHogPageview } from '@/components/PostHogPageview'
+import { Suspense } from 'react'
 import { Lora, Plus_Jakarta_Sans } from 'next/font/google'
 
 const lora = Lora({
@@ -47,9 +50,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr">
       <body className={`${lora.variable} ${plusJakarta.variable} bg-creme text-brun font-jakarta antialiased`}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <PostHogProvider>
+          <Suspense>
+            <PostHogPageview />
+          </Suspense>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </PostHogProvider>
       </body>
     </html>
   )
