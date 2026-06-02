@@ -81,6 +81,26 @@ export async function POST(req: NextRequest) {
         break
       }
 
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Stripe.Subscription
+        const priceId = subscription.items.data[0]?.price.id
+        const newPlan = PRICE_TO_PLAN[priceId]
+        // Si le statut est actif et qu'on reconnaît le plan, on met à jour
+        if (newPlan && (subscription.status === 'active' || subscription.status === 'trialing')) {
+          await supabase
+            .from('profiles')
+            .update({ plan: newPlan })
+            .eq('stripe_subscription_id', subscription.id)
+        } else if (subscription.status === 'past_due' || subscription.status === 'unpaid') {
+          // Paiement en retard — on repasse en free
+          await supabase
+            .from('profiles')
+            .update({ plan: 'free' })
+            .eq('stripe_subscription_id', subscription.id)
+        }
+        break
+      }
+
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription
         await supabase

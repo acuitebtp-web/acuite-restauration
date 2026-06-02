@@ -29,7 +29,13 @@ function ConnexionPageInner() {
     setError('')
     const { error } = await signIn(email, password)
     if (error) {
-      setError('Email ou mot de passe incorrect')
+      if (error.includes('fetch') || error.includes('network') || error.includes('connect')) {
+        setError('Impossible de contacter le serveur. Vérifiez votre connexion internet.')
+      } else if (error.includes('Invalid login') || error.includes('invalid_credentials') || error.includes('Email not confirmed')) {
+        setError('Email ou mot de passe incorrect')
+      } else {
+        setError(`Erreur : ${error}`)
+      }
     } else {
       router.push(redirect)
     }
