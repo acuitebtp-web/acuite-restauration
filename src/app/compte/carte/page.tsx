@@ -155,6 +155,7 @@ export default function CartePage() {
 
   // ── Génération food costs pour plats sans ingrédients ─────────────────────
   const handleGenerateFoodCosts = async () => {
+    if (!user) return
     const empty = dishes.filter(d => !d.ingredients || d.ingredients.length === 0)
     if (empty.length === 0) return
     setGeneratingFoodCosts(true)
@@ -185,7 +186,8 @@ export default function CartePage() {
           total_cost: metrics.totalCost,
           price_advised: priceAdvised,
           margin_pct,
-        }).eq('id', dish.id)
+          updated_at: new Date().toISOString(),
+        }).eq('id', dish.id).eq('user_id', user!.id)
 
         setDishes(prev => prev.map(d => d.id === dish.id
           ? { ...d, ingredients, total_cost: metrics.totalCost, margin_pct, price_advised: priceAdvised }
@@ -314,7 +316,8 @@ export default function CartePage() {
           total_cost: metrics.totalCost,
           price_advised: priceAdvised,
           margin_pct,
-        }).eq('id', dish.id)
+          updated_at: new Date().toISOString(),
+        }).eq('id', dish.id).eq('user_id', user.id)
       } catch { /* continue avec le plat suivant */ }
 
       setImportDone(i + 1)
@@ -349,7 +352,12 @@ export default function CartePage() {
     const costPerCover = (selectedDish.covers || 1) > 0 ? totalCost / (selectedDish.covers || 1) : totalCost
     const priceAdvised = selectedDish.price_advised > 0 ? selectedDish.price_advised : costPerCover / 0.30
     const margin_pct = priceAdvised > 0 ? ((priceAdvised - costPerCover) / priceAdvised) * 100 : 0
-    const { error } = await supabase.from('dishes').update({ ingredients: updatedIngredients, total_cost: totalCost, margin_pct }).eq('id', selectedDish.id)
+    const { error } = await supabase.from('dishes').update({
+      ingredients: updatedIngredients,
+      total_cost: totalCost,
+      margin_pct,
+      updated_at: new Date().toISOString(),
+    }).eq('id', selectedDish.id).eq('user_id', user.id)
     setDishSaving(false)
     if (error) {
       alert('Erreur lors de la sauvegarde. Veuillez réessayer.')
