@@ -349,9 +349,13 @@ export default function CartePage() {
     const costPerCover = (selectedDish.covers || 1) > 0 ? totalCost / (selectedDish.covers || 1) : totalCost
     const priceAdvised = selectedDish.price_advised > 0 ? selectedDish.price_advised : costPerCover / 0.30
     const margin_pct = priceAdvised > 0 ? ((priceAdvised - costPerCover) / priceAdvised) * 100 : 0
-    await supabase.from('dishes').update({ ingredients: updatedIngredients, total_cost: totalCost, margin_pct }).eq('id', selectedDish.id)
-    setDishes(prev => prev.map(d => d.id === selectedDish.id ? { ...d, ingredients: updatedIngredients, total_cost: totalCost, margin_pct } : d))
+    const { error } = await supabase.from('dishes').update({ ingredients: updatedIngredients, total_cost: totalCost, margin_pct }).eq('id', selectedDish.id)
     setDishSaving(false)
+    if (error) {
+      alert('Erreur lors de la sauvegarde. Veuillez réessayer.')
+      return
+    }
+    setDishes(prev => prev.map(d => d.id === selectedDish.id ? { ...d, ingredients: updatedIngredients, total_cost: totalCost, margin_pct } : d))
     setSelectedDish(null)
   }
 

@@ -29,7 +29,7 @@ export function Nav() {
             Saison
           </Link>
           <Link href="/prix" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
-            Évolution des prix
+            Marchés
           </Link>
           <Link href="/blog" className="text-sm font-medium text-brun-mid hover:text-brun transition-colors">
             Blog
@@ -44,7 +44,7 @@ export function Nav() {
               </Link>
             </>
           )}
-          {loading ? null : user ? (
+          {!loading && user ? (
             <div className="relative">
               <button
                 onClick={() => setAccountOpen(!accountOpen)}
@@ -145,11 +145,19 @@ export function Nav() {
               <Button variant="ghost" className="w-full text-red-500" onClick={() => { signOut(); setMenuOpen(false) }}>Déconnexion</Button>
             ) : (
               <div className="flex flex-col gap-2">
-                <Link href="/connexion" onClick={() => setMenuOpen(false)}>
-                  <Button variant="secondary" className="w-full">Connexion</Button>
+                <Link
+                  href="/connexion"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm rounded-xl font-semibold border-2 border-orange text-orange hover:bg-orange-pale transition-colors"
+                >
+                  Connexion
                 </Link>
-                <Link href="/outil" onClick={() => setMenuOpen(false)}>
-                  <Button className="w-full">Essayer gratuitement</Button>
+                <Link
+                  href="/outil"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full inline-flex items-center justify-center px-5 py-2.5 text-sm rounded-xl font-semibold bg-orange text-white hover:bg-[#e0733a] transition-colors"
+                >
+                  Essayer gratuitement
                 </Link>
               </div>
             )}
