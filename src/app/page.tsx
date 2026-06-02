@@ -51,47 +51,47 @@ export default function LandingPage() {
       <JsonLd />
 
       {/* ── 1. HERO ─────────────────────────────────────────────── */}
-      <section className="pt-28 pb-24 px-4 bg-creme">
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-14">
+      <section className="pt-32 pb-28 px-4 bg-gradient-to-b from-ivoire via-creme to-creme">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
           <AnimatedSection className="flex-1 text-center lg:text-left" direction="left">
-            <span className="inline-flex items-center gap-2 bg-sauge-pale text-sauge text-sm font-semibold px-4 py-1.5 rounded-full mb-6">
+            <span className="inline-flex items-center gap-2 bg-sauge-pale text-sauge text-sm font-semibold px-4 py-2 rounded-full mb-6 border border-sauge/15 shadow-sm">
               <span className="text-base">🥬</span> Basé sur les cotations FranceAgriMer
             </span>
-            <h1 className="font-lora text-5xl lg:text-6xl font-bold text-brun leading-tight mb-5">
+            <h1 className="font-lora text-5xl lg:text-7xl font-bold text-brun leading-[1.04] tracking-tight mb-6">
               Calculez votre<br />
               <em className="text-orange not-italic">food cost</em><br />
               en 30 secondes
             </h1>
-            <p className="text-brun-mid text-lg mb-8 max-w-md mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-brun-mid text-lg lg:text-xl mb-9 max-w-md mx-auto lg:mx-0 leading-relaxed">
               Saisissez votre plat, l'IA génère les ingrédients, vous obtenez le coût matière, la marge et le prix conseillé en temps réel.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3.5 justify-center lg:justify-start">
               <Link href="/outil">
-                <button className="btn-primary text-base px-8 py-4">
+                <button className="btn-primary text-base px-8 py-4 shadow-lg shadow-orange/25 hover:shadow-xl hover:shadow-orange/35 hover:-translate-y-0.5 transition-all duration-300">
                   Essayer gratuitement — sans CB
                 </button>
               </Link>
               <Link href="/tarifs">
-                <button className="btn-secondary text-base px-8 py-4">
+                <button className="btn-secondary text-base px-8 py-4 hover:-translate-y-0.5 transition-all duration-300">
                   Voir les tarifs
                 </button>
               </Link>
             </div>
-            <p className="text-brun-light text-sm mt-4">Gratuit pour 3 plats · Pro dès 15€/mois</p>
+            <p className="text-brun-light text-sm mt-5">Gratuit pour 3 plats · Pro dès 15€/mois</p>
 
             {/* Logos confiance */}
-            <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
-              <span className="text-xs text-brun-light font-medium">Données officielles</span>
+            <div className="flex items-center gap-4 mt-10 justify-center lg:justify-start">
+              <span className="text-xs text-brun-light font-medium tracking-wide uppercase">Données officielles</span>
               <div className="h-px flex-1 max-w-[40px] bg-brun-pale" />
-              <span className="bg-white border border-brun-pale text-brun text-xs font-semibold px-3 py-1.5 rounded-full">FranceAgriMer</span>
+              <span className="bg-white border border-brun-pale text-brun text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">FranceAgriMer</span>
             </div>
           </AnimatedSection>
 
           {/* Preview outil */}
           <AnimatedSection className="flex-1 w-full max-w-md lg:max-w-none" direction="right" delay={0.15}>
-            <div className="bg-white rounded-3xl shadow-2xl border border-brun-pale p-6 relative">
+            <div className="bg-white rounded-3xl shadow-2xl shadow-brun/15 ring-1 ring-brun/5 border border-brun-pale p-6 relative transition-transform duration-300 hover:-translate-y-1">
               {/* Accent couleur */}
-              <div className="absolute -top-3 -right-3 w-16 h-16 bg-citron rounded-2xl rotate-12 opacity-80 flex items-center justify-center text-2xl">
+              <div className="absolute -top-3 -right-3 w-16 h-16 bg-citron rounded-2xl rotate-12 opacity-80 flex items-center justify-center text-2xl shadow-lg shadow-citron/40">
                 🍋
               </div>
               <div className="flex items-center gap-2 mb-5">
@@ -100,10 +100,10 @@ export default function LandingPage() {
                 <div className="w-3 h-3 rounded-full bg-sauge" />
                 <span className="ml-2 text-xs text-brun-light">costyfood.fr/outil</span>
               </div>
-              <div className="bg-sauge-pale rounded-xl p-3 text-sm text-brun-mid italic mb-4">
+              <div className="bg-sauge-pale rounded-xl p-3.5 text-sm text-brun-mid italic mb-4 border border-sauge/10">
                 "Magret de canard aux cerises, sauce au porto..."
               </div>
-              <div className="space-y-2 mb-4">
+              <div className="space-y-2.5 mb-4">
                 {[
                   { name: 'Canard - Magret', qty: '180g', cost: '3,96 €', color: 'bg-orange-pale text-orange', pct: 62 },
                   { name: 'Cerises', qty: '80g', cost: '0,48 €', color: 'bg-tomate-pale text-tomate', pct: 22 },
@@ -120,16 +120,16 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="bg-ivoire rounded-xl p-2.5 text-center border border-brun-pale">
+              <div className="grid grid-cols-3 gap-2.5">
+                <div className="bg-ivoire rounded-xl p-3 text-center border border-brun-pale">
                   <p className="text-xs text-brun-light">Coût</p>
                   <p className="font-bold text-brun text-sm">5,10 €</p>
                 </div>
-                <div className="bg-orange rounded-xl p-2.5 text-center">
+                <div className="bg-orange rounded-xl p-3 text-center shadow-md shadow-orange/30">
                   <p className="text-xs text-white/70">Prix conseillé</p>
                   <p className="font-bold text-white text-sm">17,00 €</p>
                 </div>
-                <div className="bg-sauge-pale rounded-xl p-2.5 text-center border border-sauge-light">
+                <div className="bg-sauge-pale rounded-xl p-3 text-center border border-sauge-light">
                   <p className="text-xs text-sauge/70">Marge</p>
                   <p className="font-bold text-sauge text-sm">70,0 %</p>
                 </div>
@@ -140,18 +140,18 @@ export default function LandingPage() {
       </section>
 
       {/* ── STATS RAPIDES ───────────────────────────────────────── */}
-      <section className="py-10 px-4 bg-brun">
+      <section className="py-12 px-4 bg-brun">
         <div className="max-w-4xl mx-auto">
           <StatsBar />
         </div>
       </section>
 
       {/* ── 2. PROBLÈME ─────────────────────────────────────────── */}
-      <section className="py-20 px-4 bg-ivoire">
+      <section className="py-24 px-4 bg-ivoire">
         <div className="max-w-5xl mx-auto">
-          <AnimatedSection className="text-center mb-12">
+          <AnimatedSection className="text-center mb-14">
             <span className="text-3xl">🍅</span>
-            <h2 className="font-lora text-3xl font-bold text-brun mt-2">
+            <h2 className="font-lora text-3xl lg:text-4xl font-bold text-brun mt-3 tracking-tight">
               La restauration, c'est dur à rentabiliser
             </h2>
           </AnimatedSection>
@@ -180,9 +180,9 @@ export default function LandingPage() {
               },
             ].map((item, i) => (
               <AnimatedSection key={item.title} delay={i * 0.1}>
-                <div className={`${item.bg} border ${item.border} rounded-2xl p-6 h-full`}>
-                  <div className="text-4xl mb-3">{item.emoji}</div>
-                  <h3 className="font-lora text-lg font-bold text-brun mb-2">{item.title}</h3>
+                <div className={`${item.bg} border ${item.border} rounded-3xl p-7 h-full shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300`}>
+                  <div className="text-4xl mb-4">{item.emoji}</div>
+                  <h3 className="font-lora text-xl font-bold text-brun mb-2.5">{item.title}</h3>
                   <p className="text-sm text-brun-mid leading-relaxed">{item.text}</p>
                 </div>
               </AnimatedSection>
@@ -192,14 +192,14 @@ export default function LandingPage() {
       </section>
 
       {/* ── 3. COMMENT ÇA MARCHE ────────────────────────────────── */}
-      <section className="py-20 px-4 bg-creme">
+      <section className="py-24 px-4 bg-creme">
         <div className="max-w-4xl mx-auto">
-          <AnimatedSection className="text-center mb-12">
+          <AnimatedSection className="text-center mb-14">
             <span className="text-3xl">🌿</span>
-            <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
+            <h2 className="font-lora text-3xl lg:text-4xl font-bold text-brun mt-3 mb-2 tracking-tight">
               Comment ça marche ?
             </h2>
-            <p className="text-brun-light">Trois étapes, moins d'une minute</p>
+            <p className="text-brun-light text-lg">Trois étapes, moins d'une minute</p>
           </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -228,13 +228,13 @@ export default function LandingPage() {
               <AnimatedSection key={item.step} delay={i * 0.12}>
                 <div className="relative flex flex-col items-center md:items-start text-center md:text-left">
                   {i < 2 && (
-                    <div className="hidden md:block absolute top-6 left-full w-full h-0.5 bg-gradient-to-r from-brun-pale to-transparent z-0" />
+                    <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-brun-pale to-transparent z-0" />
                   )}
-                  <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-sm z-10`}>
+                  <div className={`w-16 h-16 ${item.color} rounded-2xl flex items-center justify-center text-2xl mb-5 shadow-lg shadow-brun/15 z-10`}>
                     {item.emoji}
                   </div>
-                  <div className="text-xs font-bold text-brun-light mb-1 tracking-widest">ÉTAPE {item.step}</div>
-                  <h3 className="font-lora text-lg font-bold text-brun mb-2">{item.title}</h3>
+                  <div className="text-xs font-bold text-orange mb-1.5 tracking-[0.2em]">ÉTAPE {item.step}</div>
+                  <h3 className="font-lora text-xl font-bold text-brun mb-2.5">{item.title}</h3>
                   <p className="text-sm text-brun-mid leading-relaxed">{item.text}</p>
                 </div>
               </AnimatedSection>
@@ -244,20 +244,20 @@ export default function LandingPage() {
       </section>
 
       {/* ── 4. DONNÉES FRANCEAGRIMER ────────────────────────────── */}
-      <section className="py-20 px-4 bg-sauge-pale">
-        <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+      <section className="py-24 px-4 bg-sauge-pale">
+        <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-14">
           <AnimatedSection className="flex-1" direction="left">
-            <span className="inline-flex items-center gap-2 bg-white text-sauge text-sm font-semibold px-4 py-1.5 rounded-full mb-5 border border-sauge-light">
+            <span className="inline-flex items-center gap-2 bg-white text-sauge text-sm font-semibold px-4 py-2 rounded-full mb-6 border border-sauge-light shadow-sm">
               <span>🥦</span> Données officielles
             </span>
-            <h2 className="font-lora text-3xl font-bold text-brun mb-4">
+            <h2 className="font-lora text-3xl lg:text-4xl font-bold text-brun mb-5 tracking-tight">
               Des prix fiables, issus de FranceAgriMer
             </h2>
-            <p className="text-brun-mid mb-6 leading-relaxed">
+            <p className="text-brun-mid text-lg mb-7 leading-relaxed">
               Notre base contient plus de 200 ingrédients avec des prix basés sur les cotations officielles de FranceAgriMer.
               Avec le plan Pro, remplacez ces prix par vos propres tarifs fournisseurs pour une précision maximale.
             </p>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3.5">
               {[
                 { emoji: '🥩', label: 'Viandes, volailles, poissons & crustacés' },
                 { emoji: '🥬', label: 'Légumes de saison, aromates & épices' },
@@ -274,8 +274,8 @@ export default function LandingPage() {
 
           {/* Tableau exemple */}
           <AnimatedSection className="flex-1 w-full max-w-sm" direction="right" delay={0.1}>
-            <div className="bg-white rounded-2xl overflow-hidden shadow-lg border border-sauge-light">
-              <div className="bg-brun px-4 py-3 flex items-center gap-2">
+            <div className="bg-white rounded-3xl overflow-hidden shadow-xl shadow-sauge/20 border border-sauge-light transition-transform duration-300 hover:-translate-y-1">
+              <div className="bg-brun px-5 py-4 flex items-center gap-2">
                 <span className="text-lg">🛒</span>
                 <p className="text-white font-semibold text-sm">Extrait — prix de référence</p>
               </div>
@@ -288,7 +288,7 @@ export default function LandingPage() {
                   { name: 'Asperge verte', price: '8,00', emoji: '🌿' },
                   { name: 'Homard breton', price: '55,00', emoji: '🦞' },
                 ].map(item => (
-                  <div key={item.name} className="flex justify-between items-center px-4 py-2.5">
+                  <div key={item.name} className="flex justify-between items-center px-5 py-3 hover:bg-ivoire transition-colors">
                     <span className="text-sm text-brun flex items-center gap-2">
                       <span>{item.emoji}</span>{item.name}
                     </span>
@@ -296,7 +296,7 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <div className="px-4 py-2.5 bg-ivoire">
+              <div className="px-4 py-3 bg-ivoire">
                 <p className="text-xs text-brun-light text-center font-medium">+ 200 ingrédients disponibles</p>
               </div>
             </div>
@@ -305,14 +305,14 @@ export default function LandingPage() {
       </section>
 
       {/* ── 4.5 TÉMOIGNAGES ─────────────────────────────────────── */}
-      <section className="py-20 px-4 bg-creme">
+      <section className="py-24 px-4 bg-creme">
         <div className="max-w-5xl mx-auto">
-          <AnimatedSection className="text-center mb-12">
+          <AnimatedSection className="text-center mb-14">
             <span className="text-3xl">⭐</span>
-            <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
+            <h2 className="font-lora text-3xl lg:text-4xl font-bold text-brun mt-3 mb-2 tracking-tight">
               Ce qu'en disent les restaurateurs
             </h2>
-            <p className="text-brun-light">Des professionnels qui ont repris le contrôle de leur rentabilité</p>
+            <p className="text-brun-light text-lg">Des professionnels qui ont repris le contrôle de leur rentabilité</p>
           </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -339,15 +339,15 @@ export default function LandingPage() {
               },
             ].map((t, i) => (
               <AnimatedSection key={t.name} delay={i * 0.1}>
-                <div className="bg-white border border-brun-pale rounded-2xl p-6 flex flex-col h-full">
-                  <div className="flex gap-0.5 mb-4">
+                <div className="bg-white border border-brun-pale rounded-3xl p-7 flex flex-col h-full shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300">
+                  <div className="flex gap-0.5 mb-5">
                     {Array.from({ length: t.stars }).map((_, j) => (
                       <span key={j} className="text-citron text-lg">★</span>
                     ))}
                   </div>
-                  <p className="text-brun-mid text-sm leading-relaxed flex-1 mb-5 italic">"{t.text}"</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-sauge-pale rounded-full flex items-center justify-center text-xl shrink-0">
+                  <p className="text-brun-mid text-sm leading-relaxed flex-1 mb-6 italic">"{t.text}"</p>
+                  <div className="flex items-center gap-3 pt-5 border-t border-brun-pale">
+                    <div className="w-11 h-11 bg-sauge-pale rounded-full flex items-center justify-center text-xl shrink-0">
                       {t.emoji}
                     </div>
                     <div>
@@ -363,34 +363,34 @@ export default function LandingPage() {
       </section>
 
       {/* ── 4.7 BONS PLANS & SAISON ─────────────────────────────── */}
-      <section className="py-20 px-4 bg-ivoire">
+      <section className="py-24 px-4 bg-ivoire">
         <div className="max-w-5xl mx-auto">
-          <AnimatedSection className="text-center mb-10">
+          <AnimatedSection className="text-center mb-12">
             <span className="text-3xl">📉</span>
-            <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
+            <h2 className="font-lora text-3xl lg:text-4xl font-bold text-brun mt-3 mb-2 tracking-tight">
               Le marché cette semaine
             </h2>
-            <p className="text-brun-light">Baisses de prix détectées — profitez-en pour améliorer vos marges</p>
+            <p className="text-brun-light text-lg">Baisses de prix détectées — profitez-en pour améliorer vos marges</p>
           </AnimatedSection>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Bons plans */}
             <AnimatedSection direction="left">
-              <div className="bg-white rounded-2xl border border-sauge-light overflow-hidden shadow-sm">
-                <div className="bg-sauge px-5 py-3 flex items-center gap-2">
+              <div className="bg-white rounded-3xl border border-sauge-light overflow-hidden shadow-md shadow-sauge/10 hover:shadow-xl transition-shadow duration-300">
+                <div className="bg-sauge px-5 py-4 flex items-center gap-2">
                   <span className="text-white text-lg">📉</span>
                   <p className="text-white font-semibold text-sm">Bons plans — prix en baisse</p>
                 </div>
                 <div className="divide-y divide-brun-pale">
                   {bonsPlans.slice(0, 5).map(p => (
-                    <div key={p.ingredient} className="flex items-center justify-between px-5 py-3">
+                    <div key={p.ingredient} className="flex items-center justify-between px-5 py-3.5 hover:bg-ivoire transition-colors">
                       <span className="text-sm text-brun flex items-center gap-2">
                         <span>{p.emoji}</span>{p.ingredient}
                       </span>
                       <div className="flex items-center gap-3 text-sm">
                         <span className="text-brun-light line-through">{p.previousPrice}€/kg</span>
                         <span className="font-bold text-sauge">{p.currentPrice}€/kg</span>
-                        <span className="bg-sauge-pale text-sauge text-xs font-bold px-1.5 py-0.5 rounded-full">
+                        <span className="bg-sauge-pale text-sauge text-xs font-bold px-2 py-0.5 rounded-full">
                           {p.changePct}%
                         </span>
                       </div>
@@ -405,8 +405,8 @@ export default function LandingPage() {
 
             {/* Produits de saison */}
             <AnimatedSection direction="right" delay={0.1}>
-              <div className="bg-white rounded-2xl border border-citron/30 overflow-hidden shadow-sm">
-                <div className="bg-citron px-5 py-3 flex items-center justify-between">
+              <div className="bg-white rounded-3xl border border-citron/30 overflow-hidden shadow-md shadow-citron/10 hover:shadow-xl transition-shadow duration-300">
+                <div className="bg-citron px-5 py-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <p className="text-brun font-semibold text-sm">Produits de saison à acheter maintenant — {seasonLabel}</p>
                   </div>
@@ -414,12 +414,12 @@ export default function LandingPage() {
                     Tout voir →
                   </Link>
                 </div>
-                <div className="p-4 flex flex-wrap gap-2">
+                <div className="p-4 flex flex-wrap gap-2.5">
                   {seasonalNow.map(s => (
                     <Link
                       key={s.name}
                       href={`/outil?prompt=${encodeURIComponent(s.name)}`}
-                      className="flex items-center gap-1.5 bg-creme border border-brun-pale rounded-xl px-3 py-2 text-sm font-medium text-brun hover:border-orange hover:text-orange transition-colors"
+                      className="flex items-center gap-1.5 bg-creme border border-brun-pale rounded-xl px-3.5 py-2 text-sm font-medium text-brun hover:border-orange hover:text-orange hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200"
                     >
                       <span>{s.emoji}</span> {s.name}
                     </Link>
@@ -437,16 +437,16 @@ export default function LandingPage() {
       </section>
 
       {/* ── 5. TARIFS ───────────────────────────────────────────── */}
-      <section className="py-20 px-4 bg-creme" id="tarifs">
+      <section className="py-24 px-4 bg-creme" id="tarifs">
         <div className="max-w-5xl mx-auto">
-          <AnimatedSection className="text-center mb-12">
+          <AnimatedSection className="text-center mb-16">
             <span className="text-3xl">🧺</span>
-            <h2 className="font-lora text-3xl font-bold text-brun mt-2 mb-2">
+            <h2 className="font-lora text-3xl lg:text-4xl font-bold text-brun mt-3 mb-2 tracking-tight">
               Tarifs simples et sans surprise
             </h2>
-            <p className="text-brun-light">Sans engagement · Résiliable à tout moment</p>
+            <p className="text-brun-light text-lg">Sans engagement · Résiliable à tout moment</p>
           </AnimatedSection>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
             {[
               {
                 name: 'Gratuit',
@@ -462,7 +462,7 @@ export default function LandingPage() {
                 name: 'Pro',
                 price: '15€/mois',
                 emoji: '',
-                bg: 'bg-white border-orange ring-2 ring-orange shadow-xl',
+                bg: 'bg-white border-orange ring-2 ring-orange shadow-2xl shadow-orange/20 md:scale-105',
                 features: ['Plats illimités', 'IA illimitée', 'Export PDF', 'Scan IA de carte', 'Prix fournisseurs'],
                 cta: 'Essayer le Pro',
                 link: '/tarifs',
@@ -480,19 +480,19 @@ export default function LandingPage() {
               },
             ].map((plan, i) => (
               <AnimatedSection key={plan.name} delay={i * 0.1}>
-                <div className={`relative rounded-2xl border p-6 flex flex-col h-full transition-shadow hover:shadow-lg ${plan.bg}`}>
+                <div className={`relative rounded-3xl border p-7 flex flex-col h-full transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${plan.bg}`}>
                   {plan.highlight && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="bg-orange text-white text-xs font-bold px-3 py-1 rounded-full">
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                      <span className="bg-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-orange/30">
                         Recommandé
                       </span>
                     </div>
                   )}
                   <h3 className="font-lora text-xl font-bold text-brun">{plan.name}</h3>
-                  <p className="text-2xl font-bold text-brun mt-2 mb-4">{plan.price}</p>
-                  <ul className="space-y-2 mb-6 flex-1">
+                  <p className="text-3xl font-bold text-brun mt-2 mb-5">{plan.price}</p>
+                  <ul className="space-y-3 mb-7 flex-1">
                     {plan.features.map(f => (
-                      <li key={f} className="flex items-center gap-2 text-sm text-brun-mid">
+                      <li key={f} className="flex items-center gap-2.5 text-sm text-brun-mid">
                         <svg className="w-4 h-4 text-sauge shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                         </svg>
@@ -513,20 +513,20 @@ export default function LandingPage() {
       </section>
 
       {/* ── 6. CTA FINAL ────────────────────────────────────────── */}
-      <section className="py-20 px-4 bg-gradient-to-br from-brun via-brun-mid to-sauge relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none text-9xl flex items-center justify-center gap-8 select-none">
+      <section className="py-28 px-4 bg-gradient-to-br from-brun via-brun-mid to-sauge relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.08] pointer-events-none text-9xl flex items-center justify-center gap-8 select-none blur-[1px]">
           🥬🍅🥕🧅🫒🌿
         </div>
         <AnimatedSection className="max-w-3xl mx-auto text-center relative">
-          <span className="text-5xl block mb-4">🎯</span>
-          <h2 className="font-lora text-4xl font-bold text-white mb-4">
+          <span className="text-5xl block mb-5">🎯</span>
+          <h2 className="font-lora text-4xl lg:text-5xl font-bold text-white mb-5 tracking-tight leading-tight">
             Commencez à piloter votre rentabilité
           </h2>
-          <p className="text-white/70 text-lg mb-8">
+          <p className="text-white/75 text-lg mb-9">
             Aucune carte bancaire requise · 3 plats gratuits dès maintenant
           </p>
           <Link href="/outil">
-            <button className="bg-white text-brun font-bold text-base px-10 py-4 rounded-xl hover:bg-ivoire transition-colors shadow-lg">
+            <button className="bg-white text-brun font-bold text-lg px-10 py-5 rounded-2xl hover:bg-ivoire hover:scale-[1.03] hover:-translate-y-0.5 transition-all duration-300 shadow-2xl shadow-black/25">
               Calculer le food cost de mon premier plat →
             </button>
           </Link>
