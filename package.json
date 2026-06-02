@@ -17,6 +17,7 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "next": "^16.2.2",
+    "posthog-js": "^1.378.1",
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^2.12.7",
