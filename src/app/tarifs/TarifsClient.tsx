@@ -7,6 +7,7 @@ import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/hooks/useAuth'
+import { usePostHog } from 'posthog-js/react'
 
 const PLANS = [
   {
@@ -116,6 +117,7 @@ function TarifsJsonLd() {
 
 function TarifsPageInner() {
   const { user } = useAuth()
+  const posthog = usePostHog()
   const searchParams = useSearchParams()
   const highlightPlan = searchParams.get('plan')
   const [loading, setLoading] = useState<string | null>(null)
@@ -133,6 +135,7 @@ function TarifsPageInner() {
 
   const handleSubscribe = async (priceId: string | undefined, planId: string) => {
     if (!priceId) return
+    posthog?.capture('upgrade_clicked', { plan: planId, is_annual: isAnnual, logged_in: !!user })
     if (!user) {
       window.location.href = `/inscription?redirect=/tarifs&plan=${planId}`
       return
@@ -146,6 +149,7 @@ function TarifsPageInner() {
       })
       const { url, error } = await res.json()
       if (error) throw new Error(error)
+      posthog?.capture('checkout_started', { plan: planId, is_annual: isAnnual })
       window.location.href = url
     } catch (err) {
       console.error(err)

@@ -7,9 +7,11 @@ import { Nav } from '@/components/layout/Nav'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
+import { usePostHog } from 'posthog-js/react'
 
 function ConnexionPageInner() {
   const { signIn, signInWithGoogle } = useAuth()
+  const posthog = usePostHog()
   const router = useRouter()
   const searchParams = useSearchParams()
   const rawRedirect = searchParams.get('redirect') || '/compte'
@@ -37,6 +39,7 @@ function ConnexionPageInner() {
         setError(`Erreur : ${error}`)
       }
     } else {
+      posthog?.capture('user_logged_in', { method: 'email' })
       router.push(redirect)
     }
     setLoading(false)
@@ -44,6 +47,7 @@ function ConnexionPageInner() {
 
   const handleGoogle = async () => {
     setGoogleLoading(true)
+    posthog?.capture('user_logged_in', { method: 'google' })
     await signInWithGoogle()
   }
 

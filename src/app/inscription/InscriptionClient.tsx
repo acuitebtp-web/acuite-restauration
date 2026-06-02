@@ -6,10 +6,12 @@ import { Nav } from '@/components/layout/Nav'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useAuth } from '@/hooks/useAuth'
+import { usePostHog } from 'posthog-js/react'
 
 export default function InscriptionClient() {
   const { signUp, signInWithGoogle } = useAuth()
   const router = useRouter()
+  const posthog = usePostHog()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -31,6 +33,8 @@ export default function InscriptionClient() {
     if (error) {
       setError(error)
     } else {
+      posthog?.capture('user_signed_up', { method: 'email' })
+      posthog?.identify(email, { email })
       setSuccess(true)
     // Envoyer l'email de bienvenue (silencieux si échec)
     fetch('/api/email/welcome', {
@@ -45,6 +49,7 @@ export default function InscriptionClient() {
 
   const handleGoogle = async () => {
     setGoogleLoading(true)
+    posthog?.capture('user_signed_up', { method: 'google' })
     await signInWithGoogle()
   }
 

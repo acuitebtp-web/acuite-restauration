@@ -22,9 +22,11 @@ const CATEGORIES = [
 ]
 
 import type { Ingredient } from '@/lib/supabase'
+import { usePostHog } from 'posthog-js/react'
 
 export default function PlatsPage() {
   const { user, profile, isPro } = useAuth()
+  const posthog = usePostHog()
   const [dishes, setDishes] = useState<Dish[]>([])
   const [loading, setLoading] = useState(true)
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -114,6 +116,7 @@ export default function PlatsPage() {
     setPdfLoading(dish.id)
     try {
       await generateDishPDF(dish, profile)
+      posthog?.capture('pdf_exported', { dish_name: dish.name, category: dish.category })
     } finally {
       setPdfLoading(null)
     }
@@ -138,6 +141,7 @@ export default function PlatsPage() {
     }).eq('id', prixDish.id).eq('user_id', user.id)
     setPrixSaving(false)
     if (error) { alert('Erreur lors de la sauvegarde. Veuillez réessayer.'); return }
+    posthog?.capture('price_kg_modified', { dish_name: prixDish.name, ingredient_count: updatedIngredients.length })
     setDishes(prev => prev.map(d => d.id === prixDish.id
       ? { ...d, ingredients: updatedIngredients, total_cost: totalCost, margin_pct }
       : d

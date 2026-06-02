@@ -14,6 +14,7 @@ import { supabase, Ingredient, CustomPrice } from '@/lib/supabase'
 import { INGREDIENT_NAMES, getPriceForIngredient } from '@/lib/ingredients'
 import { getFallbackClient } from '@/lib/fallback'
 import { calculateDishMetrics, getPriceScenarios, getFoodCostStatus, formatEuros, formatPct } from '@/lib/calculations'
+import { usePostHog } from 'posthog-js/react'
 
 const SIMILAR_DISHES: Record<string, string[]> = {
   canard: ['Canard à l\'orange', 'Magret de canard, sauce miel-soja', 'Confit de canard'],
@@ -51,6 +52,7 @@ const ALLERGENS_LIST = [
 
 function OutilPageInner() {
   const { user, isPro } = useAuth()
+  const posthog = usePostHog()
   const searchParams = useSearchParams()
   const [customPrices, setCustomPrices] = useState<CustomPrice[]>([])
   const [aiPrompt, setAiPrompt] = useState('')
@@ -171,6 +173,7 @@ function OutilPageInner() {
         })
         setIngredients(mapped)
       }
+      posthog?.capture('ai_ingredients_generated', { dish: aiPrompt, ingredient_count: ingredients.length, is_pro: isPro })
       localStorage.setItem('acuite_dish_count', String(count + 1))
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Erreur lors de la génération'
@@ -252,6 +255,14 @@ function OutilPageInner() {
         }).then(() => {}) // fire and forget
       }
 
+      posthog?.capture('dish_saved', {
+        dish_name: dishName,
+        category,
+        food_cost_pct: metrics?.foodCostPct,
+        price_advised: metrics?.priceAdvised,
+        ingredient_count: ingredients.length,
+        plan: isPro ? 'pro' : 'free',
+      })
       setSaveSuccess(true)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (err) {
