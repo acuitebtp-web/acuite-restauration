@@ -17,8 +17,12 @@ export const calculateDishMetrics = (
   customPrices: Record<string, number> = {}
 ): DishMetrics => {
   const totalCost = ingredients.reduce((sum, ing) => {
-    const price = getPriceForIngredient(ing.name, customPrices)
-    return sum + (price * ing.qty_grams / 1000)
+    // Utilise ing.cost s'il est déjà calculé (inclut les prix/kg manuels),
+    // sinon fallback sur les cotations marchés
+    const cost = ing.cost > 0
+      ? ing.cost
+      : getPriceForIngredient(ing.name, customPrices) * ing.qty_grams / 1000
+    return sum + cost
   }, 0)
 
   const costPerCover = covers > 0 ? totalCost / covers : totalCost

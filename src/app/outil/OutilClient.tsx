@@ -420,49 +420,53 @@ function OutilPageInner() {
               {ingredients.length > 0 ? (
                 <div className="space-y-2 mb-4">
                   {ingredients.map((ing, i) => (
-                    <div key={i} className="flex items-center gap-2 bg-creme rounded-xl p-2">
-                      <div className="flex-1 min-w-0">
+                    <div key={i} className="bg-creme rounded-xl p-2">
+                      {/* Ligne 1 : nom + supprimer */}
+                      <div className="flex items-center justify-between gap-2 mb-1">
                         <input
-                          className="text-sm font-medium text-brun bg-transparent w-full truncate focus:outline-none"
+                          className="text-sm font-medium text-brun bg-transparent flex-1 focus:outline-none"
                           value={ing.name}
                           onChange={(e) => updateIngredient(i, 'name', e.target.value)}
                         />
+                        <button
+                          onClick={() => removeIngredient(i)}
+                          className="text-brun-light hover:text-red-500 transition-colors shrink-0"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <input
-                          type="number"
-                          className="w-16 text-sm text-center bg-white border border-brun-pale rounded-lg px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange"
-                          value={ing.qty_grams}
-                          min={1}
-                          onChange={(e) => updateIngredient(i, 'qty_grams', Number(e.target.value))}
-                        />
-                        <span className="text-xs text-brun-light">g</span>
-                      </div>
-                      {isPro && (
+                      {/* Ligne 2 : quantité + prix/kg (Pro) + coût */}
+                      <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1">
                           <input
                             type="number"
-                            step="0.01"
-                            min="0"
-                            title="Prix au kg (modifiable)"
-                            className="w-16 text-sm text-center bg-white border border-orange/40 rounded-lg px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange"
-                            value={ing.price_per_kg}
-                            onChange={(e) => updateIngredient(i, 'price_per_kg', parseFloat(e.target.value) || 0)}
+                            className="w-16 text-sm text-center bg-white border border-brun-pale rounded-lg px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange"
+                            value={ing.qty_grams}
+                            min={1}
+                            onChange={(e) => updateIngredient(i, 'qty_grams', Number(e.target.value))}
                           />
-                          <span className="text-xs text-brun-light">€/kg</span>
+                          <span className="text-xs text-brun-light">g</span>
                         </div>
-                      )}
-                      <span className="text-xs text-brun-light w-14 text-right shrink-0">
-                        {ing.cost.toLocaleString('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €
-                      </span>
-                      <button
-                        onClick={() => removeIngredient(i)}
-                        className="text-brun-light hover:text-red-500 transition-colors ml-1"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
+                        {isPro && (
+                          <div className="flex items-center gap-1">
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              title="Prix au kg (modifiable)"
+                              className="w-16 text-sm text-center bg-white border border-orange/40 rounded-lg px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange"
+                              value={ing.price_per_kg}
+                              onChange={(e) => updateIngredient(i, 'price_per_kg', parseFloat(e.target.value) || 0)}
+                            />
+                            <span className="text-xs text-brun-light">€/kg</span>
+                          </div>
+                        )}
+                        <span className="text-xs text-brun-light ml-auto">
+                          {ing.cost.toLocaleString('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
