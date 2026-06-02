@@ -162,28 +162,28 @@ function TarifsPageInner() {
     <>
       <Nav />
       <TarifsJsonLd />
-      <div className="pt-24 pb-20 px-4 bg-creme min-h-screen">
+      <div className="pt-28 pb-24 px-4 bg-gradient-to-b from-ivoire via-creme to-creme min-h-screen">
         <div className="max-w-5xl mx-auto">
 
           {/* Header */}
-          <div className="text-center mb-10">
-            <h1 className="font-lora text-4xl font-bold text-brun mb-3">
+          <div className="text-center mb-14">
+            <h1 className="font-lora text-4xl lg:text-5xl font-bold text-brun mb-4 tracking-tight">
               Des tarifs simples et transparents
             </h1>
-            <p className="text-brun-light text-lg max-w-xl mx-auto mb-6">
+            <p className="text-brun-light text-lg max-w-xl mx-auto mb-8">
               Sans engagement. Résiliable à tout moment. Facturation HT.
             </p>
             {/* Toggle mensuel/annuel */}
-            <div className="inline-flex items-center gap-3 bg-white border border-brun-pale rounded-2xl p-1.5">
+            <div className="inline-flex items-center gap-2 bg-white border border-brun-pale rounded-2xl p-1.5 shadow-sm">
               <button
                 onClick={() => setIsAnnual(false)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${!isAnnual ? 'bg-brun text-white shadow-sm' : 'text-brun-mid hover:text-brun'}`}
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${!isAnnual ? 'bg-brun text-white shadow-md shadow-brun/20' : 'text-brun-mid hover:text-brun'}`}
               >
                 Mensuel
               </button>
               <button
                 onClick={() => setIsAnnual(true)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${isAnnual ? 'bg-brun text-white shadow-sm' : 'text-brun-mid hover:text-brun'}`}
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${isAnnual ? 'bg-brun text-white shadow-md shadow-brun/20' : 'text-brun-mid hover:text-brun'}`}
               >
                 Annuel
                 <span className="bg-sauge text-white text-xs px-1.5 py-0.5 rounded-full font-bold">-20%</span>
@@ -192,17 +192,17 @@ function TarifsPageInner() {
           </div>
 
           {/* Plans */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-7 mb-20 items-center">
             {PLANS.map((plan) => (
               <div
                 key={plan.id}
-                className={`relative rounded-2xl border-2 p-6 flex flex-col ${plan.accentBg} ${plan.accentBorder} ${
-                  plan.highlight || highlightPlan === plan.id ? 'shadow-xl ring-2 ring-orange' : 'shadow-sm'
+                className={`relative rounded-3xl border-2 p-7 flex flex-col transition-all duration-300 hover:-translate-y-1.5 ${plan.accentBg} ${plan.accentBorder} ${
+                  plan.highlight || highlightPlan === plan.id ? 'shadow-2xl shadow-orange/20 ring-2 ring-orange md:scale-105 hover:shadow-2xl' : 'shadow-sm hover:shadow-xl'
                 }`}
               >
                 {(plan.highlight || highlightPlan === plan.id) && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span className="bg-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow">
+                    <span className="bg-orange text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md shadow-orange/30">
                       Le plus populaire
                     </span>
                   </div>
@@ -210,32 +210,32 @@ function TarifsPageInner() {
 
                 {plan.emoji && <div className="text-4xl mb-3">{plan.emoji}</div>}
 
-                <div className="mb-5">
-                  <h2 className="font-lora text-xl font-bold text-brun">{plan.name}</h2>
-                  <p className="text-brun-light text-sm mt-1">{plan.description}</p>
-                  <div className="flex items-end gap-1 mt-3">
+                <div className="mb-6">
+                  <h2 className="font-lora text-2xl font-bold text-brun">{plan.name}</h2>
+                  <p className="text-brun-light text-sm mt-1.5">{plan.description}</p>
+                  <div className="flex items-end gap-1 mt-4">
                     {plan.id === 'pro' ? (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '12€' : '15€'}</span>
-                        <span className="text-brun-light text-sm mb-1">/mois HT</span>
-                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">144€/an</span>}
+                        <span className="font-lora text-5xl font-bold text-brun">{isAnnual ? '12€' : '15€'}</span>
+                        <span className="text-brun-light text-sm mb-1.5">/mois HT</span>
+                        {isAnnual && <span className="ml-1 mb-1.5 text-xs text-sauge font-bold">144€/an</span>}
                       </>
                     ) : plan.id === 'multi' ? (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{isAnnual ? '24€' : '30€'}</span>
-                        <span className="text-brun-light text-sm mb-1">/mois HT</span>
-                        {isAnnual && <span className="ml-1 mb-1 text-xs text-sauge font-bold">288€/an</span>}
+                        <span className="font-lora text-5xl font-bold text-brun">{isAnnual ? '24€' : '30€'}</span>
+                        <span className="text-brun-light text-sm mb-1.5">/mois HT</span>
+                        {isAnnual && <span className="ml-1 mb-1.5 text-xs text-sauge font-bold">288€/an</span>}
                       </>
                     ) : (
                       <>
-                        <span className="font-lora text-4xl font-bold text-brun">{plan.price}</span>
-                        {plan.period && <span className="text-brun-light text-sm mb-1">{plan.period}</span>}
+                        <span className="font-lora text-5xl font-bold text-brun">{plan.price}</span>
+                        {plan.period && <span className="text-brun-light text-sm mb-1.5">{plan.period}</span>}
                       </>
                     )}
                   </div>
                 </div>
 
-                <ul className="space-y-2.5 flex-1 mb-6">
+                <ul className="space-y-3 flex-1 mb-7">
                   {plan.features.map(f => (
                     <li key={f} className="flex items-start gap-2.5 text-sm text-brun">
                       <svg className="w-4 h-4 text-sauge shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,19 +273,19 @@ function TarifsPageInner() {
           </div>
 
           {/* Garantie */}
-          <div className="bg-sauge-pale border border-sauge-light rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left mb-14">
+          <div className="bg-sauge-pale border border-sauge-light rounded-3xl p-7 flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left mb-16 shadow-sm">
             <span className="text-4xl shrink-0">🛡️</span>
             <div>
-              <h3 className="font-lora font-bold text-brun text-lg">Satisfait ou remboursé 14 jours</h3>
-              <p className="text-sm text-brun-mid mt-1">Si l&apos;outil ne vous convient pas dans les 14 premiers jours, on vous rembourse sans question. C&apos;est notre engagement.</p>
+              <h3 className="font-lora font-bold text-brun text-xl">Satisfait ou remboursé 14 jours</h3>
+              <p className="text-sm text-brun-mid mt-1.5 leading-relaxed">Si l&apos;outil ne vous convient pas dans les 14 premiers jours, on vous rembourse sans question. C&apos;est notre engagement.</p>
             </div>
           </div>
 
           {/* FAQ */}
           <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-8">
+            <div className="text-center mb-10">
               <span className="text-3xl">🌿</span>
-              <h2 className="font-lora text-2xl font-bold text-brun mt-2">Questions fréquentes</h2>
+              <h2 className="font-lora text-2xl lg:text-3xl font-bold text-brun mt-3 tracking-tight">Questions fréquentes</h2>
             </div>
             <div className="space-y-4">
               {[
@@ -306,7 +306,7 @@ function TarifsPageInner() {
                   a: 'Facturation mensuelle via Stripe. Vous recevez une facture HT par email chaque mois.',
                 },
               ].map(({ q, a }) => (
-                <div key={q} className="bg-white rounded-2xl border border-brun-pale p-5">
+                <div key={q} className="bg-white rounded-2xl border border-brun-pale p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
                   <h3 className="font-semibold text-brun mb-2 flex items-center gap-2">
                     <span className="text-orange">→</span> {q}
                   </h3>
