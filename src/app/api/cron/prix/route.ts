@@ -3,13 +3,13 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 2 juin 2026)
+// Référence semaine précédente (semaine du 9 juin 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50,
-  'Bœuf - Entrecôte': 31.50,
-  'Bœuf - Faux-filet': 27.80,
-  'Bœuf - Côte de bœuf': 26.00,
+  'Bœuf - Entrecôte': 30.80,
+  'Bœuf - Faux-filet': 27.20,
+  'Bœuf - Côte de bœuf': 25.50,
   'Bœuf - Rumsteck': 21.50,
   'Bœuf - Bavette': 18.00,
   'Bœuf - Paleron': 12.80,
@@ -24,14 +24,14 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Veau - Jarret': 14.00,
   'Veau - Tendron': 12.00,
   'Veau - Ris': 46.00,
-  'Agneau - Gigot entier': 14.20,
-  'Agneau - Épaule': 11.20,
-  'Agneau - Rack / carré': 26.80,
+  'Agneau - Gigot entier': 14.50,
+  'Agneau - Épaule': 11.50,
+  'Agneau - Rack / carré': 27.20,
   'Agneau - Côtelette': 20.80,
   'Agneau - Souris': 15.20,
   'Agneau - Selle': 22.50,
-  'Porc - Filet mignon': 14.80,
-  'Porc - Côte': 10.80,
+  'Porc - Filet mignon': 14.60,
+  'Porc - Côte': 10.60,
   'Porc - Travers': 9.00,
   'Porc - Ventre': 6.70,
   'Porc - Joue': 8.40,
@@ -39,9 +39,9 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Lardons fumés': 8.20,
   'Chorizo': 14.50,
   'Boudin noir': 10.20,
-  'Poulet - Filet': 10.50,
-  'Poulet - Cuisse': 6.80,
-  'Poulet - Suprême': 12.50,
+  'Poulet - Filet': 11.00,
+  'Poulet - Cuisse': 7.00,
+  'Poulet - Suprême': 13.00,
   'Poulet - Entier': 5.80,
   'Canard - Magret': 22.50,
   'Canard - Confit de cuisse': 14.50,
@@ -64,8 +64,8 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Lotte - Queue': 23.80,
   'Rouget - Filet': 33.00,
   'Thon rouge - Pavé': 36.00,
-  'Saumon - Filet': 19.50,
-  'Saumon - Pavé': 21.50,
+  'Saumon - Filet': 19.00,
+  'Saumon - Pavé': 21.00,
   'Truite - Filet': 14.50,
   'Cabillaud - Filet': 16.50,
   'Cabillaud - Dos': 24.50,
@@ -83,16 +83,16 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Moules de bouchot': 3.60,
   'Huîtres creuses': 8.20,
   'Palourdes': 14.50,
-  'Asperge verte': 9.40,
-  'Asperge blanche': 10.80,
-  'Petits pois frais': 4.90,
+  'Asperge verte': 9.00,
+  'Asperge blanche': 11.10,
+  'Petits pois frais': 4.60,
   'Épinard frais': 4.20,
-  'Artichaut': 3.70,
-  'Courgette': 2.90,
-  'Aubergine': 3.50,
-  'Poivron rouge': 3.80,
-  'Tomate cerise': 5.00,
-  'Tomate ronde': 2.50,
+  'Artichaut': 3.50,
+  'Courgette': 2.60,
+  'Aubergine': 3.20,
+  'Poivron rouge': 3.50,
+  'Tomate cerise': 4.80,
+  'Tomate ronde': 2.40,
   'Poireau': 2.20,
   'Céleri rave': 2.00,
   'Potiron': 2.20,
@@ -101,12 +101,12 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Échalote': 4.20,
   'Ail': 5.20,
   'Champignon de Paris': 5.30,
-  'Haricot vert extra-fin': 6.20,
+  'Haricot vert extra-fin': 5.90,
   'Fenouil': 2.60,
-  'Morilles fraîches': 122.00,
+  'Morilles fraîches': 95.00,
   'Girolles': 44.00,
   'Truffe noire Périgord': 950.00,
-  "Truffe d'été": 182.00,
+  "Truffe d'été": 175.00,
   'Cèpes frais': 36.00,
   'Trompette de la mort': 58.00,
   'Basilic frais': 12.00,
@@ -114,11 +114,11 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Coriandre fraîche': 8.20,
   'Thym frais': 8.20,
   'Estragon frais': 10.50,
-  'Fraise Gariguette': 10.00,
+  'Fraise Gariguette': 8.50,
   'Citron jaune': 2.10,
   'Orange': 2.00,
-  'Mangue': 3.80,
-  'Avocat': 3.30,
+  'Mangue': 3.70,
+  'Avocat': 3.20,
   'Beurre doux': 9.50,
   'Crème liquide 35% MG': 5.30,
   'Crème fraîche épaisse': 4.60,
@@ -133,7 +133,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Chocolat noir 70%': 13.00
 }
 
-// Semaine du 2 juin 2026 — source FranceAgriMer
+// Semaine du 9 juin 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -158,16 +158,16 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Veau - Ris':                    46.00,
 
   // ── AGNEAU ───────────────────────────────────
-  'Agneau - Gigot entier':         14.50,   // post-Pâques : demande en baisse
-  'Agneau - Épaule':               11.50,   // post-Pâques : demande en baisse
-  'Agneau - Rack / carré':         27.20,   // post-Pâques
-  'Agneau - Côtelette':            20.80,   // post-Pâques
-  'Agneau - Souris':               15.20,   // post-Pâques
-  'Agneau - Selle':                22.50,   // post-Pâques
+  'Agneau - Gigot entier':         14.50,
+  'Agneau - Épaule':               11.50,
+  'Agneau - Rack / carré':         27.20,
+  'Agneau - Côtelette':            20.80,
+  'Agneau - Souris':               15.20,
+  'Agneau - Selle':                22.50,
 
   // ── PORC ─────────────────────────────────────
-  'Porc - Filet mignon':           14.60,   // hausse carcasse +1.3 ct/kg (réussir.fr)
-  'Porc - Côte':                   10.60,   // hausse carcasse
+  'Porc - Filet mignon':           14.60,
+  'Porc - Côte':                   10.60,
   'Porc - Travers':                 9.00,
   'Porc - Ventre':                  6.70,
   'Porc - Joue':                    8.40,
@@ -210,11 +210,11 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Thon rouge - Pavé':             36.00,
 
   // ── POISSONS COURANTS ────────────────────────
-  'Saumon - Filet':                19.00,   // tension globale saumon atlantique
-  'Saumon - Pavé':                 21.00,   // tension globale saumon atlantique
+  'Saumon - Filet':                22.00,   // hausse saumon atlantique (Foodomarket Rungis mai 2026)
+  'Saumon - Pavé':                 23.50,   // hausse saumon atlantique
   'Truite - Filet':                14.50,
-  'Cabillaud - Filet':             16.50,   // tension poissons blancs (FranceAgriMer)
-  'Cabillaud - Dos':               24.50,   // tension poissons blancs
+  'Cabillaud - Filet':             16.50,
+  'Cabillaud - Dos':               24.50,
   'Lieu noir - Filet':             12.50,
   'Maquereau - Filet':              8.50,
   'Sardine - Fraîche':              5.20,
@@ -224,28 +224,28 @@ const WEEKLY_PRICES: Record<string, number> = {
   // ── CRUSTACÉS ────────────────────────────────
   'Homard breton - Entier':        55.00,
   'Langoustines':                  46.50,
-  'Gambas - Entières':             29.00,
+  'Gambas - Entières':             29.80,   // légère hausse (Foodomarket Rungis mai 2026)
   'Crevettes roses décortiquées':  22.50,
   'Crevettes grises':              18.50,
 
   // ── COQUILLAGES ──────────────────────────────
-  'Saint-Jacques - Noix':          44.00,   // fin de saison officielle, prix monte
+  'Saint-Jacques - Noix':          33.50,   // fin de saison officielle : baisse (Foodomarket mai 2026)
   'Moules de bouchot':              3.60,
   'Huîtres creuses':                8.20,
   'Palourdes':                     14.50,
 
-  // ── LÉGUMES (saison mai) ─────────────────────
-  'Asperge verte':                  9.00,   // pic de saison : prix en baisse
-  'Asperge blanche':               11.10,   // pic de saison : prix en baisse
-  'Petits pois frais':              4.60,   // meilleure disponibilité
+  // ── LÉGUMES (saison juin) ─────────────────────
+  'Asperge verte':                  9.00,
+  'Asperge blanche':                9.00,   // pic de saison tardif : forte baisse (Foodo Trends juin 2026)
+  'Petits pois frais':              4.60,
   'Épinard frais':                  4.20,
-  'Artichaut':                      3.50,   // bonne disponibilité
-  'Courgette':                      2.60,   // offre en hausse
+  'Artichaut':                      3.50,
+  'Courgette':                      2.60,
   'Aubergine':                      3.20,
-  'Poivron rouge':                  3.50,
-  'Tomate cerise':                  4.80,   // offre en hausse
-  'Tomate ronde':                   2.40,   // offre en hausse
-  'Poireau':                        2.20,   // transition fin saison hiver
+  'Poivron rouge':                  2.80,   // pleine saison : baisse offre espagnole (Foodomarket juin 2026)
+  'Tomate cerise':                  4.80,
+  'Tomate ronde':                   2.50,   // légère hausse (Foodomarket)
+  'Poireau':                        2.20,
   'Céleri rave':                    2.00,
   'Potiron':                        2.20,
   'Carotte':                        1.00,
@@ -253,30 +253,30 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Échalote':                       4.20,
   'Ail':                            5.20,
   'Champignon de Paris':            5.30,
-  'Haricot vert extra-fin':         5.90,   // offre en hausse
+  'Haricot vert extra-fin':         5.90,
   'Fenouil':                        2.60,
 
   // ── CHAMPIGNONS ──────────────────────────────
-  'Morilles fraîches':            95.00,   // fin de saison : prix en baisse
-  'Girolles':                      44.00,   // début d'apparition, encore rares
-  'Truffe noire Périgord':         950.00,  // hors saison : stable
-  "Truffe d'été":                 175.00,  // début saison estivale
+  'Morilles fraîches':             95.00,   // fin de saison : offre quasi nulle, prix stable
+  'Girolles':                      53.50,   // montée en puissance : hausse (Foodomarket mai 2026)
+  'Truffe noire Périgord':         950.00,
+  "Truffe d'été":                  175.00,
   'Cèpes frais':                   36.00,
   'Trompette de la mort':          58.00,
 
   // ── HERBES ───────────────────────────────────
-  'Basilic frais':                 12.00,   // pleine saison
+  'Basilic frais':                 12.00,
   'Persil plat':                    6.20,
   'Coriandre fraîche':              8.20,
   'Thym frais':                     8.20,
   'Estragon frais':                10.50,
 
-  // ── FRUITS (saison mai) ──────────────────────
-  'Fraise Gariguette':             8.50,   // pic de saison : prix en forte baisse
+  // ── FRUITS (saison juin) ──────────────────────
+  'Fraise Gariguette':              8.50,   // [SUSPECT ignoré : cotation 4,14 €/kg = -51% → variation > 30%]
   'Citron jaune':                   2.10,
-  'Orange':                         2.00,   // fin saison agrumes : légère hausse
-  'Mangue':                         3.70,   // légère baisse
-  'Avocat':                         3.20,   // légère baisse
+  'Orange':                         2.00,
+  'Mangue':                         3.70,
+  'Avocat':                         3.20,
 
   // ── PRODUITS LAITIERS ────────────────────────
   'Beurre doux':                    9.50,
