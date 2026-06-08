@@ -148,7 +148,6 @@ function OutilPageInner() {
       const data = await res.json()
       if (data.quota_exceeded) { setShowSignupModal(true); return }
       if (!res.ok) {
-        // Si clé API manquante → passer au fallback local côté client
         if (res.status === 503) {
           const fallback = getFallbackClient(aiPrompt)
           if (fallback.dishName) setDishName(fallback.dishName)
@@ -213,7 +212,6 @@ function OutilPageInner() {
 
     setSaveLoading(true)
     try {
-      // Vérification limite plan Gratuit (3 plats max) côté client+serveur
       if (!isPro) {
         const { count } = await supabase
           .from('dishes')
@@ -243,7 +241,6 @@ function OutilPageInner() {
       const { data: insertedDish, error } = await supabase.from('dishes').insert(dish).select().single()
       if (error) throw error
 
-      // Enregistrer un snapshot dans l'historique
       if (insertedDish?.id) {
         supabase.from('dish_cost_history').insert({
           dish_id: insertedDish.id,
@@ -252,7 +249,7 @@ function OutilPageInner() {
           price_advised: metrics.priceAdvised,
           food_cost_pct: metrics.foodCostPct,
           margin_pct: metrics.marginPct,
-        }).then(() => {}) // fire and forget
+        }).then(() => {})
       }
 
       posthog?.capture('dish_saved', {
@@ -342,29 +339,29 @@ function OutilPageInner() {
   return (
     <>
       <Nav />
-      <div className="pt-16 min-h-screen bg-creme">
+      <div className="pt-16 min-h-screen bg-gradient-to-b from-ivoire via-creme to-creme">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-0 min-h-[calc(100vh-64px)]">
 
           {/* ── Colonne gauche — Inputs ─── */}
-          <div className="lg:w-[420px] lg:min-w-[420px] border-r border-brun-pale bg-white p-6 space-y-6 lg:overflow-y-auto lg:h-[calc(100vh-64px)] lg:sticky lg:top-16">
+          <div className="lg:w-[420px] lg:min-w-[420px] border-r border-brun-pale bg-white p-7 space-y-7 lg:overflow-y-auto lg:h-[calc(100vh-64px)] lg:sticky lg:top-16 shadow-sm">
 
             {/* Bloc IA */}
             <div>
-              <h2 className="font-lora text-lg font-semibold text-brun mb-3">Générer avec l'IA</h2>
+              <h2 className="font-lora text-lg font-bold text-brun mb-3 tracking-tight">Générer avec l'IA</h2>
               <Textarea
                 placeholder="Décrivez votre plat... ex: Magret de canard aux cerises, sauce au porto, purée de panais"
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
                 rows={3}
               />
-              {aiError && <p className="text-red-500 text-xs mt-1">{aiError}</p>}
+              {aiError && <p className="text-red-500 text-xs mt-1.5">{aiError}</p>}
               {aiFallback && (
-                <p className="text-xs text-brun-light mt-1 italic">
+                <p className="text-xs text-brun-light mt-1.5 italic">
                   ⚡ Suggestion automatique — ajustez les quantités selon votre recette
                 </p>
               )}
               <Button
-                className="mt-2 w-full"
+                className="mt-3 w-full"
                 onClick={handleGenerate}
                 loading={aiLoading}
                 disabled={!aiPrompt.trim()}
@@ -372,7 +369,7 @@ function OutilPageInner() {
                 Générer les ingrédients
               </Button>
               {aiPrompt.trim() && !aiLoading && (
-                <p className="text-xs text-brun-light text-center mt-1">
+                <p className="text-xs text-brun-light text-center mt-2">
                   ou <kbd className="bg-brun-pale px-1.5 py-0.5 rounded text-brun text-xs font-mono">⌘ Enter</kbd>
                 </p>
               )}
@@ -382,7 +379,7 @@ function OutilPageInner() {
 
             {/* Paramètres */}
             <div className="space-y-4">
-              <h2 className="font-lora text-lg font-semibold text-brun">Paramètres</h2>
+              <h2 className="font-lora text-lg font-bold text-brun tracking-tight">Paramètres</h2>
               <Input
                 label="Nom du plat"
                 value={dishName}
@@ -427,11 +424,11 @@ function OutilPageInner() {
 
             {/* Composition */}
             <div>
-              <h2 className="font-lora text-lg font-semibold text-brun mb-3">Composition</h2>
+              <h2 className="font-lora text-lg font-bold text-brun mb-3 tracking-tight">Composition</h2>
               {ingredients.length > 0 ? (
                 <div className="space-y-2 mb-4">
                   {ingredients.map((ing, i) => (
-                    <div key={i} className="bg-creme rounded-xl p-2">
+                    <div key={i} className="bg-creme rounded-xl p-2.5 border border-brun-pale/60 transition-colors hover:border-brun-pale">
                       {/* Ligne 1 : nom + supprimer */}
                       <div className="flex items-center justify-between gap-2 mb-1">
                         <input
@@ -453,7 +450,7 @@ function OutilPageInner() {
                         <div className="flex items-center gap-1">
                           <input
                             type="number"
-                            className="w-16 text-sm text-center bg-white border border-brun-pale rounded-lg px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange"
+                            className="w-16 text-sm text-center bg-white border border-brun-pale rounded-lg px-1 py-1 focus:outline-none focus:ring-1 focus:ring-orange"
                             value={ing.qty_grams}
                             min={1}
                             onChange={(e) => updateIngredient(i, 'qty_grams', Number(e.target.value))}
@@ -467,14 +464,14 @@ function OutilPageInner() {
                               step="0.01"
                               min="0"
                               title="Prix au kg (modifiable)"
-                              className="w-16 text-sm text-center bg-white border border-orange/40 rounded-lg px-1 py-0.5 focus:outline-none focus:ring-1 focus:ring-orange"
+                              className="w-16 text-sm text-center bg-white border border-orange/40 rounded-lg px-1 py-1 focus:outline-none focus:ring-1 focus:ring-orange"
                               value={ing.price_per_kg}
                               onChange={(e) => updateIngredient(i, 'price_per_kg', parseFloat(e.target.value) || 0)}
                             />
                             <span className="text-xs text-brun-light">€/kg</span>
                           </div>
                         )}
-                        <span className="text-xs text-brun-light ml-auto">
+                        <span className="text-xs font-medium text-brun-mid ml-auto">
                           {ing.cost.toLocaleString('fr-FR', { minimumFractionDigits: 3, maximumFractionDigits: 3 })} €
                         </span>
                       </div>
@@ -522,9 +519,9 @@ function OutilPageInner() {
                 Allergènes {showAllergens ? '▲' : '▼'}
               </button>
               {showAllergens && (
-                <div className="mt-2 flex flex-wrap gap-2">
+                <div className="mt-3 flex flex-wrap gap-2">
                   {ALLERGENS_LIST.map(a => (
-                    <label key={a} className="flex items-center gap-1 cursor-pointer">
+                    <label key={a} className="flex items-center gap-1.5 cursor-pointer bg-creme border border-brun-pale/60 rounded-lg px-2.5 py-1.5 hover:border-orange transition-colors">
                       <input
                         type="checkbox"
                         className="accent-orange"
@@ -551,26 +548,23 @@ function OutilPageInner() {
           </div>
 
           {/* ── Colonne droite — Résultats ─── */}
-          <div className="flex-1 p-6 lg:overflow-y-auto lg:h-[calc(100vh-64px)]">
+          <div className="flex-1 p-6 lg:p-8 lg:overflow-y-auto lg:h-[calc(100vh-64px)]">
             {aiLoading ? (
               <div className="max-w-2xl space-y-5 pt-4">
-                {/* Header skeleton */}
                 <div className="space-y-2">
                   <div className="h-4 w-20 bg-brun-pale/60 rounded-full animate-pulse" />
                   <div className="h-8 w-64 bg-brun-pale/60 rounded-xl animate-pulse" />
                 </div>
-                {/* Métriques skeleton */}
                 <div className="grid grid-cols-3 gap-3">
                   {[0,1,2].map(i => (
-                    <div key={i} className="bg-white rounded-2xl border border-brun-pale p-4 space-y-2 animate-pulse">
+                    <div key={i} className="bg-white rounded-2xl border border-brun-pale p-4 space-y-2 animate-pulse shadow-sm">
                       <div className="h-3 w-16 bg-brun-pale/60 rounded-full mx-auto" />
                       <div className="h-7 w-20 bg-brun-pale/60 rounded-xl mx-auto" />
                       <div className="h-3 w-12 bg-brun-pale/60 rounded-full mx-auto" />
                     </div>
                   ))}
                 </div>
-                {/* Ingrédients skeleton */}
-                <div className="bg-white rounded-2xl border border-brun-pale p-5 space-y-3 animate-pulse">
+                <div className="bg-white rounded-2xl border border-brun-pale p-5 space-y-3 animate-pulse shadow-sm">
                   <div className="h-4 w-40 bg-brun-pale/60 rounded-full" />
                   {[0,1,2,3,4].map(i => (
                     <div key={i} className="flex items-center gap-3">
@@ -580,7 +574,6 @@ function OutilPageInner() {
                     </div>
                   ))}
                 </div>
-                {/* Message IA */}
                 <div className="flex items-center gap-3 text-brun-light">
                   <div className="flex gap-1">
                     {[0,1,2].map(i => (
@@ -592,19 +585,19 @@ function OutilPageInner() {
               </div>
             ) : !metrics ? (
               <div className="h-full flex flex-col items-center justify-center text-center py-20">
-                <div className="w-16 h-16 bg-orange-pale rounded-2xl flex items-center justify-center mb-4">
-                  <span className="text-3xl">🧮</span>
+                <div className="w-20 h-20 bg-orange-pale rounded-3xl flex items-center justify-center mb-5 shadow-sm">
+                  <span className="text-4xl">🧮</span>
                 </div>
-                <h3 className="font-lora text-xl font-semibold text-brun mb-2">Décrivez votre plat</h3>
-                <p className="text-brun-light max-w-sm mb-6">
+                <h3 className="font-lora text-2xl font-bold text-brun mb-2.5 tracking-tight">Décrivez votre plat</h3>
+                <p className="text-brun-light max-w-sm mb-7 leading-relaxed">
                   Utilisez l'IA pour générer automatiquement les ingrédients, ou ajoutez-les manuellement.
                   Les résultats s'affichent en temps réel.
                 </p>
-                <div className="grid grid-cols-2 gap-2 text-left max-w-xs w-full">
+                <div className="grid grid-cols-2 gap-2.5 text-left max-w-xs w-full">
                   {['Magret de canard aux cerises', 'Risotto aux champignons', 'Tiramisu maison', 'Soupe de poisson'].map(ex => (
                     <button
                       key={ex}
-                      className="bg-white border border-brun-pale rounded-xl px-3 py-2 text-xs text-brun-mid hover:border-orange hover:text-orange transition-colors text-left"
+                      className="bg-white border border-brun-pale rounded-xl px-3.5 py-2.5 text-xs text-brun-mid hover:border-orange hover:text-orange hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 text-left"
                       onClick={() => { setAiPrompt(ex) }}
                     >
                       {ex}
@@ -616,36 +609,36 @@ function OutilPageInner() {
               <div className="max-w-2xl space-y-5">
                 {/* Identité */}
                 <div>
-                  <div className="flex items-center gap-3 mb-1">
+                  <div className="flex items-center gap-3 mb-2">
                     <Badge variant={category === 'entrée' ? 'blue' : category === 'dessert' ? 'green' : 'orange'}>
                       {CATEGORY_OPTIONS.find(c => c.value === category)?.label}
                     </Badge>
                     {isShared && <Badge variant="gray">{covers} couverts</Badge>}
                   </div>
-                  <h1 className="font-lora text-3xl font-bold text-brun italic">{dishName || 'Mon plat'}</h1>
+                  <h1 className="font-lora text-3xl lg:text-4xl font-bold text-brun italic tracking-tight">{dishName || 'Mon plat'}</h1>
                 </div>
 
                 {/* 3 métriques */}
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-white rounded-2xl border border-brun-pale p-4 text-center">
-                    <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-1">Coût matière</p>
-                    <p className="font-lora text-2xl font-bold text-brun">{formatEuros(metrics.costPerCover)}</p>
-                    <p className="text-xs text-brun-light">par assiette</p>
+                  <div className="bg-white rounded-2xl border border-brun-pale p-5 text-center shadow-sm">
+                    <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-1.5">Coût matière</p>
+                    <p className="font-lora text-3xl font-bold text-brun">{formatEuros(metrics.costPerCover)}</p>
+                    <p className="text-xs text-brun-light mt-0.5">par assiette</p>
                   </div>
-                  <div className="bg-orange rounded-2xl p-4 text-center shadow-sm">
-                    <p className="text-xs font-semibold text-white/70 uppercase tracking-wide mb-1">Prix conseillé</p>
-                    <p className="font-lora text-2xl font-bold text-white">{formatEuros(metrics.priceAdvised)}</p>
-                    <p className="text-xs text-white/70">à {targetFoodCost}% food cost</p>
+                  <div className="bg-orange rounded-2xl p-5 text-center shadow-md shadow-orange/30">
+                    <p className="text-xs font-semibold text-white/70 uppercase tracking-wide mb-1.5">Prix conseillé</p>
+                    <p className="font-lora text-3xl font-bold text-white">{formatEuros(metrics.priceAdvised)}</p>
+                    <p className="text-xs text-white/70 mt-0.5">à {targetFoodCost}% food cost</p>
                   </div>
-                  <div className="bg-white rounded-2xl border border-brun-pale p-4 text-center">
-                    <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-1">Marge brute</p>
-                    <p className="font-lora text-2xl font-bold text-sauge">{formatEuros(metrics.marginEuros)}</p>
-                    <p className="text-xs text-brun-light">{formatPct(metrics.marginPct)}</p>
+                  <div className="bg-white rounded-2xl border border-brun-pale p-5 text-center shadow-sm">
+                    <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-1.5">Marge brute</p>
+                    <p className="font-lora text-3xl font-bold text-sauge">{formatEuros(metrics.marginEuros)}</p>
+                    <p className="text-xs text-brun-light mt-0.5">{formatPct(metrics.marginPct)}</p>
                   </div>
                 </div>
 
                 {/* Jauge food cost */}
-                <div className="bg-white rounded-2xl border border-brun-pale p-5">
+                <div className="bg-white rounded-2xl border border-brun-pale p-5 shadow-sm">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-semibold text-brun-mid">Food cost réel</span>
                     <div className="flex items-center gap-2">
@@ -665,16 +658,16 @@ function OutilPageInner() {
                     />
                   </div>
                   {metrics.foodCostPct > 35 && (
-                    <p className="mt-2 text-xs text-red-500 font-medium">
+                    <p className="mt-2.5 text-xs text-red-500 font-medium">
                       Attention : food cost trop élevé. Envisagez de revoir les quantités ou le prix de vente.
                     </p>
                   )}
                 </div>
 
                 {/* Décomposition ingrédients */}
-                <div className="bg-white rounded-2xl border border-brun-pale p-5">
-                  <h3 className="font-semibold text-brun mb-3">Décomposition du coût</h3>
-                  <div className="space-y-2">
+                <div className="bg-white rounded-2xl border border-brun-pale p-5 shadow-sm">
+                  <h3 className="font-semibold text-brun mb-4">Décomposition du coût</h3>
+                  <div className="space-y-3">
                     {ingredients
                       .slice()
                       .sort((a, b) => b.cost - a.cost)
@@ -704,13 +697,13 @@ function OutilPageInner() {
                 </div>
 
                 {/* 3 scénarios prix */}
-                <div className="bg-white rounded-2xl border border-brun-pale p-5">
-                  <h3 className="font-semibold text-brun mb-3">Scénarios de prix</h3>
+                <div className="bg-white rounded-2xl border border-brun-pale p-5 shadow-sm">
+                  <h3 className="font-semibold text-brun mb-4">Scénarios de prix</h3>
                   <div className="grid grid-cols-3 gap-3">
                     {scenarios.map((s) => (
-                      <div key={s.foodCost} className={`rounded-xl p-3 text-center ${s.foodCost === targetFoodCost ? 'bg-orange-pale border-2 border-orange' : 'bg-creme'}`}>
-                        <p className="text-xs font-semibold text-brun-light mb-1">{s.label}</p>
-                        <p className="font-bold text-brun">{formatEuros(s.price)}</p>
+                      <div key={s.foodCost} className={`rounded-xl p-3.5 text-center transition-all ${s.foodCost === targetFoodCost ? 'bg-orange-pale border-2 border-orange shadow-sm' : 'bg-creme border border-brun-pale/50'}`}>
+                        <p className="text-xs font-semibold text-brun-light mb-1.5">{s.label}</p>
+                        <p className="font-lora text-lg font-bold text-brun">{formatEuros(s.price)}</p>
                       </div>
                     ))}
                   </div>
@@ -718,13 +711,13 @@ function OutilPageInner() {
 
                 {/* Suggestions plats similaires */}
                 {dishName && (
-                  <div className="bg-ivoire border border-brun-pale rounded-2xl p-4">
+                  <div className="bg-ivoire border border-brun-pale rounded-2xl p-5 shadow-sm">
                     <p className="text-xs font-semibold text-brun-light uppercase tracking-wide mb-3">Analyser un plat similaire</p>
                     <div className="flex flex-wrap gap-2">
                       {getSimilarDishes(dishName).map(suggestion => (
                         <button
                           key={suggestion}
-                          className="text-xs bg-white border border-brun-pale text-brun-mid px-3 py-1.5 rounded-full hover:border-orange hover:text-orange transition-colors"
+                          className="text-xs bg-white border border-brun-pale text-brun-mid px-3 py-1.5 rounded-full hover:border-orange hover:text-orange hover:shadow-sm transition-all duration-200"
                           onClick={() => { setAiPrompt(suggestion) }}
                         >
                           {suggestion} →
@@ -735,7 +728,7 @@ function OutilPageInner() {
                 )}
 
                 {/* Module suggestions marge IA */}
-                <div className="bg-white rounded-2xl border border-brun-pale p-5">
+                <div className="bg-white rounded-2xl border border-brun-pale p-5 shadow-sm">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <h3 className="font-semibold text-brun">Améliorer votre marge</h3>
@@ -745,7 +738,7 @@ function OutilPageInner() {
                       <button
                         onClick={handleSuggestMargin}
                         disabled={marginLoading}
-                        className="flex items-center gap-2 bg-sauge-pale text-sauge text-sm font-semibold px-3 py-2 rounded-xl hover:bg-sauge hover:text-white transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 bg-sauge-pale text-sauge text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-sauge hover:text-white transition-colors disabled:opacity-50"
                       >
                         {marginLoading ? (
                           <><div className="w-3 h-3 border-2 border-sauge border-t-transparent rounded-full animate-spin" /> Analyse…</>
@@ -759,15 +752,15 @@ function OutilPageInner() {
                   {marginSuggestions && (
                     <div className="space-y-3">
                       {marginSuggestions.map((s, i) => (
-                        <div key={i} className="bg-sauge-pale/50 rounded-xl p-3 border border-sauge-light">
-                          <div className="flex items-start justify-between gap-2 mb-1">
+                        <div key={i} className="bg-sauge-pale/50 rounded-xl p-4 border border-sauge-light">
+                          <div className="flex items-start justify-between gap-2 mb-1.5">
                             <p className="font-semibold text-brun text-sm">{s.title}</p>
                             <div className="flex gap-1 shrink-0">
                               <span className="bg-sauge text-white text-xs font-bold px-2 py-0.5 rounded-full">{s.saving}</span>
                               <span className="bg-white text-brun-mid text-xs font-medium px-2 py-0.5 rounded-full border border-brun-pale">{s.newFoodCost}</span>
                             </div>
                           </div>
-                          <p className="text-xs text-brun-mid leading-relaxed mb-2">{s.description}</p>
+                          <p className="text-xs text-brun-mid leading-relaxed mb-2.5">{s.description}</p>
                           <button
                             onClick={() => handleApplySuggestion(s)}
                             className="text-xs font-semibold text-sauge bg-white border border-sauge-light px-3 py-1.5 rounded-lg hover:bg-sauge hover:text-white transition-colors"
@@ -795,7 +788,7 @@ function OutilPageInner() {
                 {/* Bouton sauvegarde */}
                 <div>
                   {saveSuccess && (
-                    <div className="mb-3 bg-sauge-pale text-sauge text-sm font-medium px-4 py-2 rounded-xl text-center">
+                    <div className="mb-3 bg-sauge-pale text-sauge text-sm font-medium px-4 py-3 rounded-xl text-center shadow-sm">
                       Plat sauvegardé avec succès !
                     </div>
                   )}
@@ -829,13 +822,13 @@ function OutilPageInner() {
       {/* Modale inscription freemium */}
       <Modal open={showSignupModal} onClose={() => setShowSignupModal(false)}>
         <div className="text-center mb-6">
-          <div className="w-14 h-14 bg-orange-pale rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 bg-orange-pale rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
             <svg className="w-7 h-7 text-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
             </svg>
           </div>
           <h2 className="font-lora text-xl font-bold text-brun">Sauvegardez vos calculs gratuitement</h2>
-          <p className="text-sm text-brun-light mt-1">Créez votre compte en 30 secondes — aucune CB requise</p>
+          <p className="text-sm text-brun-light mt-1.5">Créez votre compte en 30 secondes — aucune CB requise</p>
         </div>
         <form onSubmit={handleSignup} className="space-y-3">
           <Input
