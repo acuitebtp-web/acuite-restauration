@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 9 juin 2026)
+// Référence semaine précédente (semaine du 8 juin 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50,
@@ -133,7 +133,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Chocolat noir 70%': 13.00
 }
 
-// Semaine du 9 juin 2026 — source FranceAgriMer
+// Semaine du 8 juin 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -158,16 +158,16 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Veau - Ris':                    46.00,
 
   // ── AGNEAU ───────────────────────────────────
-  'Agneau - Gigot entier':         14.50,
-  'Agneau - Épaule':               11.50,
-  'Agneau - Rack / carré':         27.20,
-  'Agneau - Côtelette':            20.80,
-  'Agneau - Souris':               15.20,
-  'Agneau - Selle':                22.50,
+  'Agneau - Gigot entier':         14.50,   // post-Pâques : demande en baisse
+  'Agneau - Épaule':               11.50,   // post-Pâques : demande en baisse
+  'Agneau - Rack / carré':         27.20,   // post-Pâques
+  'Agneau - Côtelette':            20.80,   // post-Pâques
+  'Agneau - Souris':               15.20,   // post-Pâques
+  'Agneau - Selle':                22.50,   // post-Pâques
 
   // ── PORC ─────────────────────────────────────
-  'Porc - Filet mignon':           14.60,
-  'Porc - Côte':                   10.60,
+  'Porc - Filet mignon':           14.60,   // hausse carcasse +1.3 ct/kg (réussir.fr)
+  'Porc - Côte':                   10.60,   // hausse carcasse
   'Porc - Travers':                 9.00,
   'Porc - Ventre':                  6.70,
   'Porc - Joue':                    8.40,
@@ -210,11 +210,11 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Thon rouge - Pavé':             36.00,
 
   // ── POISSONS COURANTS ────────────────────────
-  'Saumon - Filet':                22.00,   // hausse saumon atlantique (Foodomarket Rungis mai 2026)
-  'Saumon - Pavé':                 23.50,   // hausse saumon atlantique
+  'Saumon - Filet':                19.00,   // tension globale saumon atlantique
+  'Saumon - Pavé':                 21.00,   // tension globale saumon atlantique
   'Truite - Filet':                14.50,
-  'Cabillaud - Filet':             16.50,
-  'Cabillaud - Dos':               24.50,
+  'Cabillaud - Filet':             16.50,   // tension poissons blancs (FranceAgriMer)
+  'Cabillaud - Dos':               24.50,   // tension poissons blancs
   'Lieu noir - Filet':             12.50,
   'Maquereau - Filet':              8.50,
   'Sardine - Fraîche':              5.20,
@@ -224,28 +224,28 @@ const WEEKLY_PRICES: Record<string, number> = {
   // ── CRUSTACÉS ────────────────────────────────
   'Homard breton - Entier':        55.00,
   'Langoustines':                  46.50,
-  'Gambas - Entières':             29.80,   // légère hausse (Foodomarket Rungis mai 2026)
+  'Gambas - Entières':             29.00,
   'Crevettes roses décortiquées':  22.50,
   'Crevettes grises':              18.50,
 
   // ── COQUILLAGES ──────────────────────────────
-  'Saint-Jacques - Noix':          33.50,   // fin de saison officielle : baisse (Foodomarket mai 2026)
+  'Saint-Jacques - Noix':          44.00,   // fin de saison officielle, prix monte
   'Moules de bouchot':              3.60,
   'Huîtres creuses':                8.20,
   'Palourdes':                     14.50,
 
-  // ── LÉGUMES (saison juin) ─────────────────────
-  'Asperge verte':                  9.00,
-  'Asperge blanche':                9.00,   // pic de saison tardif : forte baisse (Foodo Trends juin 2026)
-  'Petits pois frais':              4.60,
+  // ── LÉGUMES (saison juin) ────────────────────
+  'Asperge verte':                  8.80,   // fin de saison : prix en baisse
+  'Asperge blanche':               10.00,   // fin de saison : forte baisse offre (RNM Sem22 -10.3%)
+  'Petits pois frais':              4.60,   // meilleure disponibilité
   'Épinard frais':                  4.20,
-  'Artichaut':                      3.50,
-  'Courgette':                      2.60,
+  'Artichaut':                      3.50,   // bonne disponibilité
+  'Courgette':                      2.30,   // offre abondante Sud : forte baisse (RNM Sem22 -11.5%)
   'Aubergine':                      3.20,
-  'Poivron rouge':                  2.80,   // pleine saison : baisse offre espagnole (Foodomarket juin 2026)
-  'Tomate cerise':                  4.80,
-  'Tomate ronde':                   2.50,   // légère hausse (Foodomarket)
-  'Poireau':                        2.20,
+  'Poivron rouge':                  3.50,
+  'Tomate cerise':                  5.80,   // hausse demande estivale (RNM grossiste Bordeaux 05/06 +20.8%)
+  'Tomate ronde':                   2.50,   // légère hausse gros (RNM 05/06)
+  'Poireau':                        2.20,   // transition fin saison hiver
   'Céleri rave':                    2.00,
   'Potiron':                        2.20,
   'Carotte':                        1.00,
@@ -253,30 +253,30 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Échalote':                       4.20,
   'Ail':                            5.20,
   'Champignon de Paris':            5.30,
-  'Haricot vert extra-fin':         5.90,
+  'Haricot vert extra-fin':         5.90,   // offre en hausse
   'Fenouil':                        2.60,
 
   // ── CHAMPIGNONS ──────────────────────────────
-  'Morilles fraîches':             95.00,   // fin de saison : offre quasi nulle, prix stable
-  'Girolles':                      53.50,   // montée en puissance : hausse (Foodomarket mai 2026)
-  'Truffe noire Périgord':         950.00,
-  "Truffe d'été":                  175.00,
+  'Morilles fraîches':            95.00,   // fin de saison : prix en baisse
+  'Girolles':                      44.00,   // début d'apparition, encore rares
+  'Truffe noire Périgord':         950.00,  // hors saison : stable
+  "Truffe d'été":                 175.00,  // début saison estivale
   'Cèpes frais':                   36.00,
   'Trompette de la mort':          58.00,
 
   // ── HERBES ───────────────────────────────────
-  'Basilic frais':                 12.00,
+  'Basilic frais':                 12.00,   // pleine saison
   'Persil plat':                    6.20,
   'Coriandre fraîche':              8.20,
   'Thym frais':                     8.20,
   'Estragon frais':                10.50,
 
-  // ── FRUITS (saison juin) ──────────────────────
-  'Fraise Gariguette':              8.50,   // [SUSPECT ignoré : cotation 4,14 €/kg = -51% → variation > 30%]
+  // ── FRUITS (saison juin) ─────────────────────
+  'Fraise Gariguette':             10.00,  // remontée des cours : forte demande estivale (RNM Rungis 05/06)
   'Citron jaune':                   2.10,
-  'Orange':                         2.00,
-  'Mangue':                         3.70,
-  'Avocat':                         3.20,
+  'Orange':                         2.00,   // fin saison agrumes : légère hausse
+  'Mangue':                         3.70,   // légère baisse
+  'Avocat':                         3.20,   // légère baisse
 
   // ── PRODUITS LAITIERS ────────────────────────
   'Beurre doux':                    9.50,
