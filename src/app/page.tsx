@@ -23,26 +23,72 @@ export const metadata: Metadata = {
 }
 
 function JsonLd() {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Costyfood',
-    applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web',
-    url: 'https://costyfood.fr',
-    description: 'Outil SaaS de calcul food cost pour restaurateurs professionnels. Génération IA des ingrédients, analyse de carte, fiches techniques PDF.',
-    offers: [
-      { '@type': 'Offer', price: '0', priceCurrency: 'EUR', name: 'Plan Gratuit' },
-      { '@type': 'Offer', price: '15', priceCurrency: 'EUR', name: 'Plan Pro' },
-    ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      reviewCount: '47',
-      bestRating: '5',
+  const schemas = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Costyfood',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      url: 'https://costyfood.fr',
+      description: 'Outil SaaS de calcul food cost pour restaurateurs professionnels. Génération IA des ingrédients, analyse de carte, fiches techniques PDF.',
+      offers: [
+        { '@type': 'Offer', price: '0', priceCurrency: 'EUR', name: 'Plan Gratuit' },
+        { '@type': 'Offer', price: '15', priceCurrency: 'EUR', name: 'Plan Pro' },
+      ],
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.9',
+        reviewCount: '47',
+        bestRating: '5',
+      },
     },
-  }
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+    {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: 'Comment calculer son food cost en 30 secondes',
+      description: 'Calculez le food cost de vos plats avec l\'IA en 30 secondes grâce à Costyfood.',
+      totalTime: 'PT30S',
+      step: [
+        { '@type': 'HowToStep', position: 1, name: 'Décrivez votre plat', text: 'Saisissez le nom ou décrivez votre plat en langage naturel dans le calculateur.' },
+        { '@type': 'HowToStep', position: 2, name: "L'IA génère les ingrédients", text: "L'intelligence artificielle génère automatiquement la liste des ingrédients et leurs quantités." },
+        { '@type': 'HowToStep', position: 3, name: 'Obtenez votre food cost', text: 'Le coût matière, le food cost %, la marge brute et le prix de vente conseillé s\'affichent instantanément.' },
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "C'est quoi le food cost en restauration ?",
+          acceptedAnswer: { '@type': 'Answer', text: "Le food cost est le ratio entre le coût des ingrédients d'un plat et son prix de vente HT, exprimé en pourcentage. Formule : (Coût ingrédients ÷ Prix de vente HT) × 100. Un food cost de 30% signifie que 30 centimes de chaque euro encaissé servent à payer les matières premières." },
+        },
+        {
+          '@type': 'Question',
+          name: 'Quel est le bon food cost pour un restaurant ?',
+          acceptedAnswer: { '@type': 'Answer', text: "Le food cost idéal dépend du type de restauration. En général : 28-34% pour un restaurant gastronomique, 30-35% pour un bistrot/brasserie, 24-30% pour la restauration rapide. Au-delà de 38%, la rentabilité est compromise." },
+        },
+        {
+          '@type': 'Question',
+          name: 'Comment améliorer son food cost restaurant ?',
+          acceptedAnswer: { '@type': 'Answer', text: "Pour améliorer son food cost : calculer précisément le coût de chaque plat, peser les grammages, réduire le gaspillage, négocier avec les fournisseurs, et surveiller les prix du marché chaque semaine. Un outil comme Costyfood automatise ces calculs en temps réel." },
+        },
+        {
+          '@type': 'Question',
+          name: 'Costyfood est-il gratuit ?',
+          acceptedAnswer: { '@type': 'Answer', text: "Oui, Costyfood est gratuit pour 3 plats, sans limite de durée et sans carte bancaire. Le plan Pro (15€/mois) débloque les plats illimités, l'export PDF et l'analyse de carte." },
+        },
+      ],
+    },
+  ]
+  return (
+    <>
+      {schemas.map((s, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }} />
+      ))}
+    </>
+  )
 }
 
 export default function LandingPage() {

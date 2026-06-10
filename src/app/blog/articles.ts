@@ -288,6 +288,258 @@ export const ARTICLES: Article[] = [
 <p>Dans un contexte de volatilité persistante des matières premières, les restaurateurs qui gagnent sont ceux qui suivent leurs coûts en temps réel et ajustent leur carte en conséquence. Ce n'est plus une option de bonne gestion — c'est un avantage concurrentiel. Un restaurateur qui connaît son food cost à 1 % près prend de meilleures décisions sur ses prix, sa carte et ses négociations fournisseurs. Et sur un marché aussi concurrentiel que la restauration française, cette précision fait la différence.</p>
     `,
   },
+  {
+    slug: 'rentabilite-restaurant',
+    title: 'Rentabilité restaurant : les 7 leviers pour enfin dégager des bénéfices',
+    description: 'Comment améliorer la rentabilité de votre restaurant ? Food cost, masse salariale, prix de vente, carte courte... Les 7 leviers actionnables dès cette semaine.',
+    date: '3 juin 2026',
+    dateIso: '2026-06-03',
+    readTime: 10,
+    category: 'Gestion',
+    keywords: ['rentabilité restaurant', 'améliorer rentabilité restaurant', 'marge restauration', 'bénéfice restaurant', 'gestion restaurant rentable'],
+    content: `
+<h2>Pourquoi la rentabilité d'un restaurant est si difficile à atteindre ?</h2>
+<p>En France, 30 % des restaurants ferment dans les deux premières années. Parmi ceux qui survivent, beaucoup dégagent des marges nettes inférieures à 5 %. Pourtant, certains établissements affichent des résultats nets de 15 à 20 %. La différence ne tient pas à la chance ni à la notoriété — elle tient à la maîtrise de quelques leviers précis.</p>
+<p>La rentabilité d'un restaurant se calcule simplement : Chiffre d'affaires − Charges = Résultat net. Mais derrière cette équation simple se cachent des dizaines de variables que seuls les restaurateurs rigoureux suivent vraiment.</p>
+
+<h2>Levier 1 — Maîtriser son food cost (objectif : &lt; 32 %)</h2>
+<p>Le food cost est le rapport entre le coût des ingrédients et le prix de vente HT. C'est le premier levier de rentabilité, et souvent le plus négligé. Un food cost à 38 % quand votre concurrent est à 29 % représente une perte de 9 points de marge brute — sur un CA de 50 000 €/mois, c'est 4 500 € de différence mensuelle.</p>
+<p>Pour chaque plat, calculez précisément : coût de chaque ingrédient × grammage exact. Utilisez les cotations officielles (FranceAgriMer) comme base de référence, et ajustez avec vos prix fournisseurs réels.</p>
+<blockquote><strong>Règle d'or : tout plat dont le food cost dépasse 35 % doit être revu (prix, grammage ou recette).</strong></blockquote>
+
+<h2>Levier 2 — Réduire les pertes et le gaspillage</h2>
+<p>En restauration, les pertes représentent en moyenne 4 à 8 % du food cost théorique. Épluchures, cuissons ratées, produits périmés avant utilisation : chaque euro gaspillé est un euro qui ne finance pas votre résultat.</p>
+<ul>
+  <li><strong>Carte courte</strong> : moins de références = moins de stocks = moins de pertes</li>
+  <li><strong>FIFO</strong> (First In, First Out) : utilisez toujours les produits les plus anciens en premier</li>
+  <li><strong>Portion control</strong> : pesez vos grammages, surtout sur les ingrédients coûteux</li>
+</ul>
+
+<h2>Levier 3 — Optimiser la structure de votre carte</h2>
+<p>Le menu engineering est la discipline qui analyse chaque plat selon deux axes : sa popularité (combien de fois il est commandé) et sa rentabilité (quelle marge il génère). Cette matrice permet d'identifier :</p>
+<ul>
+  <li><strong>Les stars</strong> : populaires ET rentables → à mettre en valeur</li>
+  <li><strong>Les vaches à lait</strong> : populaires mais peu rentables → à optimiser (prix ou recette)</li>
+  <li><strong>Les questions</strong> : rentables mais peu commandées → à mieux promouvoir</li>
+  <li><strong>Les poids morts</strong> : ni populaires ni rentables → à supprimer</li>
+</ul>
+
+<h2>Levier 4 — Maîtriser la masse salariale (objectif : &lt; 35 %)</h2>
+<p>La masse salariale représente généralement 30 à 40 % du CA en restauration. Au-delà de 38 %, votre établissement est en danger structurel. Les leviers : planification précise des horaires selon les pics d'activité, polyvalence du personnel, révision des fiches de poste.</p>
+
+<h2>Levier 5 — Augmenter le ticket moyen sans perdre en clientèle</h2>
+<p>Une augmentation de 10 % du ticket moyen avec le même volume de couverts améliore directement le résultat net. Les techniques : suggestions du personnel, menus "découverte" à marge optimisée, accord mets-vins, desserts et boissons chaudes systématiquement proposés.</p>
+
+<h2>Levier 6 — Négocier ses achats fournisseurs</h2>
+<p>Peu de restaurateurs négocient vraiment leurs tarifs fournisseurs. Pourtant, une réduction de 5 % sur vos achats matières premières se répercute directement sur votre résultat. Groupements d'achats, engagements de volume, paiement comptant contre remise : les marges de négociation existent.</p>
+
+<h2>Levier 7 — Suivre ses KPIs chaque semaine</h2>
+<p>Ce qui ne se mesure pas ne s'améliore pas. Les KPIs essentiels à suivre chaque semaine : food cost % par plat, CA par couvert, taux d'occupation, masse salariale %. Un restaurateur qui suit ces 4 indicateurs réagit 3 à 4 semaines plus vite qu'un restaurateur qui navigue à l'aveugle.</p>
+
+<h2>Conclusion</h2>
+<p>La rentabilité d'un restaurant ne se décrète pas : elle se construit levier par levier, semaine après semaine. Les établissements qui dégagent des bénéfices durables ne sont pas nécessairement les plus "branchés" ou les mieux notés — ce sont ceux qui maîtrisent leurs coûts avec rigueur et ajustent leur carte en conséquence.</p>
+    `,
+  },
+  {
+    slug: 'calculer-marge-restaurant',
+    title: 'Calculer la marge d\'un restaurant : formules, benchmarks et exemples concrets',
+    description: 'Comment calculer la marge brute, la marge nette et le seuil de rentabilité de votre restaurant ? Formules détaillées, benchmarks sectoriels et exemples chiffrés.',
+    date: '4 juin 2026',
+    dateIso: '2026-06-04',
+    readTime: 8,
+    category: 'Gestion',
+    keywords: ['calculer marge restaurant', 'marge brute restaurant', 'marge nette restauration', 'seuil rentabilité restaurant', 'calcul marge restauration'],
+    content: `
+<h2>Les trois niveaux de marge en restauration</h2>
+<p>En restauration, on distingue trois niveaux de marge, chacun mesurant une réalité différente de votre performance économique :</p>
+<ul>
+  <li><strong>La marge brute</strong> : ce qui reste après déduction du coût des matières premières</li>
+  <li><strong>La marge opérationnelle (EBITDA)</strong> : ce qui reste après masse salariale et charges fixes</li>
+  <li><strong>La marge nette</strong> : le bénéfice réel après toutes charges, impôts inclus</li>
+</ul>
+
+<h2>Calcul de la marge brute par plat</h2>
+<p>La marge brute par plat est le point de départ de toute analyse de rentabilité :</p>
+<blockquote>
+  <strong>Marge brute = Prix de vente HT − Coût des ingrédients</strong><br />
+  <strong>Taux de marge brute = (Marge brute ÷ Prix de vente HT) × 100</strong>
+</blockquote>
+<p><strong>Exemple concret — Magret de canard :</strong></p>
+<ul>
+  <li>Prix de vente : 28 € TTC → 23,33 € HT</li>
+  <li>Coût ingrédients : 6,80 € (magret 180g + garniture + sauce)</li>
+  <li>Marge brute : 23,33 − 6,80 = <strong>16,53 €</strong></li>
+  <li>Taux de marge brute : (16,53 ÷ 23,33) × 100 = <strong>70,9 %</strong></li>
+  <li>Food cost : 100 − 70,9 = <strong>29,1 %</strong> ✅</li>
+</ul>
+
+<h2>Benchmarks de marge brute par type d'établissement</h2>
+<table>
+  <thead><tr><th>Type d'établissement</th><th>Food cost cible</th><th>Marge brute cible</th></tr></thead>
+  <tbody>
+    <tr><td>Restaurant gastronomique</td><td>28–35 %</td><td>65–72 %</td></tr>
+    <tr><td>Bistrot / brasserie</td><td>30–36 %</td><td>64–70 %</td></tr>
+    <tr><td>Restauration rapide</td><td>25–30 %</td><td>70–75 %</td></tr>
+    <tr><td>Pizzeria</td><td>20–28 %</td><td>72–80 %</td></tr>
+    <tr><td>Restaurant asiatique</td><td>25–32 %</td><td>68–75 %</td></tr>
+  </tbody>
+</table>
+
+<h2>Calcul du seuil de rentabilité</h2>
+<p>Le seuil de rentabilité (ou point mort) est le chiffre d'affaires minimum à réaliser pour couvrir toutes vos charges. En dessous : vous perdez de l'argent. Au-dessus : vous dégagez du bénéfice.</p>
+<blockquote>
+  <strong>Seuil de rentabilité = Charges fixes ÷ Taux de marge sur coûts variables</strong>
+</blockquote>
+<p><strong>Exemple :</strong></p>
+<ul>
+  <li>Charges fixes mensuelles : loyer 3 000 € + salaires 12 000 € + charges diverses 2 000 € = <strong>17 000 €</strong></li>
+  <li>Taux de marge sur coûts variables : 68 % (food cost 32 %)</li>
+  <li>Seuil de rentabilité : 17 000 ÷ 0,68 = <strong>25 000 € de CA mensuel</strong></li>
+</ul>
+
+<h2>La marge nette : ce que vous gardez vraiment</h2>
+<p>Après toutes les charges (matières, personnel, loyer, énergie, amortissements, impôts), la marge nette d'un restaurant se situe généralement entre 3 et 9 % du CA. Un restaurant bien géré peut atteindre 12 à 15 %.</p>
+<p>Pour l'améliorer, les deux leviers les plus efficaces sont :</p>
+<ol>
+  <li>Réduire le food cost de 2 à 3 points (impacte directement la marge brute)</li>
+  <li>Optimiser la planification du personnel (impacte la masse salariale)</li>
+</ol>
+
+<h2>Outils pour calculer vos marges automatiquement</h2>
+<p>Calculer manuellement la marge de chaque plat dans Excel est chronophage et source d'erreurs. Les outils spécialisés comme Costyfood permettent de générer automatiquement les ingrédients via IA, d'appliquer les prix du marché (FranceAgriMer) et d'obtenir food cost, marge brute et prix conseillé en quelques secondes.</p>
+    `,
+  },
+  {
+    slug: 'fiche-technique-cuisine-restaurant',
+    title: 'Fiche technique cuisine : comment la créer et pourquoi elle est indispensable',
+    description: 'Qu\'est-ce qu\'une fiche technique en cuisine ? Comment la créer, quoi y mettre et pourquoi chaque restaurant devrait en avoir une par plat. Guide complet avec modèle.',
+    date: '5 juin 2026',
+    dateIso: '2026-06-05',
+    readTime: 7,
+    category: 'Technique',
+    keywords: ['fiche technique cuisine', 'fiche technique restaurant', 'créer fiche technique culinaire', 'modèle fiche technique restaurant', 'fiche recette professionnelle'],
+    content: `
+<h2>Qu'est-ce qu'une fiche technique en cuisine ?</h2>
+<p>Une fiche technique de cuisine (aussi appelée fiche recette professionnelle) est un document standardisé qui décrit précisément un plat : liste des ingrédients avec grammages exacts, mode opératoire, dressage, allergènes, coût matière et prix de vente conseillé.</p>
+<p>C'est à la fois un outil de gestion (calcul du food cost), un outil de formation (reproductibilité des recettes) et un outil légal (déclaration des allergènes).</p>
+
+<h2>Pourquoi chaque restaurant doit avoir des fiches techniques</h2>
+<p>Sans fiche technique, chaque chef cuisinera "à l'œil". Résultat :</p>
+<ul>
+  <li>Des grammages variables qui font exploser le food cost certains jours</li>
+  <li>Des plats qui ne goûtent pas pareil d'un service à l'autre</li>
+  <li>Impossible de former un remplaçant rapidement</li>
+  <li>Aucune visibilité sur les coûts réels par plat</li>
+</ul>
+<p>À l'inverse, un restaurant avec des fiches techniques complètes peut faire tourner sa cuisine avec n'importe quel commis, connaît son coût exact par assiette et peut recalculer ses prix en 5 minutes si un fournisseur augmente ses tarifs.</p>
+
+<h2>Que doit contenir une fiche technique de cuisine ?</h2>
+<p>Une fiche technique professionnelle complète contient :</p>
+<ol>
+  <li><strong>Identité du plat</strong> : nom, catégorie (entrée/plat/dessert), nombre de couverts</li>
+  <li><strong>Liste des ingrédients</strong> : nom exact, fournisseur, unité d'achat, grammage par portion</li>
+  <li><strong>Prix unitaire</strong> de chaque ingrédient (au kg ou à l'unité)</li>
+  <li><strong>Coût matière total</strong> par portion</li>
+  <li><strong>Food cost %</strong> et <strong>prix de vente conseillé</strong></li>
+  <li><strong>Mode opératoire</strong> : étapes de préparation numérotées</li>
+  <li><strong>Dressage</strong> : description ou photo du rendu final</li>
+  <li><strong>Allergènes</strong> : liste des 14 allergènes majeurs présents</li>
+  <li><strong>Date de création</strong> et <strong>auteur</strong></li>
+</ol>
+
+<h2>Comment créer une fiche technique efficacement</h2>
+<h3>Méthode 1 — À la main (Excel/Word)</h3>
+<p>Créez un tableau avec les colonnes : Ingrédient | Grammage (g) | Prix/kg | Coût portion. Additionnez les coûts, divisez par le prix de vente HT. Long, source d'erreurs, mais gratuit.</p>
+
+<h3>Méthode 2 — Outil spécialisé</h3>
+<p>Des outils comme Costyfood génèrent automatiquement les ingrédients et leurs quantités via IA, appliquent les prix du marché en temps réel, calculent le food cost et exportent la fiche en PDF professionnel. Ce qui prenait 45 minutes se fait en 2 minutes.</p>
+
+<h2>Modèle de fiche technique restaurant (structure)</h2>
+<pre>
+FICHE TECHNIQUE — [Nom du plat]
+Catégorie : [Entrée / Plat / Dessert]
+Couverts : [1 / 2 / 4]
+
+INGRÉDIENTS :
+Ingrédient          | Qté (g) | Prix/kg | Coût
+--------------------|---------|---------|------
+[Ingrédient 1]      | [150]   | [22,50] | [3,38]
+[Ingrédient 2]      | [80]    | [4,20]  | [0,34]
+...
+TOTAL COÛT MATIÈRE  |         |         | [X,XX €]
+
+Food cost : [XX %]
+Prix de vente conseillé : [XX,XX €]
+
+ALLERGÈNES : [Gluten, Lait...]
+</pre>
+
+<h2>Fréquence de mise à jour</h2>
+<p>Une fiche technique doit être mise à jour à chaque fois qu'un prix fournisseur change significativement (+ ou − 10 %), qu'une recette est modifiée, ou qu'un ingrédient change de fournisseur. En pratique : une révision trimestrielle est le minimum.</p>
+    `,
+  },
+  {
+    slug: 'food-cost-calcul-gratuit-en-ligne',
+    title: 'Food cost calcul en ligne : le guide complet pour maîtriser vos coûts',
+    description: 'Comment calculer votre food cost gratuitement en ligne ? Formule, exemples, outils et conseils pour maîtriser vos coûts en restauration. Calculateur gratuit disponible.',
+    date: '6 juin 2026',
+    dateIso: '2026-06-06',
+    readTime: 9,
+    category: 'Gestion',
+    keywords: ['food cost calcul', 'calculer food cost', 'food cost calcul gratuit', 'calcul food cost en ligne', 'food cost restaurant formule', 'food cost définition'],
+    content: `
+<h2>Food cost : définition et formule</h2>
+<p>Le food cost est le ratio entre le coût des matières premières utilisées et le chiffre d'affaires généré par ces mêmes matières. C'est l'indicateur de base de la gestion d'un restaurant.</p>
+<blockquote>
+  <strong>Food cost % = (Coût des ingrédients ÷ Prix de vente HT) × 100</strong>
+</blockquote>
+<p>Exemple : un plat dont les ingrédients coûtent 7,20 € et qui est vendu 24 € HT a un food cost de <strong>30 %</strong>.</p>
+<p>Cela signifie que 30 centimes de chaque euro encaissé partent en matières premières. Les 70 centimes restants doivent couvrir la main-d'œuvre, le loyer, l'énergie et dégager un bénéfice.</p>
+
+<h2>Food cost idéal : quels objectifs viser ?</h2>
+<p>Il n'existe pas de food cost universel "idéal" — il dépend de votre type de restauration, de vos charges fixes et de votre positionnement tarifaire. Toutefois, voici les fourchettes de référence :</p>
+<ul>
+  <li><strong>Restauration gastronomique</strong> : 28–34 % (produits nobles, prix élevés)</li>
+  <li><strong>Bistrot / brasserie</strong> : 30–35 %</li>
+  <li><strong>Restauration rapide</strong> : 24–30 %</li>
+  <li><strong>Pizza / pasta</strong> : 22–28 %</li>
+  <li><strong>Pâtisserie / boulangerie</strong> : 25–35 %</li>
+</ul>
+<p>Au-delà de 38 %, la rentabilité de votre restaurant est compromise sauf si vos charges salariales et locatives sont très faibles.</p>
+
+<h2>Comment calculer son food cost étape par étape</h2>
+<h3>Étape 1 — Listez tous les ingrédients du plat</h3>
+<p>Pour chaque plat de votre carte, notez tous les ingrédients utilisés, y compris la matière grasse de cuisson, les herbes, les condiments et les garnitures. Tout ce qui est dans l'assiette a un coût.</p>
+
+<h3>Étape 2 — Indiquez le grammage exact de chaque ingrédient</h3>
+<p>C'est l'étape que la plupart des restaurateurs bâclent. Pesez vraiment chaque ingrédient. Un chef qui ajoute "une noix de beurre" peut mettre entre 10 et 25 grammes — cela peut faire varier le coût de 15 à 20 centimes sur un seul plat.</p>
+
+<h3>Étape 3 — Valorisez chaque ingrédient au prix d'achat réel</h3>
+<p>Utilisez vos dernières factures fournisseurs comme référence. Ramenez chaque prix à l'unité kilogramme pour pouvoir comparer et calculer facilement.</p>
+
+<h3>Étape 4 — Calculez le coût total et le food cost %</h3>
+<p>Additionnez tous les coûts unitaires (grammage × prix/kg ÷ 1000). Divisez par le prix de vente HT et multipliez par 100.</p>
+
+<h2>Calculateur food cost gratuit en ligne</h2>
+<p>Faire ce calcul pour 30, 50 ou 100 plats manuellement dans Excel prend des heures. Des outils comme Costyfood automatisent ce processus : l'IA génère les ingrédients et leurs quantités à partir du nom du plat, applique les prix du marché issus des cotations officielles FranceAgriMer, et affiche instantanément food cost %, marge brute et prix de vente conseillé.</p>
+<p>Le calculateur est accessible gratuitement pour 3 plats, sans inscription ni carte bancaire.</p>
+
+<h2>Les erreurs courantes de calcul du food cost</h2>
+<ul>
+  <li><strong>Oublier les pertes à la préparation</strong> : un poisson entier de 500g ne donne que 300g de filet — intégrez ce coefficient de rendement</li>
+  <li><strong>Ne pas inclure les condiments</strong> : sel, poivre, huile d'olive, herbes fraîches s'additionnent</li>
+  <li><strong>Utiliser des prix anciens</strong> : les prix fournisseurs changent. Un calcul fait il y a 6 mois peut être obsolète</li>
+  <li><strong>Calculer en TTC</strong> : toujours calculer le food cost sur le prix HT</li>
+  <li><strong>Ne pas intégrer les boissons</strong> : le food cost d'un menu inclut aussi les boissons offertes ou accompagnements</li>
+</ul>
+
+<h2>Food cost vs. beverage cost</h2>
+<p>Dans les restaurants avec une offre boissons significative, on distingue le food cost (nourriture) du beverage cost (boissons). Les marges sont généralement meilleures sur les boissons (15–25 % de coût), ce qui permet de compenser un food cost élevé sur certains plats.</p>
+
+<h2>Conclusion : le food cost, premier indicateur à maîtriser</h2>
+<p>Avant d'investir dans la décoration, la communication ou les équipements, chaque restaurateur devrait être capable de donner le food cost exact de ses 10 plats les plus vendus. C'est la fondation de toute gestion rentable.</p>
+    `,
+  },
 ]
 
 export function getArticle(slug: string): Article | undefined {
