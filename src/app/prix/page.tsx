@@ -7,10 +7,15 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Prix ingrédients restauration — Hausses & baisses du marché | Costyfood',
   description: 'Suivez en temps réel les hausses et baisses de prix des ingrédients en restauration. Viandes, poissons, légumes — cotations hebdomadaires FranceAgriMer.',
+  keywords: ['prix ingrédients restaurant', 'cotation FranceAgriMer', 'prix viande restaurant', 'prix poisson marché', 'hausse prix ingrédients'],
+  alternates: { canonical: 'https://costyfood.fr/prix' },
   openGraph: {
     title: 'Prix ingrédients restauration — Costyfood',
     description: 'Hausses et baisses hebdomadaires sur 300+ ingrédients. Basé sur FranceAgriMer.',
+    url: 'https://costyfood.fr/prix',
+    images: [{ url: 'https://costyfood.fr/og-image.png', width: 1200, height: 630 }],
   },
+  twitter: { card: 'summary_large_image' },
 }
 
 function BreadcrumbJsonLd() {

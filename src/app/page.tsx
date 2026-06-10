@@ -10,10 +10,16 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Calculez votre food cost en 30 secondes — Costyfood',
   description: 'Outil SaaS pour restaurateurs : calcul food cost instantané basé sur les cotations FranceAgriMer, analyse de carte, fiches techniques PDF.',
+  keywords: ['food cost', 'calcul food cost restaurant', 'outil food cost', 'food cost restaurateur', 'coût matière restaurant', 'fiche technique restaurant', 'menu engineering'],
+  alternates: { canonical: 'https://costyfood.fr' },
   openGraph: {
     title: 'Calculez votre food cost en 30 secondes',
     description: 'Outil SaaS pour restaurateurs. Calcul food cost instantané, analyse de carte, IA.',
+    url: 'https://costyfood.fr',
+    type: 'website',
+    images: [{ url: 'https://costyfood.fr/og-image.png', width: 1200, height: 630 }],
   },
+  twitter: { card: 'summary_large_image', site: '@costyfood' },
 }
 
 function JsonLd() {
