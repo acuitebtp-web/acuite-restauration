@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 8 juin 2026)
+// Référence semaine précédente (semaine du 15 juin 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50,
@@ -83,16 +83,16 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Moules de bouchot': 3.60,
   'Huîtres creuses': 8.20,
   'Palourdes': 14.50,
-  'Asperge verte': 9.00,
-  'Asperge blanche': 11.10,
+  'Asperge verte': 8.80,
+  'Asperge blanche': 10.00,
   'Petits pois frais': 4.60,
   'Épinard frais': 4.20,
   'Artichaut': 3.50,
-  'Courgette': 2.60,
+  'Courgette': 2.30,
   'Aubergine': 3.20,
   'Poivron rouge': 3.50,
-  'Tomate cerise': 4.80,
-  'Tomate ronde': 2.40,
+  'Tomate cerise': 5.80,
+  'Tomate ronde': 2.50,
   'Poireau': 2.20,
   'Céleri rave': 2.00,
   'Potiron': 2.20,
@@ -114,7 +114,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Coriandre fraîche': 8.20,
   'Thym frais': 8.20,
   'Estragon frais': 10.50,
-  'Fraise Gariguette': 8.50,
+  'Fraise Gariguette': 10.00,
   'Citron jaune': 2.10,
   'Orange': 2.00,
   'Mangue': 3.70,
@@ -133,7 +133,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Chocolat noir 70%': 13.00
 }
 
-// Semaine du 8 juin 2026 — source FranceAgriMer
+// Semaine du 15 juin 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -204,7 +204,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Bar - Filet':                   29.80,
   'Bar - Entier':                  19.00,
   'Daurade - Filet':               22.50,
-  'Daurade - Entière':             14.50,
+  'Daurade - Entière':             11.50,   // baisse élevage (Foodomarket/Rungis 05/06)
   'Lotte - Queue':                 23.80,
   'Rouget - Filet':                33.00,
   'Thon rouge - Pavé':             36.00,
@@ -236,7 +236,7 @@ const WEEKLY_PRICES: Record<string, number> = {
 
   // ── LÉGUMES (saison juin) ────────────────────
   'Asperge verte':                  8.80,   // fin de saison : prix en baisse
-  'Asperge blanche':               10.00,   // fin de saison : forte baisse offre (RNM Sem22 -10.3%)
+  'Asperge blanche':               8.30,    // fin de saison : poursuite baisse (Rungis S24 -17%)
   'Petits pois frais':              4.60,   // meilleure disponibilité
   'Épinard frais':                  4.20,
   'Artichaut':                      3.50,   // bonne disponibilité
