@@ -60,7 +60,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bar - Filet': 29.80,
   'Bar - Entier': 19.00,
   'Daurade - Filet': 22.50,
-  'Daurade - Entière': 14.50,
+  'Daurade - Entière': 11.50,
   'Lotte - Queue': 23.80,
   'Rouget - Filet': 33.00,
   'Thon rouge - Pavé': 36.00,
@@ -84,7 +84,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Huîtres creuses': 8.20,
   'Palourdes': 14.50,
   'Asperge verte': 8.80,
-  'Asperge blanche': 10.00,
+  'Asperge blanche': 8.30,
   'Petits pois frais': 4.60,
   'Épinard frais': 4.20,
   'Artichaut': 3.50,
@@ -133,7 +133,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Chocolat noir 70%': 13.00
 }
 
-// Semaine du 15 juin 2026 — source FranceAgriMer
+// Semaine du 22 juin 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -184,7 +184,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Poulet - Suprême':              13.00,
   'Poulet - Entier':                5.80,
   'Canard - Magret':               22.50,
-  'Canard - Confit de cuisse':     14.50,
+  'Canard - Confit de cuisse':     13.41,
   'Canard - Foie gras entier':     82.00,
   'Canard - Escalope foie gras':   92.00,
   'Pintade - Entière':             10.50,
@@ -202,7 +202,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Turbot - Filet':                56.00,
   'Saint-Pierre - Entier':         18.50,
   'Bar - Filet':                   29.80,
-  'Bar - Entier':                  19.00,
+  'Bar - Entier':                  15.50,   // baisse Rungis 17/06/2026
   'Daurade - Filet':               22.50,
   'Daurade - Entière':             11.50,   // baisse élevage (Foodomarket/Rungis 05/06)
   'Lotte - Queue':                 23.80,
@@ -210,10 +210,10 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Thon rouge - Pavé':             36.00,
 
   // ── POISSONS COURANTS ────────────────────────
-  'Saumon - Filet':                19.00,   // tension globale saumon atlantique
+  'Saumon - Filet':                21.95,   // hausse Foodomarket/Rungis 05/2026
   'Saumon - Pavé':                 21.00,   // tension globale saumon atlantique
   'Truite - Filet':                14.50,
-  'Cabillaud - Filet':             16.50,   // tension poissons blancs (FranceAgriMer)
+  'Cabillaud - Filet':             19.86,   // hausse Foodomarket/Rungis 05/2026
   'Cabillaud - Dos':               24.50,   // tension poissons blancs
   'Lieu noir - Filet':             12.50,
   'Maquereau - Filet':              8.50,
@@ -244,7 +244,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Aubergine':                      3.20,
   'Poivron rouge':                  3.50,
   'Tomate cerise':                  5.80,   // hausse demande estivale (RNM grossiste Bordeaux 05/06 +20.8%)
-  'Tomate ronde':                   2.50,   // légère hausse gros (RNM 05/06)
+  'Tomate ronde':                   2.36,   // légère baisse Rungis 06/2026
   'Poireau':                        2.20,   // transition fin saison hiver
   'Céleri rave':                    2.00,
   'Potiron':                        2.20,
@@ -258,7 +258,7 @@ const WEEKLY_PRICES: Record<string, number> = {
 
   // ── CHAMPIGNONS ──────────────────────────────
   'Morilles fraîches':            95.00,   // fin de saison : prix en baisse
-  'Girolles':                      44.00,   // début d'apparition, encore rares
+  'Girolles':                      53.56,   // début saison, Foodomarket/Rungis 05/2026
   'Truffe noire Périgord':         950.00,  // hors saison : stable
   "Truffe d'été":                 175.00,  // début saison estivale
   'Cèpes frais':                   36.00,
