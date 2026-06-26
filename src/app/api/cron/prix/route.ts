@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export const maxDuration = 30
 
-// Référence semaine précédente (semaine du 15 juin 2026)
+// Référence semaine précédente (semaine du 23 juin 2026)
 // Chaque lundi : copier WEEKLY_PRICES ici AVANT de les mettre à jour
 const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bœuf - Filet': 57.50,
@@ -60,7 +60,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Bar - Filet': 29.80,
   'Bar - Entier': 19.00,
   'Daurade - Filet': 22.50,
-  'Daurade - Entière': 11.50,
+  'Daurade - Entière': 14.50,
   'Lotte - Queue': 23.80,
   'Rouget - Filet': 33.00,
   'Thon rouge - Pavé': 36.00,
@@ -84,7 +84,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Huîtres creuses': 8.20,
   'Palourdes': 14.50,
   'Asperge verte': 8.80,
-  'Asperge blanche': 8.30,
+  'Asperge blanche': 10.00,
   'Petits pois frais': 4.60,
   'Épinard frais': 4.20,
   'Artichaut': 3.50,
@@ -132,8 +132,7 @@ const PREVIOUS_WEEK_REF: Record<string, number> = {
   'Pâtes fraîches': 5.20,
   'Chocolat noir 70%': 13.00
 }
-
-// Semaine du 22 juin 2026 — source FranceAgriMer
+// Semaine du 23 juin 2026 — source FranceAgriMer
 const WEEKLY_PRICES: Record<string, number> = {
   // ── BŒUF ─────────────────────────────────────
   'Bœuf - Filet':                  57.50,
@@ -150,8 +149,8 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Bœuf - Os à moelle':             4.00,
 
   // ── VEAU ─────────────────────────────────────
-  'Veau - Escalope':               23.50,
-  'Veau - Côte':                   28.00,
+  'Veau - Escalope':               23.30,   // légère baisse PMP veau sem24 -0.9%
+  'Veau - Côte':                   27.80,   // légère baisse veau
   'Veau - Joue':                   18.50,
   'Veau - Jarret':                 14.00,
   'Veau - Tendron':                12.00,
@@ -166,8 +165,8 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Agneau - Selle':                22.50,   // post-Pâques
 
   // ── PORC ─────────────────────────────────────
-  'Porc - Filet mignon':           14.60,   // hausse carcasse +1.3 ct/kg (réussir.fr)
-  'Porc - Côte':                   10.60,   // hausse carcasse
+  'Porc - Filet mignon':           15.20,   // longe porc wholesale +8.0% sem24 (RNM)
+  'Porc - Côte':                   11.00,   // hausse longe porc sem24
   'Porc - Travers':                 9.00,
   'Porc - Ventre':                  6.70,
   'Porc - Joue':                    8.40,
@@ -184,7 +183,7 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Poulet - Suprême':              13.00,
   'Poulet - Entier':                5.80,
   'Canard - Magret':               22.50,
-  'Canard - Confit de cuisse':     13.41,
+  'Canard - Confit de cuisse':     14.50,
   'Canard - Foie gras entier':     82.00,
   'Canard - Escalope foie gras':   92.00,
   'Pintade - Entière':             10.50,
@@ -201,20 +200,20 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Sole - Filet':                  44.50,
   'Turbot - Filet':                56.00,
   'Saint-Pierre - Entier':         18.50,
-  'Bar - Filet':                   29.80,
-  'Bar - Entier':                  15.50,   // baisse Rungis 17/06/2026
+  'Bar - Filet':                   29.50,   // RNM bar sauvage -1.0% sem24
+  'Bar - Entier':                  18.80,   // RNM bar sauvage -1.1% sem24
   'Daurade - Filet':               22.50,
-  'Daurade - Entière':             11.50,   // baisse élevage (Foodomarket/Rungis 05/06)
-  'Lotte - Queue':                 23.80,
+  'Daurade - Entière':             14.50,
+  'Lotte - Queue':                 23.50,   // RNM Lotte Rungis -1.1% sem24
   'Rouget - Filet':                33.00,
   'Thon rouge - Pavé':             36.00,
 
   // ── POISSONS COURANTS ────────────────────────
-  'Saumon - Filet':                21.95,   // hausse Foodomarket/Rungis 05/2026
+  'Saumon - Filet':                19.20,   // RNM saumon entier Norvège +1.1% sem24
   'Saumon - Pavé':                 21.00,   // tension globale saumon atlantique
   'Truite - Filet':                14.50,
-  'Cabillaud - Filet':             19.86,   // hausse Foodomarket/Rungis 05/2026
-  'Cabillaud - Dos':               24.50,   // tension poissons blancs
+  'Cabillaud - Filet':             16.70,   // RNM Cabillaud filet Rungis +1.1% sem24
+  'Cabillaud - Dos':               23.80,   // RNM prix détail -1.5% sem24
   'Lieu noir - Filet':             12.50,
   'Maquereau - Filet':              8.50,
   'Sardine - Fraîche':              5.20,
@@ -235,16 +234,16 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Palourdes':                     14.50,
 
   // ── LÉGUMES (saison juin) ────────────────────
-  'Asperge verte':                  8.80,   // fin de saison : prix en baisse
-  'Asperge blanche':               8.30,    // fin de saison : poursuite baisse (Rungis S24 -17%)
-  'Petits pois frais':              4.60,   // meilleure disponibilité
+  'Asperge verte':                  8.00,   // forte fin de saison -9.1%
+  'Asperge blanche':                8.80,   // fin de saison accélérée -12.0%
+  'Petits pois frais':              4.40,   // meilleure disponibilité -4.3%
   'Épinard frais':                  4.20,
   'Artichaut':                      3.50,   // bonne disponibilité
-  'Courgette':                      2.30,   // offre abondante Sud : forte baisse (RNM Sem22 -11.5%)
+  'Courgette':                      2.10,   // offre abondante Sud continue -8.7%
   'Aubergine':                      3.20,
   'Poivron rouge':                  3.50,
   'Tomate cerise':                  5.80,   // hausse demande estivale (RNM grossiste Bordeaux 05/06 +20.8%)
-  'Tomate ronde':                   2.36,   // légère baisse Rungis 06/2026
+  'Tomate ronde':                   2.40,   // légère baisse marché gros -4.0%
   'Poireau':                        2.20,   // transition fin saison hiver
   'Céleri rave':                    2.00,
   'Potiron':                        2.20,
@@ -253,14 +252,14 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Échalote':                       4.20,
   'Ail':                            5.20,
   'Champignon de Paris':            5.30,
-  'Haricot vert extra-fin':         5.90,   // offre en hausse
+  'Haricot vert extra-fin':         5.60,   // montée en production estivale -5.1%
   'Fenouil':                        2.60,
 
   // ── CHAMPIGNONS ──────────────────────────────
-  'Morilles fraîches':            95.00,   // fin de saison : prix en baisse
-  'Girolles':                      53.56,   // début saison, Foodomarket/Rungis 05/2026
+  'Morilles fraîches':             88.00,   // fin de saison -7.4%
+  'Girolles':                      44.00,   // début d'apparition, encore rares
   'Truffe noire Périgord':         950.00,  // hors saison : stable
-  "Truffe d'été":                 175.00,  // début saison estivale
+  "Truffe d'été":                 165.00,  // production estivale croissante -5.7%
   'Cèpes frais':                   36.00,
   'Trompette de la mort':          58.00,
 
@@ -272,14 +271,14 @@ const WEEKLY_PRICES: Record<string, number> = {
   'Estragon frais':                10.50,
 
   // ── FRUITS (saison juin) ─────────────────────
-  'Fraise Gariguette':             10.00,  // remontée des cours : forte demande estivale (RNM Rungis 05/06)
+  'Fraise Gariguette':              9.50,   // baisse cotation gros RNM sem24 -4.7%
   'Citron jaune':                   2.10,
   'Orange':                         2.00,   // fin saison agrumes : légère hausse
   'Mangue':                         3.70,   // légère baisse
   'Avocat':                         3.20,   // légère baisse
 
   // ── PRODUITS LAITIERS ────────────────────────
-  'Beurre doux':                    9.50,
+  'Beurre doux':                    9.60,   // beurre industriel RNM sem24 +1.0%
   'Crème liquide 35% MG':           5.30,
   'Crème fraîche épaisse':          4.60,
   'Lait entier':                    1.25,
